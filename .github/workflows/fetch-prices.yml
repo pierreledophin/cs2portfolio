@@ -2,10 +2,10 @@ name: fetch-prices
 on:
   push:
     paths:
-      - 'data/holdings.csv'   # relance si tu modifies ta liste d'items
+      - 'data/holdings.csv'         # relance si tu modifies tes skins
   schedule:
-    - cron: "0 7,19 * * *"    # 2x/jour en UTC (~09h & 21h en Europe/Prague)
-  workflow_dispatch:          # bouton manuel "Run workflow"
+    - cron: "0 7,19 * * *"          # 2x/jour en UTC (~09:00 & 21:00 Europe/Prague)
+  workflow_dispatch:                # bouton manuel "Run workflow"
 
 permissions:
   contents: write
@@ -50,12 +50,12 @@ jobs:
         run: |
           python fetch_prices.py
 
-      # 1) Crée/met à jour le PR avec ton token personnel (GH_PAT)
-      - name: Create/Update Pull Request
+      # 1) Crée / met à jour le PR avec ton token personnel
+      - name: Create or update Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GH_PAT }}       # ← PAT perso (scope: repo ou public_repo)
           title: "chore(data): update price_history.csv"
           body: "Automated data update (CSFloat) – append latest prices."
           commit-message: "chore(data): update price_history.csv [skip ci]"
@@ -64,13 +64,13 @@ jobs:
           add-paths: |
             data/price_history.csv
 
-      # 2) Merge automatiquement le PR créé (si quelque chose a changé)
-      - name: Auto-merge PR
+      # 2) Merge auto du PR avec la CLI GitHub
+      - name: Auto-merge PR (squash + delete branch)
         if: steps.cpr.outputs.pull-request-number != ''
-        uses: peter-evans/merge-pull-request@v3
-        with:
-          token: ${{ secrets.GH_PAT }}
-          pull-request: ${{ steps.cpr.outputs.pull-request-number }}
-          merge-method: squash
-          commit-message: pull-request-title
-          delete-branch: true
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}    # gh lit GH_TOKEN
+        run: |
+          set -e
+          echo "Merging PR #${{ steps.cpr.outputs.pull-request-number }} ..."
+          gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --squash --delete-branch \
+          || gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --merge --delete-branch
