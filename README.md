@@ -5,3 +5,5 @@ Ajout des skins à partir de "holdings.csv"
 - historique des transactions pour avoir un P/L qui inclut les ventes passées
 - ajout d'un trade manuellement (au moins du prix)
 - ajout d'une interface admin
+- UI plus sympa (couleurs, ...)
+- Ajout image du skin
