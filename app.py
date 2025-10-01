@@ -161,7 +161,9 @@ else:
         metric_card("P&L total", f"${total_pnl:,.2f}", color=color_pnl)
     with col4:
         color_pct = "#eef7f2" if total_pct >= 0 else "#fbeeee"
-        metric_card("% d’évolution", f"{total_pct:,.2f}%", color=color_pct)
+        metric_card("% Profit", f"{total_pct:,.2f}%", color=color_pct)
+
+    st.markdown("<div style='margin-top:25px'></div>", unsafe_allow_html=True)
 
     # Tableau demandé (sans quantité, colonnes renommées)
     display = pd.DataFrame({
