@@ -1,0 +1,4 @@
+# caches & locaux éventuels (sécurité)
+.env
+__pycache__/
+.streamlit/
