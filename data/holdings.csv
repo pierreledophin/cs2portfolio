@@ -1,4 +1,4 @@
-market_hash_name,qty,buy_price_usd,buy_date
+market_hash_name,qty,buy_price_usd,buy_date,notes
 AK-47 | Redline,1,18.50,2024-05-10
 AWP | Asiimov,2,42.00,2024-07-02
 M4A4 | Poseidon,1,980.00,2023-12-15
