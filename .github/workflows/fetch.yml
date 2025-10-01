@@ -1,18 +1,26 @@
 name: fetch-prices
 on:
   schedule:
-    - cron: "0 7,19 * * *"   # 2x/jour en UTC ≈ 09:00 & 21:00 Europe/Prague
-  workflow_dispatch:         # bouton manuel dans l’onglet Actions
+    - cron: "0 7,19 * * *"    # 2x/jour en UTC
+  workflow_dispatch:          # bouton "Run workflow"
+
+concurrency:
+  group: data-update
+  cancel-in-progress: false
 
 jobs:
   fetch:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # pour commit/push
+      contents: write   # autorise le push vers le dépôt
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0       # récupère tout l’historique (important)
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -31,10 +39,16 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # se synchroniser avec la branche distante
+          git fetch origin
+          git pull --rebase origin main || true
+
+          # ajouter le fichier CSV
           git add data/price_history.csv
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
             git commit -m "chore(data): update price_history.csv [skip ci]"
-            git push
+            git push origin HEAD:main
           fi
