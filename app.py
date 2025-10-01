@@ -1,4 +1,8 @@
-import io, base64, requests, pandas as pd, streamlit as st
+import io
+import base64
+import requests
+import pandas as pd
+import streamlit as st
 
 # ---------- Page setup ----------
 st.set_page_config(page_title="CS2 Portfolio (CSFloat)", layout="wide")
@@ -64,14 +68,14 @@ def load_all():
 
 # ---------- UI: actions ----------
 with st.sidebar:
-    if st.button("🔁 Recharger les CSV depuis GitHub"):
+    if st.button("Recharger les CSV depuis GitHub"):
         st.cache_data.clear()
         st.rerun()
 
 # ---------- Charge les données ----------
 hist, holds, info_hist, info_holds = load_all()
 
-with st.expander("🔍 Debug (utile si rien ne s'affiche)"):
+with st.expander("Debug (utile si rien ne s'affiche)"):
     st.write("price_history.csv →", info_hist)
     st.write("holdings.csv →", info_holds)
     st.write("Owner/Repo/Branch:", OWNER, REPO, BRANCH)
@@ -96,13 +100,15 @@ if not needed_hist_cols.issubset(set(hist.columns)):
     st.stop()
 
 # ---------- Dernier prix par item ----------
-last = (hist.sort_values(["market_hash_name", "ts_utc"])
-            .groupby("market_hash_name", as_index=False)
-            .tail(1)
-            .rename(columns={"price_usd": "latest_price_usd"}))
+last = (
+    hist.sort_values(["market_hash_name", "ts_utc"])
+        .groupby("market_hash_name", as_index=False)
+        .tail(1)
+        .rename(columns={"price_usd": "latest_price_usd"})
+)
 
 # ---------- Portefeuille & P&L ----------
-st.markdown("## 💼 Portefeuille (P&L)")
+st.markdown("## Portefeuille (P&L)")
 
 if holds.empty:
     st.info("Ton fichier `data/holdings.csv` est vide. Ajoute tes achats (market_hash_name, qty, buy_price_usd, …) dans le dépôt.")
@@ -116,7 +122,7 @@ else:
 
     # Calculs (on garde les colonnes demandées)
     df["pnl_abs"] = (df["latest_price_usd"] - df["buy_price_usd"]) * df["qty"]
-    # % d'évolution par unité (prix vs achat)
+    # % d'évolution unitaire (prix vs achat)
     denom = df["buy_price_usd"].replace(0, pd.NA)
     df["pnl_pct"] = ((df["latest_price_usd"] - df["buy_price_usd"]) / denom * 100).fillna(0)
 
@@ -126,11 +132,36 @@ else:
     total_pnl = total_val - total_cost
     total_pct = (total_pnl / total_cost * 100) if total_cost > 0 else 0
 
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Valeur portefeuille", f"${total_val:,.2f}")
-    c2.metric("Coût total",         f"${total_cost:,.2f}")
-    c3.metric("P&L total",          f"${total_pnl:,.2f}")
-    c4.metric("% d’évolution",      f"{total_pct:,.2f}%")
+    # ----- Cartes métriques sobres (fonds très clairs) -----
+    def metric_card(label, value, color="#f7f9fb"):
+        st.markdown(
+            f"""
+            <div style="
+                background-color:{color};
+                padding:18px;
+                border-radius:12px;
+                text-align:center;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+                border: 1px solid rgba(0,0,0,0.04);
+            ">
+                <div style="font-size:15px; color:#555; margin-bottom:6px;">{label}</div>
+                <div style="font-size:26px; font-weight:700; color:#1f2937;">{value}</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        metric_card("Valeur portefeuille", f"${total_val:,.2f}", color="#eef7f2")   # vert très très pâle
+    with col2:
+        metric_card("Coût total", f"${total_cost:,.2f}", color="#eff3fb")           # bleu très pâle
+    with col3:
+        color_pnl = "#eef7f2" if total_pnl >= 0 else "#fbeeee"                      # vert clair si gain, rouge clair si perte
+        metric_card("P&L total", f"${total_pnl:,.2f}", color=color_pnl)
+    with col4:
+        color_pct = "#eef7f2" if total_pct >= 0 else "#fbeeee"
+        metric_card("% d’évolution", f"{total_pct:,.2f}%", color=color_pct)
 
     # Tableau demandé (sans quantité, colonnes renommées)
     display = pd.DataFrame({
@@ -141,32 +172,34 @@ else:
         "% d’évolution": df["pnl_pct"],
     })
 
-    # ----- Styles -----
+    # ----- Styles très clairs -----
     def color_pnl_abs(val):
         if pd.isna(val):
             return ""
-        return "color: #138000;" if val > 0 else ("color: #B00020;" if val < 0 else "")
+        # Texte vert doux si gain, rouge doux si perte
+        return "color: #157a3d;" if val > 0 else ("color: #c44545;" if val < 0 else "")
 
     def grad_pct(val):
         if pd.isna(val):
             return ""
         a = abs(val)
-        # paliers : <5% / 5-10% / 10-20% / >=20%
+        # paliers extra-clairs : <5% / 5-10% / 10-20% / >=20%
         if val > 0:
-            if a < 5:   bg = "#e7f7ee"   # vert très clair
-            elif a < 10: bg = "#c6eedb"
-            elif a < 20: bg = "#8fdbb9"
-            else:        bg = "#46be88"
+            if a < 5:   bg = "#f3fbf7"   # vert très clair
+            elif a < 10: bg = "#e9f7f0"
+            elif a < 20: bg = "#ddf2e7"
+            else:        bg = "#d0ecdD"
         elif val < 0:
-            if a < 5:   bg = "#fde8e8"   # rouge très clair
-            elif a < 10: bg = "#f9c9c9"
-            elif a < 20: bg = "#f29b9b"
-            else:        bg = "#e35d5d"
+            if a < 5:   bg = "#fdf3f3"   # rouge très clair
+            elif a < 10: bg = "#fbeaea"
+            elif a < 20: bg = "#f7dddd"
+            else:        bg = "#f3d1d1"
         else:
             bg = ""
         return f"background-color: {bg};"
 
-    styled = (display.style
+    styled = (
+        display.style
         .format({
             "prix achat USD": "{:,.2f}",
             "Prix vente USD": "{:,.2f}",
@@ -180,7 +213,7 @@ else:
     st.dataframe(styled, hide_index=True, use_container_width=True)
 
 # ---------- Historique (courbe) ----------
-st.markdown("## 📈 Historique")
+st.markdown("## Historique")
 items = sorted(hist["market_hash_name"].unique())
 if items:
     item = st.selectbox("Choisis un item :", items)
