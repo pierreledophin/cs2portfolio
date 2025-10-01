@@ -15,7 +15,7 @@ REPO    = st.secrets.get("GH_REPO", "")
 BRANCH  = st.secrets.get("GH_BRANCH", "main")
 GH_PAT  = st.secrets.get("GH_PAT")  # requis si repo privé
 
-# Clé CSFloat pour la colonne images (facultatif)
+# Clé CSFloat pour la colonne images (facultatif mais recommandé)
 CSFLOAT_API_KEY = st.secrets.get("CSFLOAT_API_KEY")
 CSFLOAT_API = "https://csfloat.com/api/v1/listings"
 CSFLOAT_HEADERS = {"Authorization": CSFLOAT_API_KEY} if CSFLOAT_API_KEY else {}
@@ -160,12 +160,22 @@ else:
     # Espace avant le tableau
     st.markdown("<div style='margin-top:25px'></div>", unsafe_allow_html=True)
 
-    # ----- Colonne images (optionnelle si CSFLOAT_API_KEY présent) -----
+    # ----- Colonne images (API CSFloat, nécessite CSFLOAT_API_KEY) -----
     @st.cache_data(ttl=3600)
     def fetch_icon_url(market_hash_name: str) -> str | None:
+        """
+        On demande 1 listing avec expand=item pour obtenir l'icône.
+        Puis on reconstruit l'URL Steam CDN si l'API renvoie un icon_url relatif.
+        """
         if not CSFLOAT_API_KEY:
             return None
-        params = {"market_hash_name": market_hash_name, "sort_by": "lowest_price", "type": "buy_now", "limit": 1}
+        params = {
+            "market_hash_name": market_hash_name,
+            "sort_by": "lowest_price",
+            "type": "buy_now",
+            "limit": 1,
+            "expand": "item",  # <-- clé pour recevoir les infos item (dont icon_url)
+        }
         try:
             r = requests.get(CSFLOAT_API, headers=CSFLOAT_HEADERS, params=params, timeout=15)
             if r.status_code == 429:
@@ -174,17 +184,32 @@ else:
             data = r.json()
         except Exception:
             return None
-        # L'API peut renvoyer {"data":[...]} ou [...]
+
         listings = data.get("data") if isinstance(data, dict) else data
         if not isinstance(listings, list) or not listings:
             return None
+
         first = listings[0]
-        # Essaye plusieurs clés possibles
-        img = first.get("image") or first.get("icon_url") or (first.get("item", {}) or {}).get("image")
-        # Si l'API renvoie un chemin relatif, on peut tenter de le compléter (rare)
+        # Plusieurs sources possibles :
+        # - first["image"] (rare)
+        # - first["icon_url"] (parfois)
+        # - first["item"]["icon_url"] (avec expand=item) -> souvent un chemin relatif Steam
+        img = first.get("image") or first.get("icon_url")
+        if not img:
+            item = first.get("item") or {}
+            img = item.get("icon_url")
+
+        if not img:
+            return None
+
+        # Si c'est une URL complète, on renvoie tel quel
         if isinstance(img, str) and img.startswith("http"):
             return img
-        return None
+
+        # Sinon, la plupart du temps c'est un chemin relatif vers l'icône Steam.
+        # On reconstruit l'URL Steam CDN avec une taille raisonnable (128px).
+        # Format : https://steamcommunity-a.akamaihd.net/economy/image/<icon_url>/128fx128f
+        return f"https://steamcommunity-a.akamaihd.net/economy/image/{img}/128fx128f"
 
     if CSFLOAT_API_KEY:
         df["Image"] = df["market_hash_name"].apply(fetch_icon_url)
@@ -237,7 +262,6 @@ else:
         .applymap(grad_pct, subset=["% d’évolution"])
     )
 
-    # Affichage avec colonne image (si URL), sinon texte
     st.dataframe(
         styled,
         hide_index=True,
@@ -245,7 +269,7 @@ else:
         column_config={
             "Image": st.column_config.ImageColumn(
                 "Image",
-                help="Prévisualisation (CSFloat)",
+                help="Prévisualisation (CSFloat/Steam)",
                 width="small"
             )
         }
