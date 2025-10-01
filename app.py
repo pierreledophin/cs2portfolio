@@ -10,6 +10,31 @@ st.set_page_config(page_title="CS2 Portfolio (CSFloat)", layout="wide")
 st.markdown("<h1 style='margin-bottom:0'>CS2 Portfolio Tracker</h1>", unsafe_allow_html=True)
 st.caption("Affichage à partir des CSV dans ton dépôt GitHub")
 
+# ---------- Password setup  ----------
+import streamlit as st
+import hashlib
+
+def check_password() -> bool:
+    pwd = st.session_state.get("_app_pwd", "")
+    correct = st.secrets.get("APP_PASSWORD", "")
+    if not correct:
+        return True  # si tu n'as pas mis de mot de passe, on ne bloque pas
+    return hashlib.sha256(pwd.encode()).hexdigest() == hashlib.sha256(correct.encode()).hexdigest()
+
+def login_gate():
+    if "auth_ok" not in st.session_state:
+        st.session_state.auth_ok = False
+    if not st.session_state.auth_ok:
+        st.text_input("Mot de passe", type="password", key="_app_pwd")
+        if st.button("Entrer"):
+            st.session_state.auth_ok = check_password()
+            if not st.session_state.auth_ok:
+                st.error("Mot de passe incorrect.")
+        st.stop()
+
+# active le garde pour toute l'app :
+login_gate()
+
 # ---------- Secrets / Repo config ----------
 OWNER   = st.secrets.get("GH_OWNER", "")
 REPO    = st.secrets.get("GH_REPO", "")
