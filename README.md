@@ -7,3 +7,4 @@ Ajout des skins à partir de "holdings.csv"
 - ajout d'une interface admin
 - UI plus sympa (couleurs, ...)
 - Ajout image du skin
+- Analyse J-1 J-7 J-30 par skin et au global 
