@@ -14,10 +14,12 @@ st.caption("Affichage à partir des CSV dans ton dépôt GitHub")
 OWNER   = st.secrets.get("GH_OWNER", "")
 REPO    = st.secrets.get("GH_REPO", "")
 BRANCH  = st.secrets.get("GH_BRANCH", "main")
-GH_PAT  = st.secrets.get("GH_PAT")      # requis pour éditer/sauvegarder
+GH_PAT  = st.secrets.get("GH_PAT")      # requis pour éditer/sauvegarder si repo privé (ou si on veut écrire)
 
-# (Optionnel) clé CSFloat si tu utilises la colonne images
+# API CSFloat pour récupérer les miniatures (facultatif mais recommandé)
 CSFLOAT_API_KEY = st.secrets.get("CSFLOAT_API_KEY")
+CSFLOAT_API = "https://csfloat.com/api/v1/listings"
+CSFLOAT_HEADERS = {"Authorization": CSFLOAT_API_KEY} if CSFLOAT_API_KEY else {}
 
 PATH_HISTORY  = "data/price_history.csv"
 PATH_HOLDINGS = "data/holdings.csv"
@@ -33,10 +35,7 @@ def _gh_headers():
     }
 
 def gh_get_file(path: str):
-    """
-    Lit un fichier via l'API GitHub (retourne text, sha, status_code).
-    Nécessite GH_PAT.
-    """
+    """Lit un fichier via l'API GitHub (retourne text, sha, status_code)."""
     url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}?ref={BRANCH}"
     r = requests.get(url, headers=_gh_headers(), timeout=20)
     if r.status_code != 200:
@@ -51,9 +50,7 @@ def gh_get_file(path: str):
     return raw, sha, r.status_code
 
 def gh_put_file(path: str, new_text: str, sha: str, message: str):
-    """
-    Ecrit/maj un fichier via l'API GitHub (PUT contents). Nécessite GH_PAT.
-    """
+    """Ecrit/maj un fichier via l'API GitHub (PUT contents)."""
     url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}"
     payload = {
         "message": message,
@@ -194,10 +191,61 @@ else:
         color_pct = "#eef7f2" if total_pct >= 0 else "#fbeeee"
         metric_card("% d’évolution", f"{total_pct:,.2f}%", color=color_pct)
 
+    # Espace avant le tableau
     st.markdown("<div style='margin-top:25px'></div>", unsafe_allow_html=True)
 
-    # ----- Tableau P&L (sans quantité) -----
+    # ----- Colonne IMAGES (CSFloat) -----
+    @st.cache_data(ttl=3600)
+    def fetch_icon_url(market_hash_name: str) -> str | None:
+        """
+        On demande 1 listing avec expand=item pour obtenir l'icône.
+        On reconstruit l'URL Steam CDN si l'API renvoie un chemin relatif.
+        """
+        if not CSFLOAT_API_KEY:
+            return None
+        params = {
+            "market_hash_name": market_hash_name,
+            "sort_by": "lowest_price",
+            "type": "buy_now",
+            "limit": 1,
+            "expand": "item",  # inclut item.icon_url
+        }
+        try:
+            r = requests.get(CSFLOAT_API, headers=CSFLOAT_HEADERS, params=params, timeout=15)
+            if r.status_code == 429:
+                return None
+            r.raise_for_status()
+            data = r.json()
+        except Exception:
+            return None
+
+        listings = data.get("data") if isinstance(data, dict) else data
+        if not isinstance(listings, list) or not listings:
+            return None
+
+        first = listings[0]
+        img = first.get("image") or first.get("icon_url")
+        if not img:
+            item = first.get("item") or {}
+            img = item.get("icon_url")
+
+        if not img:
+            return None
+
+        if isinstance(img, str) and img.startswith("http"):
+            return img
+
+        # URL Steam CDN taille 128
+        return f"https://steamcommunity-a.akamaihd.net/economy/image/{img}/128fx128f"
+
+    if CSFLOAT_API_KEY:
+        df["Image"] = df["market_hash_name"].apply(fetch_icon_url)
+    else:
+        df["Image"] = None
+
+    # ----- Tableau P&L (avec images, sans quantité) -----
     table = pd.DataFrame({
+        "Image": df["Image"],
         "Item": df["market_hash_name"],
         "prix achat USD": df["buy_price_usd"],
         "Prix vente USD": df["latest_price_usd"],
@@ -237,66 +285,81 @@ else:
         .applymap(color_pnl_abs, subset=["perte/gain"])
         .applymap(grad_pct, subset=["% d’évolution"])
     )
-    st.dataframe(styled, hide_index=True, use_container_width=True)
 
-# ---------- Modifier prix d'achat (édition & sauvegarde) ----------
+    st.dataframe(
+        styled,
+        hide_index=True,
+        use_container_width=True,
+        column_config={
+            "Image": st.column_config.ImageColumn("Image", help="Miniature CSFloat/Steam", width="small")
+        }
+    )
+
+# ---------- Éditeur de prix d'achat (bouton afficher/masquer) ----------
 st.markdown("## Modifier prix d’achat")
 
-if not GH_PAT:
-    st.info("Pour éditer et sauvegarder depuis la page, ajoute un secret Streamlit **GH_PAT** (Personal Access Token avec scope `repo` ou `public_repo`).")
+# état du panneau
+if "show_editor" not in st.session_state:
+    st.session_state.show_editor = False
+
+# bouton toggle
+if st.session_state.show_editor:
+    if st.button("Masquer l’éditeur"):
+        st.session_state.show_editor = False
+        st.rerun()
 else:
-    # Charger holdings.csv en texte + sha via API (utile pour PUT)
-    text, sha, status = gh_get_file(PATH_HOLDINGS)
-    if status != 200 or not text:
-        st.warning("Impossible de charger `data/holdings.csv` via l'API GitHub (vérifie GH_PAT, OWNER/REPO/BRANCH).")
+    if st.button("Afficher l’éditeur"):
+        st.session_state.show_editor = True
+        st.rerun()
+
+if st.session_state.show_editor:
+    if not GH_PAT:
+        st.info("Pour éditer et sauvegarder depuis la page, ajoute un secret Streamlit **GH_PAT** (Personal Access Token avec scope `repo` ou `public_repo`).")
     else:
-        # DataFrame éditable (on verrouille tout sauf 'buy_price_usd')
-        df_hold = pd.read_csv(io.StringIO(text))
-        if "buy_price_usd" not in df_hold.columns or "market_hash_name" not in df_hold.columns:
-            st.warning("`data/holdings.csv` doit contenir au minimum les colonnes: market_hash_name, buy_price_usd.")
+        text, sha, status = gh_get_file(PATH_HOLDINGS)
+        if status != 200 or not text:
+            st.warning("Impossible de charger `data/holdings.csv` via l'API GitHub (vérifie GH_PAT, OWNER/REPO/BRANCH).")
         else:
-            # data_editor pour n'autoriser que la colonne achats en édition
-            editable_cols = {"buy_price_usd": True}
-            col_cfg = {
-                "market_hash_name": st.column_config.TextColumn("Item", disabled=True, width="large"),
-                "buy_price_usd": st.column_config.NumberColumn("prix achat USD", step=0.01, min_value=0.0),
-                # On affiche (désactivées) d'autres colonnes éventuelles si elles existent
-            }
-            for c in df_hold.columns:
-                if c not in col_cfg:
-                    col_cfg[c] = st.column_config.TextColumn(c, disabled=True)
+            df_hold = pd.read_csv(io.StringIO(text))
+            if "buy_price_usd" not in df_hold.columns or "market_hash_name" not in df_hold.columns:
+                st.warning("`data/holdings.csv` doit contenir au minimum les colonnes: market_hash_name, buy_price_usd.")
+            else:
+                col_cfg = {
+                    "market_hash_name": st.column_config.TextColumn("Item", disabled=True, width="large"),
+                    "buy_price_usd": st.column_config.NumberColumn("prix achat USD", step=0.01, min_value=0.0),
+                }
+                for c in df_hold.columns:
+                    if c not in col_cfg:
+                        col_cfg[c] = st.column_config.TextColumn(c, disabled=True)
 
-            st.caption("Édite la colonne **prix achat USD**, puis clique **Enregistrer**.")
-            edited = st.data_editor(
-                df_hold,
-                use_container_width=True,
-                column_config=col_cfg,
-                num_rows="fixed",
-                disabled=[c for c in df_hold.columns if c != "buy_price_usd"],
-            )
+                st.caption("Édite la colonne **prix achat USD**, puis clique **Enregistrer**.")
+                edited = st.data_editor(
+                    df_hold,
+                    use_container_width=True,
+                    column_config=col_cfg,
+                    num_rows="fixed",
+                    disabled=[c for c in df_hold.columns if c != "buy_price_usd"],
+                )
 
-            save = st.button("Enregistrer les prix d’achat dans GitHub")
-            if save:
-                # Validation & sérialisation CSV
-                try:
-                    edited["buy_price_usd"] = pd.to_numeric(edited["buy_price_usd"], errors="coerce").fillna(0.0)
-                    # Reconstituer CSV (conserver l'ordre des colonnes initial)
-                    csv_out = io.StringIO()
-                    edited.to_csv(csv_out, index=False)
-                    resp = gh_put_file(
-                        PATH_HOLDINGS,
-                        csv_out.getvalue(),
-                        sha,
-                        "chore(data): update buy_price_usd via Streamlit app",
-                    )
-                    if 200 <= resp.status_code < 300:
-                        st.success("Sauvegardé. Le workflow GitHub va se lancer (si configuré sur push).")
-                        st.cache_data.clear()
-                        st.rerun()
-                    else:
-                        st.error(f"Erreur GitHub API ({resp.status_code}) : {resp.text[:200]}")
-                except Exception as e:
-                    st.error(f"Échec de la sauvegarde : {e}")
+                if st.button("Enregistrer les prix d’achat dans GitHub"):
+                    try:
+                        edited["buy_price_usd"] = pd.to_numeric(edited["buy_price_usd"], errors="coerce").fillna(0.0)
+                        csv_out = io.StringIO()
+                        edited.to_csv(csv_out, index=False)
+                        resp = gh_put_file(
+                            PATH_HOLDINGS,
+                            csv_out.getvalue(),
+                            sha,
+                            "chore(data): update buy_price_usd via Streamlit app",
+                        )
+                        if 200 <= resp.status_code < 300:
+                            st.success("Sauvegardé. Le workflow GitHub se lancera s’il est configuré sur push.")
+                            st.cache_data.clear()
+                            st.rerun()
+                        else:
+                            st.error(f"Erreur GitHub API ({resp.status_code}) : {resp.text[:200]}")
+                    except Exception as e:
+                        st.error(f"Échec de la sauvegarde : {e}")
 
 # ---------- Historique (courbe) ----------
 st.markdown("## Historique")
