@@ -1,7 +1,7 @@
 name: fetch-prices
 on:
   schedule:
-    - cron: "0 7,19 * * *"    # 2x/jour en UTC (≈ 9h et 21h heure de Paris)
+    - cron: "0 7,19 * * *"    # 2x/jour en UTC
   workflow_dispatch:          # bouton manuel "Run workflow"
 
 concurrency:
@@ -12,12 +12,13 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # autorise le push vers le dépôt
+      contents: write         # pour pousser la branche
+      pull-requests: write    # pour ouvrir/mettre à jour le PR
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0       # récupère tout l’historique git
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -35,30 +36,9 @@ jobs:
         run: |
           python fetch_prices.py
 
-      - name: Commit & push CSV
-        run: |
-          set -e
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          # Se mettre à jour avec la branche distante
-          git fetch origin
-          git checkout main
-          git pull --rebase origin main || true
-
-          # Ajouter le CSV
-          git add data/price_history.csv
-
-          # Ne commit que s’il y a un changement
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
-
-          git commit -m "chore(data): update price_history.csv [skip ci]"
-
-          # Encore un petit rebase pour éviter un conflit
-          git pull --rebase origin main || true
-
-          # Push final
-          git push origin main
+      # 👉 au lieu de pousser sur main, on crée/maj un PR automatique
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          title: "chore(data): update price_history.csv"
+          body: "Automated data update (CSFloat) – append latest prices."
