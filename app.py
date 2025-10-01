@@ -15,22 +15,21 @@ REPO    = st.secrets.get("GH_REPO", "")
 BRANCH  = st.secrets.get("GH_BRANCH", "main")
 GH_PAT  = st.secrets.get("GH_PAT")  # requis si repo privé
 
+# Clé CSFloat pour la colonne images (facultatif)
+CSFLOAT_API_KEY = st.secrets.get("CSFLOAT_API_KEY")
+CSFLOAT_API = "https://csfloat.com/api/v1/listings"
+CSFLOAT_HEADERS = {"Authorization": CSFLOAT_API_KEY} if CSFLOAT_API_KEY else {}
+
 PATH_HISTORY  = "data/price_history.csv"
 PATH_HOLDINGS = "data/holdings.csv"
 
-# ---------- Helpers pour lire les fichiers GitHub ----------
+# ---------- Helpers GitHub ----------
 def _raw_url(path: str) -> str:
     return f"https://raw.githubusercontent.com/{OWNER}/{REPO}/{BRANCH}/{path}"
 
 def read_github_csv(path: str) -> tuple[pd.DataFrame, dict]:
-    """
-    Essaye d'abord par l'API GitHub (si GH_PAT présent) -> fonctionne même sur repo privé.
-    Sinon, fallback sur raw.githubusercontent.com (repo public).
-    Retourne (DataFrame ou df vide, dict_debug).
-    """
     info = {"mode": None, "status": None, "bytes": 0, "path": path}
-
-    # Mode API (privé/public) si PAT présent
+    # API (privé/public) si PAT
     if GH_PAT and OWNER and REPO and BRANCH:
         url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}?ref={BRANCH}"
         headers = {"Authorization": f"Bearer {GH_PAT}", "Accept": "application/vnd.github+json"}
@@ -47,17 +46,14 @@ def read_github_csv(path: str) -> tuple[pd.DataFrame, dict]:
                 if text:
                     return pd.read_csv(io.StringIO(text)), info
                 return pd.DataFrame(), info
-
-    # Mode RAW (public)
-    if OWNER and REPO and BRANCH:
-        url = _raw_url(path)
-        r = requests.get(url, timeout=20)
-        info["mode"] = "raw"
-        info["status"] = r.status_code
-        if r.status_code == 200 and r.text.strip():
-            info["bytes"] = len(r.text.encode("utf-8"))
-            return pd.read_csv(io.StringIO(r.text)), info
-
+    # RAW (public)
+    url = _raw_url(path)
+    r = requests.get(url, timeout=20)
+    info["mode"] = "raw"
+    info["status"] = r.status_code
+    if r.status_code == 200 and r.text.strip():
+        info["bytes"] = len(r.text.encode("utf-8"))
+        return pd.read_csv(io.StringIO(r.text)), info
     return pd.DataFrame(), info
 
 @st.cache_data(ttl=120)
@@ -79,8 +75,9 @@ with st.expander("Debug (utile si rien ne s'affiche)"):
     st.write("price_history.csv →", info_hist)
     st.write("holdings.csv →", info_holds)
     st.write("Owner/Repo/Branch:", OWNER, REPO, BRANCH)
+    st.write("CSFLOAT_API_KEY présent :", bool(CSFLOAT_API_KEY))
 
-# ---------- Si pas d'historique ----------
+# ---------- Historique requis ----------
 if hist.empty:
     st.warning(
         "Aucun historique pour le moment.\n"
@@ -89,17 +86,15 @@ if hist.empty:
     )
     st.stop()
 
-# ---------- Normalisation colonnes historiques ----------
-# Attendues : ts_utc, market_hash_name, price_usd (ou price_cents)
+# Normalisation colonnes historiques
 if "price_usd" not in hist.columns and "price_cents" in hist.columns:
     hist["price_usd"] = pd.to_numeric(hist["price_cents"], errors="coerce") / 100.0
-
 needed_hist_cols = {"ts_utc", "market_hash_name", "price_usd"}
 if not needed_hist_cols.issubset(set(hist.columns)):
     st.info("Le CSV d'historique ne contient pas les colonnes attendues (ts_utc, market_hash_name, price_usd/price_cents).")
     st.stop()
 
-# ---------- Dernier prix par item ----------
+# Dernier prix par item
 last = (
     hist.sort_values(["market_hash_name", "ts_utc"])
         .groupby("market_hash_name", as_index=False)
@@ -120,9 +115,8 @@ else:
     # Merge avec dernier prix
     df = holds.merge(last[["market_hash_name", "latest_price_usd"]], on="market_hash_name", how="left")
 
-    # Calculs (on garde les colonnes demandées)
+    # Calculs
     df["pnl_abs"] = (df["latest_price_usd"] - df["buy_price_usd"]) * df["qty"]
-    # % d'évolution unitaire (prix vs achat)
     denom = df["buy_price_usd"].replace(0, pd.NA)
     df["pnl_pct"] = ((df["latest_price_usd"] - df["buy_price_usd"]) / denom * 100).fillna(0)
 
@@ -153,20 +147,53 @@ else:
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        metric_card("Valeur portefeuille", f"${total_val:,.2f}", color="#eef7f2")   # vert très très pâle
+        metric_card("Valeur portefeuille", f"${total_val:,.2f}", color="#eef7f2")
     with col2:
-        metric_card("Coût total", f"${total_cost:,.2f}", color="#eff3fb")           # bleu très pâle
+        metric_card("Coût total", f"${total_cost:,.2f}", color="#eff3fb")
     with col3:
-        color_pnl = "#eef7f2" if total_pnl >= 0 else "#fbeeee"                      # vert clair si gain, rouge clair si perte
+        color_pnl = "#eef7f2" if total_pnl >= 0 else "#fbeeee"
         metric_card("P&L total", f"${total_pnl:,.2f}", color=color_pnl)
     with col4:
         color_pct = "#eef7f2" if total_pct >= 0 else "#fbeeee"
-        metric_card("% Profit", f"{total_pct:,.2f}%", color=color_pct)
+        metric_card("% d’évolution", f"{total_pct:,.2f}%", color=color_pct)
 
+    # Espace avant le tableau
     st.markdown("<div style='margin-top:25px'></div>", unsafe_allow_html=True)
 
-    # Tableau demandé (sans quantité, colonnes renommées)
-    display = pd.DataFrame({
+    # ----- Colonne images (optionnelle si CSFLOAT_API_KEY présent) -----
+    @st.cache_data(ttl=3600)
+    def fetch_icon_url(market_hash_name: str) -> str | None:
+        if not CSFLOAT_API_KEY:
+            return None
+        params = {"market_hash_name": market_hash_name, "sort_by": "lowest_price", "type": "buy_now", "limit": 1}
+        try:
+            r = requests.get(CSFLOAT_API, headers=CSFLOAT_HEADERS, params=params, timeout=15)
+            if r.status_code == 429:
+                return None
+            r.raise_for_status()
+            data = r.json()
+        except Exception:
+            return None
+        # L'API peut renvoyer {"data":[...]} ou [...]
+        listings = data.get("data") if isinstance(data, dict) else data
+        if not isinstance(listings, list) or not listings:
+            return None
+        first = listings[0]
+        # Essaye plusieurs clés possibles
+        img = first.get("image") or first.get("icon_url") or (first.get("item", {}) or {}).get("image")
+        # Si l'API renvoie un chemin relatif, on peut tenter de le compléter (rare)
+        if isinstance(img, str) and img.startswith("http"):
+            return img
+        return None
+
+    if CSFLOAT_API_KEY:
+        df["Image"] = df["market_hash_name"].apply(fetch_icon_url)
+    else:
+        df["Image"] = None
+
+    # Tableau final (sans quantité, colonnes renommées)
+    table = pd.DataFrame({
+        "Image": df["Image"],
         "Item": df["market_hash_name"],
         "prix achat USD": df["buy_price_usd"],
         "Prix vente USD": df["latest_price_usd"],
@@ -174,34 +201,32 @@ else:
         "% d’évolution": df["pnl_pct"],
     })
 
-    # ----- Styles très clairs -----
+    # Styles très clairs
     def color_pnl_abs(val):
         if pd.isna(val):
             return ""
-        # Texte vert doux si gain, rouge doux si perte
         return "color: #157a3d;" if val > 0 else ("color: #c44545;" if val < 0 else "")
 
     def grad_pct(val):
         if pd.isna(val):
             return ""
         a = abs(val)
-        # paliers extra-clairs : <5% / 5-10% / 10-20% / >=20%
         if val > 0:
-            if a < 5:   bg = "#f3fbf7"   # vert très clair
+            if a < 5:   bg = "#f3fbf7"
             elif a < 10: bg = "#e9f7f0"
             elif a < 20: bg = "#ddf2e7"
-            else:        bg = "#d0ecdD"
+            else:        bg = "#d3ece0"
         elif val < 0:
-            if a < 5:   bg = "#fdf3f3"   # rouge très clair
+            if a < 5:   bg = "#fdf3f3"
             elif a < 10: bg = "#fbeaea"
             elif a < 20: bg = "#f7dddd"
-            else:        bg = "#f3d1d1"
+            else:        bg = "#f3d8d8"
         else:
             bg = ""
         return f"background-color: {bg};"
 
     styled = (
-        display.style
+        table.style
         .format({
             "prix achat USD": "{:,.2f}",
             "Prix vente USD": "{:,.2f}",
@@ -212,7 +237,19 @@ else:
         .applymap(grad_pct, subset=["% d’évolution"])
     )
 
-    st.dataframe(styled, hide_index=True, use_container_width=True)
+    # Affichage avec colonne image (si URL), sinon texte
+    st.dataframe(
+        styled,
+        hide_index=True,
+        use_container_width=True,
+        column_config={
+            "Image": st.column_config.ImageColumn(
+                "Image",
+                help="Prévisualisation (CSFloat)",
+                width="small"
+            )
+        }
+    )
 
 # ---------- Historique (courbe) ----------
 st.markdown("## Historique")
