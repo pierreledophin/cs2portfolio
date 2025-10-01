@@ -2,9 +2,9 @@ name: fetch-prices
 on:
   push:
     paths:
-      - 'data/holdings.csv'   # déclenche quand tu modifies tes skins
+      - 'data/holdings.csv'   # relance si tu modifies ta liste d'items
   schedule:
-    - cron: "0 7,19 * * *"    # 2x/jour en UTC
+    - cron: "0 7,19 * * *"    # 2x/jour en UTC (~09h & 21h en Europe/Prague)
   workflow_dispatch:          # bouton manuel "Run workflow"
 
 permissions:
@@ -23,11 +23,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Show latest commit & branch
-        run: |
-          echo "Branch:" $(git rev-parse --abbrev-ref HEAD)
-          echo "Commit:" $(git rev-parse HEAD)
 
       - name: Show current holdings.csv (debug)
         run: |
@@ -55,9 +50,12 @@ jobs:
         run: |
           python fetch_prices.py
 
+      # 1) Crée/met à jour le PR avec ton token personnel (GH_PAT)
       - name: Create/Update Pull Request
+        id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
+          token: ${{ secrets.GH_PAT }}
           title: "chore(data): update price_history.csv"
           body: "Automated data update (CSFloat) – append latest prices."
           commit-message: "chore(data): update price_history.csv [skip ci]"
@@ -65,3 +63,14 @@ jobs:
           delete-branch: true
           add-paths: |
             data/price_history.csv
+
+      # 2) Merge automatiquement le PR créé (si quelque chose a changé)
+      - name: Auto-merge PR
+        if: steps.cpr.outputs.pull-request-number != ''
+        uses: peter-evans/merge-pull-request@v3
+        with:
+          token: ${{ secrets.GH_PAT }}
+          pull-request: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: squash
+          commit-message: pull-request-title
+          delete-branch: true
