@@ -1,16 +1,19 @@
 name: fetch-prices
 on:
+  push:
+    paths:
+      - 'data/holdings.csv'   # déclenche quand tu modifies tes skins
   schedule:
     - cron: "0 7,19 * * *"    # 2x/jour en UTC
   workflow_dispatch:          # bouton manuel "Run workflow"
 
 permissions:
-  contents: write             # pour pousser une branche
-  pull-requests: write        # pour ouvrir/mettre à jour un PR
+  contents: write
+  pull-requests: write
 
 concurrency:
   group: cs2-data-update
-  cancel-in-progress: true    # évite 2 runs qui se chevauchent
+  cancel-in-progress: true
 
 jobs:
   update-data:
@@ -20,6 +23,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Show latest commit & branch
+        run: |
+          echo "Branch:" $(git rev-parse --abbrev-ref HEAD)
+          echo "Commit:" $(git rev-parse HEAD)
+
+      - name: Show current holdings.csv (debug)
+        run: |
+          echo "---- data/holdings.csv ----"
+          if [ -f data/holdings.csv ]; then
+            nl -ba data/holdings.csv
+          else
+            echo "MISSING: data/holdings.csv"
+          fi
+          echo "---------------------------"
 
       - name: Setup Python
         uses: actions/setup-python@v5
