@@ -4,20 +4,28 @@ from datetime import datetime
 # ---------- Configuration ----------
 st.set_page_config(page_title="CS2 Portfolio (CSFloat)", layout="wide")
 
-# --- Petite couche de style global (doux / lisible) ---
+# --- Style global : plus d'espaces + couleurs très douces ---
 st.markdown("""
 <style>
-/* Titres & espacements */
+/* Container & espacements globaux */
+.block-container { 
+  padding-top: 1.6rem; 
+  padding-bottom: 1.6rem; 
+}
+
+/* Titres & marges */
 h1, h2, h3 { letter-spacing: .2px; }
-.block-container { padding-top: 1.2rem; }
+h1 { margin-bottom: .6rem !important; }
+h2, h3 { margin-top: 1.0rem !important; margin-bottom: .6rem !important; }
 
 /* Cards KPI */
 .kpi-card {
   border-radius: 16px;
   padding: 16px 18px;
-  border: 1px solid rgba(0,0,0,.06);
-  box-shadow: 0 4px 16px rgba(0,0,0,.04);
+  border: 1px solid rgba(0,0,0,.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,.03);
   background: #ffffff;
+  margin-bottom: 14px; /* espace entre cartes et contenu suivant */
 }
 .kpi-title {
   font-size: 12px;
@@ -31,8 +39,25 @@ h1, h2, h3 { letter-spacing: .2px; }
   font-weight: 700;
 }
 
-/* Segmented profil (à la place du select modifiable) */
+/* Segmented profil (radio) + espacement autour */
+.stRadio { 
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.06);
+  background: #fafafa;
+  margin-bottom: 12px;
+}
 [data-testid="stHorizontalBlock"] .stRadio > label { font-weight: 600; }
+
+/* Tabs : un peu d'air */
+[data-baseweb="tab-list"] { gap: 8px; margin-bottom: 8px; }
+
+/* Table: léger padding de cellule via override */
+.stDataFrame td, .stDataFrame th { padding-top: 10px !important; padding-bottom: 10px !important; }
+
+/* Petits espacers entre sections */
+.section-gap { height: 12px; }
+.section-gap-lg { height: 18px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -48,7 +73,7 @@ CSFLOAT_HEADERS = {"Authorization": CSFLOAT_API_KEY} if CSFLOAT_API_KEY else {}
 
 PROFILES = ["pierre", "elenocames"]
 
-# ---- Profil : radio horizontale (non éditable / plus propre) ----
+# ---- Profil : radio horizontale (non éditable) ----
 profile = st.radio("Profil", PROFILES, horizontal=True, key="profile_select")
 
 DATA_DIR = f"data/{profile}"
@@ -169,15 +194,14 @@ def fetch_price(name):
     except Exception:
         return None
 
-# ---------- Helpers UI ----------
+# ---------- Helpers UI (couleurs + plus clair) ----------
 def _blend_to_pastel(hex_color, intensity):
     """
-    Mélange une couleur hex avec du blanc pour rester pastel.
+    Mélange une couleur hex avec du blanc pour rester très pastel.
     intensity ∈ [0,1] (0 = très clair, 1 = plus soutenu).
     """
     hex_color = hex_color.lstrip("#")
     r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
-    # blend with white
     wr, wg, wb = 255, 255, 255
     nr = int(wr + (r - wr) * intensity)
     ng = int(wg + (g - wg) * intensity)
@@ -185,28 +209,28 @@ def _blend_to_pastel(hex_color, intensity):
     return f"#{nr:02x}{ng:02x}{nb:02x}"
 
 def _pnl_bg_color(value):
-    # vert pour positif, rouge pour négatif, très clair si petit
-    base_green = "#22c55e"  # tailwind green-500
-    base_red   = "#ef4444"  # tailwind red-500
+    # vert pour positif, rouge pour négatif — intensité plus faible (très pastel)
+    base_green = "#22c55e"
+    base_red   = "#ef4444"
     if value is None:
         return "#ffffff"
     if value >= 0:
-        # cap à 20% d'intensité pour rester doux
-        return _blend_to_pastel(base_green, min(0.30 + min(abs(value)/5000, 0.35), 0.65))
+        # cap entre 0.15 et 0.45 pour rester doux
+        return _blend_to_pastel(base_green, min(0.15 + min(abs(value)/20000, 0.20), 0.45))
     else:
-        return _blend_to_pastel(base_red, min(0.30 + min(abs(value)/5000, 0.35), 0.65))
+        return _blend_to_pastel(base_red, min(0.15 + min(abs(value)/20000, 0.20), 0.45))
 
 def _pct_bg_color(pct):
     base_green = "#22c55e"
     base_red   = "#ef4444"
     if pct is None:
         return "#ffffff"
-    # très clair si <5%
+    # très clair si <5%, et globalement plus pastel
     if pct >= 0:
-        return _blend_to_pastel(base_green, 0.25 if pct < 5 else min(0.25 + pct/100, 0.65))
+        return _blend_to_pastel(base_green, 0.12 if pct < 5 else min(0.12 + pct/200, 0.40))
     else:
         ap = abs(pct)
-        return _blend_to_pastel(base_red, 0.25 if ap < 5 else min(0.25 + ap/100, 0.65))
+        return _blend_to_pastel(base_red, 0.12 if ap < 5 else min(0.12 + ap/200, 0.40))
 
 # ---------- Interface ----------
 tab1, tab2, tab3 = st.tabs(["Portefeuille", "Achat / Vente", "Transactions"])
@@ -215,16 +239,19 @@ trades = load_trades()
 # ---------- Onglet 1 : Portefeuille ----------
 with tab1:
     st.subheader("Portefeuille actuel")
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
     holdings = rebuild_holdings(trades)
     if holdings.empty:
         st.info("Aucune position. Ajoute un achat pour commencer.")
         st.stop()
+
     holdings["Image"] = holdings["market_hash_name"].apply(fetch_icon)
     holdings["Prix actuel USD"] = holdings["market_hash_name"].apply(fetch_price)
     holdings["valeur"] = holdings["Prix actuel USD"] * holdings["qty"]
     holdings["gain"] = (holdings["Prix actuel USD"] - holdings["buy_price_usd"]) * holdings["qty"]
 
-    # ---- % d'évolution (par ligne) ----
+    # % d'évolution (par ligne)
     holdings["evolution_pct"] = (
         (holdings["Prix actuel USD"] - holdings["buy_price_usd"]) / holdings["buy_price_usd"] * 100
     ).fillna(0.0)
@@ -234,7 +261,7 @@ with tab1:
     total_pnl = total_val - total_cost
     total_pct = (total_pnl / total_cost * 100) if total_cost>0 else 0
 
-    # ---- KPIs en encadrés, avec couleurs dynamiques pour P&L & % ----
+    # KPIs en encadrés, couleurs très claires
     col1, col2, col3, col4 = st.columns(4)
 
     col1.markdown(f"""
@@ -245,7 +272,7 @@ with tab1:
     """, unsafe_allow_html=True)
 
     col2.markdown(f"""
-    <div class="kpi-card" style="background:{_blend_to_pastel('#3b82f6',0.20)}">
+    <div class="kpi-card" style="background:{_blend_to_pastel('#3b82f6',0.10)}">
       <div class="kpi-title">Coût total</div>
       <div class="kpi-value">${total_cost:,.2f}</div>
     </div>
@@ -265,9 +292,9 @@ with tab1:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("<div style='margin-top:16px'></div>", unsafe_allow_html=True)
+    st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
 
-    # ---- Tableau : ajout colonne % évolution + coloration douce ----
+    # Tableau : % évolution + coloration très douce
     to_show = holdings[[
         "Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain","evolution_pct"
     ]].rename(columns={
@@ -279,7 +306,6 @@ with tab1:
         "evolution_pct":"% évolution"
     })
 
-    # Styler pour teintes vertes/rouges très claires sur % évolution
     def _evo_style(val):
         bg = _pct_bg_color(val)
         return f"background-color: {bg};"
@@ -309,14 +335,20 @@ with tab1:
         }
     )
 
+    st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
+
 # ---------- Onglet 2 : Achat / Vente ----------
 with tab2:
     st.subheader("Nouvelle transaction")
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
     t_type = st.radio("Type", ["BUY","SELL"], horizontal=True)
     name = st.text_input("Nom exact (market_hash_name)")
     qty = st.number_input("Quantité", min_value=1, step=1)
     price = st.number_input("Prix unitaire USD", min_value=0.0, step=0.01)
     note = st.text_input("Note (facultatif)")
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
     if st.button("Enregistrer la transaction"):
         if not name:
             st.error("Nom requis.")
@@ -339,6 +371,8 @@ with tab2:
 # ---------- Onglet 3 : Transactions ----------
 with tab3:
     st.subheader("Historique des transactions")
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
     if trades.empty:
         st.info("Aucune transaction.")
     else:
@@ -356,6 +390,7 @@ with tab3:
             pnl_real += (price_s - pru)*qty_s
 
         st.metric("P&L réalisé cumulé", f"${pnl_real:,.2f}")
+        st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
         to_display = trades.copy()
         to_display = to_display.sort_values("date", ascending=False)
@@ -370,4 +405,5 @@ with tab3:
             else:
                 st.error("ID introuvable.")
 
+        st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
         st.dataframe(to_display, use_container_width=True, hide_index=True)
