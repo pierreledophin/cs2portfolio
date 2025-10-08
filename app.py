@@ -11,28 +11,13 @@ st.markdown("""
 h1, h2, h3 { letter-spacing: .2px; }
 h1 { margin-bottom: .6rem !important; }
 h2, h3 { margin-top: 1.0rem !important; margin-bottom: .6rem !important; }
-
-/* Cards KPI (pastel très clair) */
-.kpi-card {
-  border-radius: 16px; padding: 16px 18px;
-  border: 1px solid rgba(0,0,0,.05);
-  box-shadow: 0 6px 20px rgba(0,0,0,.03);
-  background: #ffffff; margin-bottom: 14px;
-}
+.kpi-card { border-radius: 16px; padding: 16px 18px; border: 1px solid rgba(0,0,0,.05); box-shadow: 0 6px 20px rgba(0,0,0,.03); background: #ffffff; margin-bottom: 14px; }
 .kpi-title { font-size: 12px; color: #6b7280; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .6px; }
 .kpi-value { font-size: 22px; font-weight: 700; }
-
-/* Segmented profil (radio) */
 .stRadio { padding: 8px 10px; border-radius: 12px; border: 1px solid rgba(0,0,0,.06); background: #fafafa; margin-bottom: 12px; }
 [data-testid="stHorizontalBlock"] .stRadio > label { font-weight: 600; }
-
-/* Tabs */
 [data-baseweb="tab-list"] { gap: 8px; margin-bottom: 8px; }
-
-/* Table: plus d'air dans les cellules */
 .stDataFrame td, .stDataFrame th { padding-top: 10px !important; padding-bottom: 10px !important; }
-
-/* Petits espacers */
 .section-gap { height: 12px; }
 .section-gap-lg { height: 18px; }
 </style>
@@ -134,7 +119,12 @@ def rebuild_holdings(trades: pd.DataFrame):
 def fetch_price(name):
     """Toujours basé sur le prix le plus bas."""
     if not CSFLOAT_API_KEY: return None
-    params = {"market_hash_name": name, "limit": 1, "type": "buy_now", "sort_by": "lowest_price"}
+    params = {
+        "market_hash_name": name,
+        "limit": 1,
+        "type": "buy_now",
+        "sort_by": "lowest_price"
+    }
     try:
         r = requests.get(CSFLOAT_API, headers=CSFLOAT_HEADERS, params=params, timeout=10)
         data = r.json()
@@ -168,9 +158,7 @@ def _blend_to_pastel(hex_color, intensity):
     hex_color = hex_color.lstrip("#")
     r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
     wr, wg, wb = 255, 255, 255
-    nr = int(wr + (r - wr) * intensity)
-    ng = int(wg + (g - wg) * intensity)
-    nb = int(wb + (b - wb) * intensity)
+    nr = int(wr + (r - wr) * intensity); ng = int(wg + (g - wg) * intensity); nb = int(wb + (b - wb) * intensity)
     return f"#{nr:02x}{ng:02x}{nb:02x}"
 
 def _pnl_bg_color(value):
@@ -181,16 +169,9 @@ def _pnl_bg_color(value):
 
 def _pct_bg_color(pct):
     base_green = "#22c55e"; base_red = "#ef4444"
-    # vide / NaN / inf / 0 => neutre
-    try:
-        if pct is None or pct == "" or pd.isna(pct) or not np.isfinite(pct) or abs(float(pct)) < 1e-4:
-            return "#ffffff"
-    except Exception:
-        return "#ffffff"
-    if pct >= 0:
-        return _blend_to_pastel(base_green, 0.12 if pct < 5 else min(0.12 + pct/200, 0.40))
-    ap = abs(pct)
-    return _blend_to_pastel(base_red, 0.12 if ap < 5 else min(0.12 + ap/200, 0.40))
+    if pct is None or pct == "" or pd.isna(pct) or not np.isfinite(pct) or abs(pct) < 1e-4: return "#ffffff"
+    if pct >= 0: return _blend_to_pastel(base_green, 0.12 if pct < 5 else min(0.12 + pct/200, 0.40))
+    ap = abs(pct); return _blend_to_pastel(base_red, 0.12 if ap < 5 else min(0.12 + ap/200, 0.40))
 
 # ---------- Lecture price_history ----------
 def load_price_history_df() -> pd.DataFrame:
@@ -208,13 +189,16 @@ def build_portfolio_timeseries(holdings_df: pd.DataFrame, hist_df: pd.DataFrame)
         hist_df["price_usd"] = pd.to_numeric(hist_df["price_cents"], errors="coerce") / 100.0
     needed = {"ts_utc", "market_hash_name", "price_usd"}
     if not needed.issubset(set(hist_df.columns)): return pd.DataFrame()
+
     hist = hist_df.copy()
     hist["ts_utc"] = pd.to_datetime(hist["ts_utc"], errors="coerce")
     hist = hist.dropna(subset=["ts_utc"])
     hist["date"] = hist["ts_utc"].dt.floor("D")
+
     items = holdings_df[holdings_df["qty"] > 0]["market_hash_name"].unique().tolist()
     if not items: return pd.DataFrame()
     hist = hist[hist["market_hash_name"].isin(items)]
+
     daily_last = (
         hist.sort_values(["market_hash_name", "date", "ts_utc"])
             .groupby(["market_hash_name", "date"], as_index=False)
@@ -234,6 +218,7 @@ with st.sidebar:
         st.cache_data.clear()
         st.success("Prix Live rafraîchis.")
         st.rerun()
+
     if st.button("Lancer MAJ GitHub (robot)"):
         if not GH_PAT:
             st.error("GH_PAT manquant dans les secrets Streamlit.")
@@ -251,112 +236,43 @@ trades = load_trades()
 # ---------- Onglet 1 ----------
 with tab1:
     st.subheader("Portefeuille actuel")
-    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
-
     holdings = rebuild_holdings(trades)
     if holdings.empty:
         st.info("Aucune position.")
         st.stop()
 
-    # Données live
     holdings["Image"] = holdings["market_hash_name"].apply(fetch_icon)
     holdings["Prix actuel USD"] = holdings["market_hash_name"].apply(fetch_price)
     holdings["valeur"] = holdings["Prix actuel USD"] * holdings["qty"]
     holdings["gain"] = (holdings["Prix actuel USD"] - holdings["buy_price_usd"]) * holdings["qty"]
 
-    # --- Calcul robuste de l'évolution % (ne calcule que si buy>0) ---
+    # --- Calcul robuste de l'évolution % (jamais de division par 0/NaN) ---
     buy = pd.to_numeric(holdings["buy_price_usd"], errors="coerce")
     price_now = pd.to_numeric(holdings["Prix actuel USD"], errors="coerce")
     diff = price_now - buy
+    # np.divide avec 'where' : calcule diff*100/buy seulement quand buy>0
     evo_array = np.divide(
         diff.to_numpy(dtype="float64") * 100.0,
         buy.to_numpy(dtype="float64"),
         out=np.full(diff.shape, np.nan, dtype="float64"),
         where=(buy.to_numpy(dtype="float64") > 0)
     )
-    holdings["evolution_pct"] = pd.to_numeric(pd.Series(evo_array), errors="coerce").replace([np.inf, -np.inf], np.nan)
+    holdings["evolution_pct"] = pd.Series(evo_array)
 
-    # Totaux
     total_val = holdings["valeur"].sum()
     total_cost = (holdings["buy_price_usd"] * holdings["qty"]).sum()
     total_pnl = total_val - total_cost
     total_pct = (total_pnl / total_cost * 100) if total_cost>0 else 0
 
-    # KPI en encadrés (couleurs dynamiques & pastels clairs)
     col1, col2, col3, col4 = st.columns(4)
-    col1.markdown(f"""
-    <div class="kpi-card">
-      <div class="kpi-title">Valeur portefeuille</div>
-      <div class="kpi-value">${total_val:,.2f}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    col2.markdown(f"""
-    <div class="kpi-card" style="background:{_blend_to_pastel('#3b82f6',0.10)}">
-      <div class="kpi-title">Coût total</div>
-      <div class="kpi-value">${total_cost:,.2f}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    col3.markdown(f"""
-    <div class="kpi-card" style="background:{_pnl_bg_color(total_pnl)}">
-      <div class="kpi-title">P&L latent</div>
-      <div class="kpi-value">${total_pnl:,.2f}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    col4.markdown(f"""
-    <div class="kpi-card" style="background:{_pct_bg_color(total_pct)}">
-      <div class="kpi-title">% d’évolution</div>
-      <div class="kpi-value">{total_pct:,.2f}%</div>
-    </div>
-    """, unsafe_allow_html=True)
+    col1.metric("Valeur portefeuille", f"${total_val:,.2f}")
+    col2.metric("Coût total", f"${total_cost:,.2f}")
+    col3.metric("P&L latent", f"${total_pnl:,.2f}")
+    col4.metric("% d’évolution", f"{total_pct:,.2f}%")
 
-    st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
-
-    # Tableau stylé (Image + % évolution coloré pastel)
-    to_show = holdings[["Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain","evolution_pct"]].rename(
-        columns={
-            "market_hash_name":"Item",
-            "qty":"Quantité",
-            "buy_price_usd":"Prix achat USD",
-            "Prix actuel USD":"Prix vente USD",
-            "gain":"Gain latent USD",
-            "evolution_pct":"% évolution"
-        }
-    )
-
-    # Important pour ImageColumn: URLs en str (None -> "")
-    to_show["Image"] = to_show["Image"].fillna("").astype(str)
-
-    # Style de la colonne % évolution (fond neutre si 0 / vide / NaN / inf)
-    def _evo_style(val):
-        return f"background-color: {_pct_bg_color(val)};"
-
-    styler = (
-        to_show.style
-        .format({
-            "Prix achat USD": "${:,.2f}",
-            "Prix vente USD": "${:,.2f}",
-            "Gain latent USD": "${:,.2f}",
-            "% évolution": "{:,.2f}%"
-        })
-        .applymap(_evo_style, subset=["% évolution"])
-    )
-
-    st.dataframe(
-        styler,
-        use_container_width=True,
-        hide_index=True,
-        column_config={
-            "Image": st.column_config.ImageColumn("Image", width="small"),
-            "Item": "Item",
-            "Quantité": st.column_config.NumberColumn("Quantité", format="%d"),
-            "Prix achat USD": st.column_config.NumberColumn("Prix achat USD", format="$%.2f"),
-            "Prix vente USD": st.column_config.NumberColumn("Prix vente USD", format="$%.2f"),
-            "Gain latent USD": st.column_config.NumberColumn("Gain latent USD", format="$%.2f"),
-            "% évolution": st.column_config.NumberColumn("% évolution", format="%.2f%%"),
-        }
-    )
-
-    st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
+    st.markdown("### Détail des positions")
+    st.dataframe(holdings[["Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain","evolution_pct"]],
+                 use_container_width=True, hide_index=True)
 
     st.markdown("### Évolution de la valeur du portefeuille")
     hist_df = load_price_history_df()
@@ -370,13 +286,11 @@ with tab1:
 # ---------- Onglet 2 ----------
 with tab2:
     st.subheader("Nouvelle transaction")
-    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
     t_type = st.radio("Type", ["BUY","SELL"], horizontal=True)
     name = st.text_input("Nom exact (market_hash_name)")
     qty = st.number_input("Quantité", min_value=1, step=1)
     price = st.number_input("Prix unitaire USD", min_value=0.0, step=0.01)
     note = st.text_input("Note (facultatif)")
-    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
     if st.button("Enregistrer la transaction"):
         if not name:
             st.error("Nom requis.")
@@ -393,7 +307,6 @@ with tab2:
 # ---------- Onglet 3 ----------
 with tab3:
     st.subheader("Historique des transactions")
-    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
     if trades.empty:
         st.info("Aucune transaction.")
     else:
@@ -405,7 +318,6 @@ with tab3:
             pru = cost/q if q>0 else 0
             pnl_real += (price_s - pru)*qty_s
         st.metric("P&L réalisé cumulé", f"${pnl_real:,.2f}")
-
         to_display = trades.sort_values("date", ascending=False)
         delete_id = st.text_input("ID de transaction à supprimer (trade_id)")
         if st.button("Supprimer"):
