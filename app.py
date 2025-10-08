@@ -3,6 +3,39 @@ from datetime import datetime
 
 # ---------- Configuration ----------
 st.set_page_config(page_title="CS2 Portfolio (CSFloat)", layout="wide")
+
+# --- Petite couche de style global (doux / lisible) ---
+st.markdown("""
+<style>
+/* Titres & espacements */
+h1, h2, h3 { letter-spacing: .2px; }
+.block-container { padding-top: 1.2rem; }
+
+/* Cards KPI */
+.kpi-card {
+  border-radius: 16px;
+  padding: 16px 18px;
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 4px 16px rgba(0,0,0,.04);
+  background: #ffffff;
+}
+.kpi-title {
+  font-size: 12px;
+  color: #6b7280; /* slate-500 */
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+}
+.kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* Segmented profil (à la place du select modifiable) */
+[data-testid="stHorizontalBlock"] .stRadio > label { font-weight: 600; }
+</style>
+""", unsafe_allow_html=True)
+
 st.markdown("<h1 style='margin-bottom:0'>CS2 Portfolio Tracker</h1>", unsafe_allow_html=True)
 
 OWNER   = st.secrets.get("GH_OWNER", "")
@@ -14,7 +47,9 @@ CSFLOAT_API = "https://csfloat.com/api/v1/listings"
 CSFLOAT_HEADERS = {"Authorization": CSFLOAT_API_KEY} if CSFLOAT_API_KEY else {}
 
 PROFILES = ["pierre", "elenocames"]
-profile = st.selectbox("Profil", PROFILES, key="profile_select")
+
+# ---- Profil : radio horizontale (non éditable / plus propre) ----
+profile = st.radio("Profil", PROFILES, horizontal=True, key="profile_select")
 
 DATA_DIR = f"data/{profile}"
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -134,6 +169,45 @@ def fetch_price(name):
     except Exception:
         return None
 
+# ---------- Helpers UI ----------
+def _blend_to_pastel(hex_color, intensity):
+    """
+    Mélange une couleur hex avec du blanc pour rester pastel.
+    intensity ∈ [0,1] (0 = très clair, 1 = plus soutenu).
+    """
+    hex_color = hex_color.lstrip("#")
+    r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+    # blend with white
+    wr, wg, wb = 255, 255, 255
+    nr = int(wr + (r - wr) * intensity)
+    ng = int(wg + (g - wg) * intensity)
+    nb = int(wb + (b - wb) * intensity)
+    return f"#{nr:02x}{ng:02x}{nb:02x}"
+
+def _pnl_bg_color(value):
+    # vert pour positif, rouge pour négatif, très clair si petit
+    base_green = "#22c55e"  # tailwind green-500
+    base_red   = "#ef4444"  # tailwind red-500
+    if value is None:
+        return "#ffffff"
+    if value >= 0:
+        # cap à 20% d'intensité pour rester doux
+        return _blend_to_pastel(base_green, min(0.30 + min(abs(value)/5000, 0.35), 0.65))
+    else:
+        return _blend_to_pastel(base_red, min(0.30 + min(abs(value)/5000, 0.35), 0.65))
+
+def _pct_bg_color(pct):
+    base_green = "#22c55e"
+    base_red   = "#ef4444"
+    if pct is None:
+        return "#ffffff"
+    # très clair si <5%
+    if pct >= 0:
+        return _blend_to_pastel(base_green, 0.25 if pct < 5 else min(0.25 + pct/100, 0.65))
+    else:
+        ap = abs(pct)
+        return _blend_to_pastel(base_red, 0.25 if ap < 5 else min(0.25 + ap/100, 0.65))
+
 # ---------- Interface ----------
 tab1, tab2, tab3 = st.tabs(["Portefeuille", "Achat / Vente", "Transactions"])
 trades = load_trades()
@@ -149,29 +223,89 @@ with tab1:
     holdings["Prix actuel USD"] = holdings["market_hash_name"].apply(fetch_price)
     holdings["valeur"] = holdings["Prix actuel USD"] * holdings["qty"]
     holdings["gain"] = (holdings["Prix actuel USD"] - holdings["buy_price_usd"]) * holdings["qty"]
+
+    # ---- % d'évolution (par ligne) ----
+    holdings["evolution_pct"] = (
+        (holdings["Prix actuel USD"] - holdings["buy_price_usd"]) / holdings["buy_price_usd"] * 100
+    ).fillna(0.0)
+
     total_val = holdings["valeur"].sum()
     total_cost = (holdings["buy_price_usd"] * holdings["qty"]).sum()
     total_pnl = total_val - total_cost
     total_pct = (total_pnl / total_cost * 100) if total_cost>0 else 0
 
+    # ---- KPIs en encadrés, avec couleurs dynamiques pour P&L & % ----
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Valeur portefeuille", f"${total_val:,.2f}")
-    col2.metric("Coût total", f"${total_cost:,.2f}")
-    col3.metric("P&L latent", f"${total_pnl:,.2f}")
-    col4.metric("% d’évolution", f"{total_pct:,.2f}%")
 
-    st.markdown("<div style='margin-top:20px'></div>", unsafe_allow_html=True)
+    col1.markdown(f"""
+    <div class="kpi-card">
+      <div class="kpi-title">Valeur portefeuille</div>
+      <div class="kpi-value">${total_val:,.2f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    col2.markdown(f"""
+    <div class="kpi-card" style="background:{_blend_to_pastel('#3b82f6',0.20)}">
+      <div class="kpi-title">Coût total</div>
+      <div class="kpi-value">${total_cost:,.2f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    col3.markdown(f"""
+    <div class="kpi-card" style="background:{_pnl_bg_color(total_pnl)}">
+      <div class="kpi-title">P&L latent</div>
+      <div class="kpi-value">${total_pnl:,.2f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    col4.markdown(f"""
+    <div class="kpi-card" style="background:{_pct_bg_color(total_pct)}">
+      <div class="kpi-title">% d’évolution</div>
+      <div class="kpi-value">{total_pct:,.2f}%</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top:16px'></div>", unsafe_allow_html=True)
+
+    # ---- Tableau : ajout colonne % évolution + coloration douce ----
+    to_show = holdings[[
+        "Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain","evolution_pct"
+    ]].rename(columns={
+        "market_hash_name":"Item",
+        "qty":"Quantité",
+        "buy_price_usd":"Prix achat USD",
+        "Prix actuel USD":"Prix vente USD",
+        "gain":"Gain latent USD",
+        "evolution_pct":"% évolution"
+    })
+
+    # Styler pour teintes vertes/rouges très claires sur % évolution
+    def _evo_style(val):
+        bg = _pct_bg_color(val)
+        return f"background-color: {bg};"
+
+    styler = (to_show.style
+              .format({
+                  "Prix achat USD": "${:,.2f}",
+                  "Prix vente USD": "${:,.2f}",
+                  "Gain latent USD": "${:,.2f}",
+                  "% évolution": "{:,.2f}%"
+              })
+              .applymap(_evo_style, subset=["% évolution"])
+    )
+
     st.dataframe(
-        holdings[["Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain"]],
+        styler,
         use_container_width=True,
         hide_index=True,
         column_config={
             "Image": st.column_config.ImageColumn("Image", width="small"),
-            "market_hash_name": "Item",
-            "qty": "Quantité",
-            "buy_price_usd": "Prix achat USD",
-            "Prix actuel USD": "Prix vente USD",
-            "gain": "Gain latent USD"
+            "Item": "Item",
+            "Quantité": st.column_config.NumberColumn("Quantité", format="%d"),
+            "Prix achat USD": st.column_config.NumberColumn("Prix achat USD", format="$%.2f"),
+            "Prix vente USD": st.column_config.NumberColumn("Prix vente USD", format="$%.2f"),
+            "Gain latent USD": st.column_config.NumberColumn("Gain latent USD", format="$%.2f"),
+            "% évolution": st.column_config.NumberColumn("% évolution", format="%.2f%%"),
         }
     )
 
