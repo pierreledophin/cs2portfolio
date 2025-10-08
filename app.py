@@ -11,13 +11,50 @@ st.markdown("""
 h1, h2, h3 { letter-spacing: .2px; }
 h1 { margin-bottom: .6rem !important; }
 h2, h3 { margin-top: 1.0rem !important; margin-bottom: .6rem !important; }
-.kpi-card { border-radius: 16px; padding: 16px 18px; border: 1px solid rgba(0,0,0,.05); box-shadow: 0 6px 20px rgba(0,0,0,.03); background: #ffffff; margin-bottom: 14px; }
+
+/* Cards KPI (pastel très clair) */
+.kpi-card {
+  border-radius: 16px; padding: 16px 18px;
+  border: 1px solid rgba(0,0,0,.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,.03);
+  background: #ffffff; margin-bottom: 14px;
+}
 .kpi-title { font-size: 12px; color: #6b7280; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .6px; }
 .kpi-value { font-size: 22px; font-weight: 700; }
+
+/* Segmented profil (radio) */
 .stRadio { padding: 8px 10px; border-radius: 12px; border: 1px solid rgba(0,0,0,.06); background: #fafafa; margin-bottom: 12px; }
 [data-testid="stHorizontalBlock"] .stRadio > label { font-weight: 600; }
+
+/* Tabs */
 [data-baseweb="tab-list"] { gap: 8px; margin-bottom: 8px; }
-.stDataFrame td, .stDataFrame th { padding-top: 10px !important; padding-bottom: 10px !important; }
+
+/* Table HTML custom */
+.table-wrap { width: 100%; overflow-x: auto; }
+.table-positions {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  font-size: 14px;
+}
+.table-positions thead th {
+  position: sticky; top: 0; z-index: 1;
+  background: #f8fafc; /* slate-50 */
+  text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb;
+  font-weight: 600; color: #334155; /* slate-700 */
+}
+.table-positions tbody td {
+  padding: 10px 12px; border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+.table-positions tbody tr:hover td { background: #fafafa; }
+.cell-right { text-align: right; }
+.img-cell img {
+  width: 40px; height: 40px; object-fit: cover; border-radius: 8px;
+  border: 1px solid rgba(0,0,0,.06);
+}
+.badge {
+  display: inline-block; padding: 4px 8px; border-radius: 10px;
+  font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
 .section-gap { height: 12px; }
 .section-gap-lg { height: 18px; }
 </style>
@@ -119,12 +156,7 @@ def rebuild_holdings(trades: pd.DataFrame):
 def fetch_price(name):
     """Toujours basé sur le prix le plus bas."""
     if not CSFLOAT_API_KEY: return None
-    params = {
-        "market_hash_name": name,
-        "limit": 1,
-        "type": "buy_now",
-        "sort_by": "lowest_price"
-    }
+    params = {"market_hash_name": name, "limit": 1, "type": "buy_now", "sort_by": "lowest_price"}
     try:
         r = requests.get(CSFLOAT_API, headers=CSFLOAT_HEADERS, params=params, timeout=10)
         data = r.json()
@@ -148,7 +180,7 @@ def fetch_icon(name):
         first = listings[0]
         img = first.get("image") or first.get("icon_url") or first.get("item",{}).get("icon_url")
         if not img: return None
-        if img.startswith("http"): return img
+        if isinstance(img, str) and img.startswith("http"): return img
         return f"https://steamcommunity-a.akamaihd.net/economy/image/{img}/128fx128f"
     except Exception:
         return None
@@ -169,9 +201,15 @@ def _pnl_bg_color(value):
 
 def _pct_bg_color(pct):
     base_green = "#22c55e"; base_red = "#ef4444"
-    if pct is None or pct == "" or pd.isna(pct) or not np.isfinite(pct) or abs(pct) < 1e-4: return "#ffffff"
-    if pct >= 0: return _blend_to_pastel(base_green, 0.12 if pct < 5 else min(0.12 + pct/200, 0.40))
-    ap = abs(pct); return _blend_to_pastel(base_red, 0.12 if ap < 5 else min(0.12 + ap/200, 0.40))
+    try:
+        if pct is None or pct == "" or pd.isna(pct) or not np.isfinite(pct) or abs(float(pct)) < 1e-4:
+            return "#ffffff"
+    except Exception:
+        return "#ffffff"
+    if pct >= 0:
+        return _blend_to_pastel(base_green, 0.12 if pct < 5 else min(0.12 + pct/200, 0.40))
+    ap = abs(pct)
+    return _blend_to_pastel(base_red, 0.12 if ap < 5 else min(0.12 + ap/200, 0.40))
 
 # ---------- Lecture price_history ----------
 def load_price_history_df() -> pd.DataFrame:
@@ -218,7 +256,6 @@ with st.sidebar:
         st.cache_data.clear()
         st.success("Prix Live rafraîchis.")
         st.rerun()
-
     if st.button("Lancer MAJ GitHub (robot)"):
         if not GH_PAT:
             st.error("GH_PAT manquant dans les secrets Streamlit.")
@@ -233,46 +270,139 @@ with st.sidebar:
 tab1, tab2, tab3 = st.tabs(["Portefeuille", "Achat / Vente", "Transactions"])
 trades = load_trades()
 
+# ---------- RENDERER TABLEAU (HTML, images + couleurs %évo) ----------
+def render_positions_table(df: pd.DataFrame):
+    # Assure les colonnes attendues
+    cols = ["Image","Item","Quantité","Prix achat USD","Prix vente USD","Gain latent USD","% évolution"]
+    for c in cols:
+        if c not in df.columns:
+            return st.info("Colonnes manquantes pour l’affichage.")
+    # Construire HTML
+    rows_html = []
+    for _, r in df.iterrows():
+        img = r["Image"] if isinstance(r["Image"], str) else ""
+        name = str(r["Item"])
+        qty = int(r["Quantité"]) if pd.notna(r["Quantité"]) else 0
+        pa = r["Prix achat USD"]; pv = r["Prix vente USD"]; gl = r["Gain latent USD"]; evo = r["% évolution"]
+
+        # Formats
+        pa_txt = f"${pa:,.2f}" if pd.notna(pa) else "-"
+        pv_txt = f"${pv:,.2f}" if pd.notna(pv) else "-"
+        gl_txt = f"${gl:,.2f}" if pd.notna(gl) else "-"
+        evo_txt = (f"{evo:,.2f}%" if (pd.notna(evo) and np.isfinite(evo)) else "—")
+
+        # Couleur de fond pour le badge d’évolution
+        bg = _pct_bg_color(evo)
+
+        rows_html.append(f"""
+        <tr>
+          <td class="img-cell">{f'<img src="{img}" alt="img">' if img else ''}</td>
+          <td>{name}</td>
+          <td class="cell-right">{qty}</td>
+          <td class="cell-right">{pa_txt}</td>
+          <td class="cell-right">{pv_txt}</td>
+          <td class="cell-right">{gl_txt}</td>
+          <td class="cell-right"><span class="badge" style="background:{bg}">{evo_txt}</span></td>
+        </tr>
+        """)
+    html = f"""
+    <div class="table-wrap">
+      <table class="table-positions">
+        <thead>
+          <tr>
+            <th>Image</th><th>Item</th><th>Quantité</th>
+            <th>Prix achat USD</th><th>Prix vente USD</th><th>Gain latent USD</th><th>% évolution</th>
+          </tr>
+        </thead>
+        <tbody>
+          {''.join(rows_html)}
+        </tbody>
+      </table>
+    </div>
+    """
+    st.markdown(html, unsafe_allow_html=True)
+
 # ---------- Onglet 1 ----------
 with tab1:
     st.subheader("Portefeuille actuel")
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
     holdings = rebuild_holdings(trades)
     if holdings.empty:
         st.info("Aucune position.")
         st.stop()
 
+    # Données live
     holdings["Image"] = holdings["market_hash_name"].apply(fetch_icon)
     holdings["Prix actuel USD"] = holdings["market_hash_name"].apply(fetch_price)
     holdings["valeur"] = holdings["Prix actuel USD"] * holdings["qty"]
     holdings["gain"] = (holdings["Prix actuel USD"] - holdings["buy_price_usd"]) * holdings["qty"]
 
-    # --- Calcul robuste de l'évolution % (jamais de division par 0/NaN) ---
+    # Evolution % (ne calcule que si buy>0) + pas d'inf
     buy = pd.to_numeric(holdings["buy_price_usd"], errors="coerce")
     price_now = pd.to_numeric(holdings["Prix actuel USD"], errors="coerce")
     diff = price_now - buy
-    # np.divide avec 'where' : calcule diff*100/buy seulement quand buy>0
     evo_array = np.divide(
         diff.to_numpy(dtype="float64") * 100.0,
         buy.to_numpy(dtype="float64"),
         out=np.full(diff.shape, np.nan, dtype="float64"),
         where=(buy.to_numpy(dtype="float64") > 0)
     )
-    holdings["evolution_pct"] = pd.Series(evo_array)
+    holdings["evolution_pct"] = pd.to_numeric(pd.Series(evo_array), errors="coerce").replace([np.inf, -np.inf], np.nan)
 
+    # Totaux
     total_val = holdings["valeur"].sum()
     total_cost = (holdings["buy_price_usd"] * holdings["qty"]).sum()
     total_pnl = total_val - total_cost
     total_pct = (total_pnl / total_cost * 100) if total_cost>0 else 0
 
+    # KPI en encadrés (couleurs dynamiques & pastels clairs)
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Valeur portefeuille", f"${total_val:,.2f}")
-    col2.metric("Coût total", f"${total_cost:,.2f}")
-    col3.metric("P&L latent", f"${total_pnl:,.2f}")
-    col4.metric("% d’évolution", f"{total_pct:,.2f}%")
+    col1.markdown(f"""
+    <div class="kpi-card">
+      <div class="kpi-title">Valeur portefeuille</div>
+      <div class="kpi-value">${total_val:,.2f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+    col2.markdown(f"""
+    <div class="kpi-card" style="background:{_blend_to_pastel('#3b82f6',0.10)}">
+      <div class="kpi-title">Coût total</div>
+      <div class="kpi-value">${total_cost:,.2f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+    col3.markdown(f"""
+    <div class="kpi-card" style="background:{_pnl_bg_color(total_pnl)}">
+      <div class="kpi-title">P&L latent</div>
+      <div class="kpi-value">${total_pnl:,.2f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+    col4.markdown(f"""
+    <div class="kpi-card" style="background:{_pct_bg_color(total_pct)}">
+      <div class="kpi-title">% d’évolution</div>
+      <div class="kpi-value">{total_pct:,.2f}%</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    st.markdown("### Détail des positions")
-    st.dataframe(holdings[["Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain","evolution_pct"]],
-                 use_container_width=True, hide_index=True)
+    st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
+
+    # -------- Tableau (HTML custom) : images + couleurs %évo + formats --------
+    to_show = holdings[[
+        "Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain","evolution_pct"
+    ]].rename(columns={
+        "market_hash_name":"Item",
+        "qty":"Quantité",
+        "buy_price_usd":"Prix achat USD",
+        "Prix actuel USD":"Prix vente USD",
+        "gain":"Gain latent USD",
+        "evolution_pct":"% évolution"
+    }).copy()
+
+    # Force types pour la table
+    to_show["Image"] = to_show["Image"].fillna("").astype(str)
+    # Rendu HTML
+    render_positions_table(to_show)
+
+    st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
 
     st.markdown("### Évolution de la valeur du portefeuille")
     hist_df = load_price_history_df()
@@ -286,11 +416,13 @@ with tab1:
 # ---------- Onglet 2 ----------
 with tab2:
     st.subheader("Nouvelle transaction")
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
     t_type = st.radio("Type", ["BUY","SELL"], horizontal=True)
     name = st.text_input("Nom exact (market_hash_name)")
     qty = st.number_input("Quantité", min_value=1, step=1)
     price = st.number_input("Prix unitaire USD", min_value=0.0, step=0.01)
     note = st.text_input("Note (facultatif)")
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
     if st.button("Enregistrer la transaction"):
         if not name:
             st.error("Nom requis.")
@@ -307,6 +439,7 @@ with tab2:
 # ---------- Onglet 3 ----------
 with tab3:
     st.subheader("Historique des transactions")
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
     if trades.empty:
         st.info("Aucune transaction.")
     else:
@@ -318,6 +451,7 @@ with tab3:
             pru = cost/q if q>0 else 0
             pnl_real += (price_s - pru)*qty_s
         st.metric("P&L réalisé cumulé", f"${pnl_real:,.2f}")
+
         to_display = trades.sort_values("date", ascending=False)
         delete_id = st.text_input("ID de transaction à supprimer (trade_id)")
         if st.button("Supprimer"):
