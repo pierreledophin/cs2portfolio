@@ -225,6 +225,8 @@ def _pct_bg_color(pct):
     base_red   = "#ef4444"
     if pct is None:
         return "#ffffff"
+    if abs(pct) < 0.0001:  # aucune couleur si 0%
+        return "#ffffff"
     # très clair si <5%, et globalement plus pastel
     if pct >= 0:
         return _blend_to_pastel(base_green, 0.12 if pct < 5 else min(0.12 + pct/200, 0.40))
