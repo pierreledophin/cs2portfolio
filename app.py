@@ -115,6 +115,26 @@ def rebuild_holdings(trades: pd.DataFrame):
     return df
 
 # ---------- CSFloat ----------
+@st.cache_data(ttl=600)
+def fetch_price(name):
+    """Toujours basé sur le prix le plus bas."""
+    if not CSFLOAT_API_KEY: return None
+    params = {
+        "market_hash_name": name,
+        "limit": 1,
+        "type": "buy_now",
+        "sort_by": "lowest_price"
+    }
+    try:
+        r = requests.get(CSFLOAT_API, headers=CSFLOAT_HEADERS, params=params, timeout=10)
+        data = r.json()
+        listings = data.get("data") or data
+        if not listings: return None
+        p = listings[0].get("price")
+        return p/100 if p else None
+    except Exception:
+        return None
+
 @st.cache_data(ttl=3600)
 def fetch_icon(name):
     if not CSFLOAT_API_KEY: return None
@@ -128,31 +148,8 @@ def fetch_icon(name):
         first = listings[0]
         img = first.get("image") or first.get("icon_url") or first.get("item",{}).get("icon_url")
         if not img: return None
-        if isinstance(img, str) and img.startswith("http"): return img
+        if img.startswith("http"): return img
         return f"https://steamcommunity-a.akamaihd.net/economy/image/{img}/128fx128f"
-    except Exception:
-        return None
-
-@st.cache_data(ttl=600)
-def fetch_price(name):
-    """
-    IMPORTANT : on fixe sort_by=lowest_price pour obtenir bien le prix le plus bas
-    et type=buy_now pour ignorer les enchères/offres.
-    """
-    if not CSFLOAT_API_KEY: return None
-    params = {
-        "market_hash_name": name,
-        "limit": 1,
-        "type": "buy_now",
-        "sort_by": "lowest_price",   # <- FIX ICI
-    }
-    try:
-        r = requests.get(CSFLOAT_API, headers=CSFLOAT_HEADERS, params=params, timeout=10)
-        data = r.json()
-        listings = data.get("data") or data
-        if not listings: return None
-        p = listings[0].get("price")
-        return p/100 if p else None
     except Exception:
         return None
 
@@ -215,7 +212,7 @@ def build_portfolio_timeseries(holdings_df: pd.DataFrame, hist_df: pd.DataFrame)
     ts = pivot[["total_value_usd"]].copy(); ts.index.name = "date"; ts.reset_index(inplace=True)
     return ts
 
-# ---------- Sidebar actions ----------
+# ---------- Sidebar ----------
 with st.sidebar:
     if st.button("Actualiser les prix (Live)"):
         st.cache_data.clear()
@@ -230,30 +227,32 @@ with st.sidebar:
             if resp.status_code in (201, 204):
                 st.success("Workflow GitHub déclenché.")
             else:
-                st.error(f"Échec du déclenchement ({resp.status_code}) : {resp.text[:200]}")
+                st.error(f"Échec ({resp.status_code}) : {resp.text[:200]}")
 
 # ---------- UI ----------
 tab1, tab2, tab3 = st.tabs(["Portefeuille", "Achat / Vente", "Transactions"])
 trades = load_trades()
 
-# ---------- Onglet 1 : Portefeuille ----------
+# ---------- Onglet 1 ----------
 with tab1:
     st.subheader("Portefeuille actuel")
-    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
     holdings = rebuild_holdings(trades)
     if holdings.empty:
-        st.info("Aucune position. Ajoute un achat pour commencer.")
+        st.info("Aucune position.")
         st.stop()
 
     holdings["Image"] = holdings["market_hash_name"].apply(fetch_icon)
     holdings["Prix actuel USD"] = holdings["market_hash_name"].apply(fetch_price)
     holdings["valeur"] = holdings["Prix actuel USD"] * holdings["qty"]
     holdings["gain"] = (holdings["Prix actuel USD"] - holdings["buy_price_usd"]) * holdings["qty"]
-    holdings["evolution_pct"] = np.where(
+
+    # --- FIX: plus de .replace sur ndarray ---
+    evo = np.where(
         holdings["buy_price_usd"] > 0,
         (holdings["Prix actuel USD"] - holdings["buy_price_usd"]) / holdings["buy_price_usd"] * 100,
         np.nan
-    ).replace([np.inf, -np.inf], np.nan)
+    )
+    holdings["evolution_pct"] = pd.Series(evo).replace([np.inf, -np.inf], np.nan)
 
     total_val = holdings["valeur"].sum()
     total_cost = (holdings["buy_price_usd"] * holdings["qty"]).sum()
@@ -261,58 +260,32 @@ with tab1:
     total_pct = (total_pnl / total_cost * 100) if total_cost>0 else 0
 
     col1, col2, col3, col4 = st.columns(4)
-    col1.markdown(f"""<div class="kpi-card"><div class="kpi-title">Valeur portefeuille</div>
-    <div class="kpi-value">${total_val:,.2f}</div></div>""", unsafe_allow_html=True)
-    col2.markdown(f"""<div class="kpi-card" style="background:{_blend_to_pastel('#3b82f6',0.10)}">
-    <div class="kpi-title">Coût total</div><div class="kpi-value">${total_cost:,.2f}</div></div>""", unsafe_allow_html=True)
-    col3.markdown(f"""<div class="kpi-card" style="background:{_pnl_bg_color(total_pnl)}">
-    <div class="kpi-title">P&L latent</div><div class="kpi-value">${total_pnl:,.2f}</div></div>""", unsafe_allow_html=True)
-    col4.markdown(f"""<div class="kpi-card" style="background:{_pct_bg_color(total_pct)}">
-    <div class="kpi-title">% d’évolution</div><div class="kpi-value">{total_pct:,.2f}%</div></div>""", unsafe_allow_html=True)
+    col1.metric("Valeur portefeuille", f"${total_val:,.2f}")
+    col2.metric("Coût total", f"${total_cost:,.2f}")
+    col3.metric("P&L latent", f"${total_pnl:,.2f}")
+    col4.metric("% d’évolution", f"{total_pct:,.2f}%")
 
-    st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
+    st.markdown("### Détail des positions")
+    st.dataframe(holdings[["Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain","evolution_pct"]],
+                 use_container_width=True, hide_index=True)
 
-    to_show = holdings[["Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain","evolution_pct"]].rename(columns={
-        "market_hash_name":"Item","qty":"Quantité","buy_price_usd":"Prix achat USD",
-        "Prix actuel USD":"Prix vente USD","gain":"Gain latent USD","evolution_pct":"% évolution"
-    })
-
-    def _evo_style(val): return f"background-color: {_pct_bg_color(val)};"
-    styler = (to_show.style.format({
-        "Prix achat USD": "${:,.2f}","Prix vente USD": "${:,.2f}",
-        "Gain latent USD": "${:,.2f}","% évolution": "{:,.2f}%"
-    }).applymap(_evo_style, subset=["% évolution"]))
-
-    st.dataframe(styler, use_container_width=True, hide_index=True, column_config={
-        "Image": st.column_config.ImageColumn("Image", width="small"),
-        "Item": "Item","Quantité": st.column_config.NumberColumn("Quantité", format="%d"),
-        "Prix achat USD": st.column_config.NumberColumn("Prix achat USD", format="$%.2f"),
-        "Prix vente USD": st.column_config.NumberColumn("Prix vente USD", format="$%.2f"),
-        "Gain latent USD": st.column_config.NumberColumn("Gain latent USD", format="$%.2f"),
-        "% évolution": st.column_config.NumberColumn("% évolution", format="%.2f%%"),
-    })
-
-    # ---- Graphique d'évolution (quotidien) ----
-    st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
-    st.subheader("Évolution de la valeur du portefeuille")
+    st.markdown("### Évolution de la valeur du portefeuille")
     hist_df = load_price_history_df()
     ts = build_portfolio_timeseries(holdings_df=holdings, hist_df=hist_df)
     if ts.empty:
-        st.info("Pas encore assez d'historique pour tracer la courbe (ou `price_history.csv` introuvable).")
+        st.info("Pas encore assez d’historique pour tracer la courbe.")
     else:
         ts = ts.sort_values("date").set_index("date")
         st.line_chart(ts["total_value_usd"])
 
-# ---------- Onglet 2 : Achat / Vente ----------
+# ---------- Onglet 2 ----------
 with tab2:
     st.subheader("Nouvelle transaction")
-    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
     t_type = st.radio("Type", ["BUY","SELL"], horizontal=True)
     name = st.text_input("Nom exact (market_hash_name)")
     qty = st.number_input("Quantité", min_value=1, step=1)
     price = st.number_input("Prix unitaire USD", min_value=0.0, step=0.01)
     note = st.text_input("Note (facultatif)")
-    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
     if st.button("Enregistrer la transaction"):
         if not name:
             st.error("Nom requis.")
@@ -326,10 +299,9 @@ with tab2:
             save_trades(trades, f"add {t_type} {name}")
             st.success("Transaction enregistrée."); st.cache_data.clear(); st.rerun()
 
-# ---------- Onglet 3 : Transactions ----------
+# ---------- Onglet 3 ----------
 with tab3:
     st.subheader("Historique des transactions")
-    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
     if trades.empty:
         st.info("Aucune transaction.")
     else:
@@ -341,16 +313,13 @@ with tab3:
             pru = cost/q if q>0 else 0
             pnl_real += (price_s - pru)*qty_s
         st.metric("P&L réalisé cumulé", f"${pnl_real:,.2f}")
-        st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
         to_display = trades.sort_values("date", ascending=False)
         delete_id = st.text_input("ID de transaction à supprimer (trade_id)")
-        if st.button("Supprimer cette transaction"):
+        if st.button("Supprimer"):
             if delete_id in trades["trade_id"].values:
                 trades = trades[trades["trade_id"]!=delete_id]
                 save_trades(trades, f"delete trade {delete_id}")
                 st.success(f"Transaction {delete_id} supprimée."); st.cache_data.clear(); st.rerun()
             else:
                 st.error("ID introuvable.")
-        st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
         st.dataframe(to_display, use_container_width=True, hide_index=True)
-
