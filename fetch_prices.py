@@ -1,122 +1,112 @@
-import os, time, requests, csv, sys
-from datetime import datetime, timezone
-from pathlib import Path
-from dotenv import load_dotenv
+#!/usr/bin/env python3
+import os, sys, csv, time, json, datetime, requests, pandas as pd
 
-load_dotenv()
+CSFLOAT_API_KEY = os.getenv("CSFLOAT_API_KEY", "").strip()
+CSFLOAT_API = "https://csfloat.com/api/v1/listings"
+HEADERS = {"Authorization": CSFLOAT_API_KEY} if CSFLOAT_API_KEY else {}
 
-API = "https://csfloat.com/api/v1/listings"
-API_KEY = os.environ.get("CSFLOAT_API_KEY")
-if not API_KEY:
-    print("❌ Missing CSFLOAT_API_KEY (secret GitHub absent ou mal nommé).", file=sys.stderr)
-    sys.exit(1)
+# Usage:
+#   python fetch_prices.py data/pierre/holdings.csv
+#   (écrit/append dans data/pierre/price_history.csv)
 
-HEADERS = {
-    "Authorization": API_KEY,   # pas "Bearer"
-    "User-Agent": "cs2-portfolio-csfloat (+contact)",
-}
+def read_holdings(path):
+    if not os.path.isfile(path):
+        print(f"[WARN] holdings introuvable: {path}")
+        return pd.DataFrame(columns=["market_hash_name","qty","buy_price_usd"])
+    try:
+        df = pd.read_csv(path)
+        # normalisation minimale
+        if "market_hash_name" not in df.columns:
+            raise ValueError("Colonne 'market_hash_name' manquante dans holdings.csv")
+        if "qty" not in df.columns:
+            df["qty"] = 1
+        return df
+    except Exception as e:
+        print(f"[ERROR] lecture holdings: {e}")
+        return pd.DataFrame(columns=["market_hash_name","qty","buy_price_usd"])
 
-DATA_DIR = Path("data")
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-CSV_PATH = DATA_DIR / "price_history.csv"
-HOLDINGS_PATH = DATA_DIR / "holdings.csv"
-
-def load_items_from_holdings():
-    if not HOLDINGS_PATH.exists():
-        print("❌ data/holdings.csv introuvable. Attendu: market_hash_name,qty,buy_price_usd,buy_date,notes", file=sys.stderr)
-        return []
-    with open(HOLDINGS_PATH, newline="", encoding="utf-8") as f:
-        r = csv.DictReader(f)
-        if not r.fieldnames or "market_hash_name" not in r.fieldnames:
-            print("❌ En-tête invalide dans holdings.csv.", file=sys.stderr)
-            print(f"   Colonnes détectées: {r.fieldnames}", file=sys.stderr)
-            print("   Attendu (exact): market_hash_name,qty,buy_price_usd,buy_date,notes", file=sys.stderr)
-            return []
-        items = []
-        for row in r:
-            name = (row.get("market_hash_name") or "").strip()
-            if name:
-                items.append(name)
-        return sorted({x for x in items if x})
-
-def parse_listings_json(resp_json):
-    # L'API peut retourner {"data":[...]} ou directement [...]
-    if isinstance(resp_json, dict):
-        lst = resp_json.get("data", [])
-        return lst if isinstance(lst, list) else []
-    return resp_json if isinstance(resp_json, list) else []
-
-def lowest_price_cents(market_hash_name: str) -> int | None:
+def fetch_lowest_price_usd(name: str) -> float | None:
+    """Retourne le prix le plus bas (USD) pour un item EXACT (market_hash_name)."""
+    if not CSFLOAT_API_KEY:
+        print("[WARN] CSFLOAT_API_KEY manquant; impossible de fetch.")
+        return None
     params = {
-        "market_hash_name": market_hash_name,
-        "sort_by": "lowest_price",
-        "type": "buy_now",
+        "market_hash_name": name,
+        "type": "buy_now",           # ignorer enchères/offres
+        "sort_by": "lowest_price",   # <<< IMPORTANT : prix le plus bas
         "limit": 1
     }
     try:
-        r = requests.get(API, headers=HEADERS, params=params, timeout=20)
+        r = requests.get(CSFLOAT_API, headers=HEADERS, params=params, timeout=20)
         if r.status_code == 429:
+            print("[RATE] 429 rate-limited; sleep 3s")
             time.sleep(3)
-            r = requests.get(API, headers=HEADERS, params=params, timeout=20)
+            return fetch_lowest_price_usd(name)
         r.raise_for_status()
-    except requests.HTTPError as e:
-        code = getattr(e.response, "status_code", None)
-        print(f"[HTTP ERROR] {market_hash_name}: {e} (status={code})", file=sys.stderr)
-        return None
-    except Exception as e:
-        print(f"[NET ERROR] {market_hash_name}: {e}", file=sys.stderr)
-        return None
-
-    try:
         data = r.json()
+        listings = data.get("data") if isinstance(data, dict) else data
+        if not isinstance(listings, list) or not listings:
+            print(f"[NO LISTING] {name}")
+            return None
+        price_cents = listings[0].get("price")
+        if isinstance(price_cents, (int, float)) and price_cents > 0:
+            return float(price_cents) / 100.0
+        return None
     except Exception as e:
-        print(f"[PARSE ERROR] {market_hash_name}: {e}", file=sys.stderr)
+        print(f"[ERROR] {name}: {e}")
         return None
 
-    listings = parse_listings_json(data)
-    if not listings:
-        print(f"[NO LISTING] {market_hash_name}")
-        return None
+def append_history(history_path: str, rows: list[dict]):
+    """Append des lignes dans price_history.csv (crée le fichier si besoin)."""
+    file_exists = os.path.isfile(history_path)
+    fieldnames = ["ts_utc", "market_hash_name", "price_usd"]
+    os.makedirs(os.path.dirname(history_path), exist_ok=True)
+    with open(history_path, "a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        if not file_exists:
+            writer.writeheader()
+        for r in rows:
+            writer.writerow(r)
 
-    price_cents = listings[0].get("price")
-    if not price_cents or int(price_cents) <= 0:
-        print(f"[NO PRICE] {market_hash_name}")
-        return None
-    return int(price_cents)
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python fetch_prices.py <path/to/holdings.csv>")
+        sys.exit(1)
 
-def ensure_csv_header():
-    if not CSV_PATH.exists():
-        with open(CSV_PATH, "w", newline="", encoding="utf-8") as f:
-            csv.writer(f).writerow(["ts_utc","market_hash_name","price_cents","price_usd"])
+    holdings_path = sys.argv[1]
+    base_dir = os.path.dirname(holdings_path)
+    history_path = os.path.join(base_dir, "price_history.csv")
 
-def run_once():
-    ensure_csv_header()
-    items = load_items_from_holdings()
-    print(f"🔎 Items détectés depuis holdings.csv : {len(items)}")
-    for i, it in enumerate(items, 1):
-        print(f"  {i}. {it}")
+    if not CSFLOAT_API_KEY:
+        print("[FATAL] CSFLOAT_API_KEY manquant (secret GitHub).")
+        sys.exit(1)
 
-    if not items:
-        print("⚠️ Aucun item à relever. Corrige data/holdings.csv (entête exact, séparateur virgule).")
-        return
+    holds = read_holdings(holdings_path)
+    if holds.empty:
+        print("[INFO] Aucun item dans holdings; rien à faire.")
+        sys.exit(0)
 
-    ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    rows = []
-    for name in items:
-        cents = lowest_price_cents(name)
-        if cents is not None:
-            usd = f"{cents/100:.2f}"
-            rows.append([ts, name, cents, usd])
-            print(f"[OK] {name} -> {usd} USD")
+    names = sorted(holds["market_hash_name"].dropna().unique().tolist())
+    print(f"[INFO] {len(names)} items à traiter depuis {holdings_path}")
+
+    ts = datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+    out_rows = []
+    for i, name in enumerate(names, start=1):
+        price = fetch_lowest_price_usd(name)
+        if price is not None:
+            out_rows.append({"ts_utc": ts, "market_hash_name": name, "price_usd": price})
+            print(f"[OK] {i:02d}/{len(names)} {name} -> ${price:.2f}")
         else:
-            print(f"[SKIP] {name}")
+            print(f"[SKIP] {i:02d}/{len(names)} {name} (aucun prix)")
 
-    if rows:
-        with open(CSV_PATH, "a", newline="", encoding="utf-8") as f:
-            csv.writer(f).writerows(rows)
-        print(f"✅ Lignes ajoutées : {len(rows)}")
+        # petite pause anti-rate-limit
+        time.sleep(0.3)
+
+    if out_rows:
+        append_history(history_path, out_rows)
+        print(f"[DONE] {len(out_rows)} lignes ajoutées → {history_path}")
     else:
-        print("⚠️ 0 ligne ajoutée (noms mauvais / aucune offre 'buy_now' dispo).")
+        print("[WARN] Aucune ligne ajoutée (noms invalides ou pas d'offres buy_now).")
 
 if __name__ == "__main__":
-    run_once()
+    main()
