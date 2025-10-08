@@ -1,41 +1,22 @@
 name: fetch-prices
 on:
-  push:
-    paths:
-      - 'data/holdings.csv'         # relance si tu modifies tes skins
   schedule:
-    - cron: "0 7,19 * * *"          # 2x/jour en UTC (~09:00 & 21:00 Europe/Prague)
-  workflow_dispatch:                # bouton manuel "Run workflow"
+    - cron: "0 7,19 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: write
   pull-requests: write
 
-concurrency:
-  group: cs2-data-update
-  cancel-in-progress: true
-
 jobs:
-  update-data:
+  fetch-multi:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Show current holdings.csv (debug)
-        run: |
-          echo "---- data/holdings.csv ----"
-          if [ -f data/holdings.csv ]; then
-            nl -ba data/holdings.csv
-          else
-            echo "MISSING: data/holdings.csv"
-          fi
-          echo "---------------------------"
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -44,33 +25,25 @@ jobs:
           python -m pip install -U pip
           pip install -r requirements.txt
 
-      - name: Fetch prices (append CSV)
+      - name: Run fetch for each profile
         env:
           CSFLOAT_API_KEY: ${{ secrets.CSFLOAT_API_KEY }}
         run: |
-          python fetch_prices.py
+          for d in data/*; do
+            if [ -f "$d/holdings.csv" ]; then
+              echo "=== Processing $d ==="
+              python fetch_prices.py "$d/holdings.csv" || true
+            fi
+          done
 
-      # 1) Crée / met à jour le PR avec ton token personnel
-      - name: Create or update Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GH_PAT }}       # ← PAT perso (scope: repo ou public_repo)
-          title: "chore(data): update price_history.csv"
-          body: "Automated data update (CSFloat) – append latest prices."
-          commit-message: "chore(data): update price_history.csv [skip ci]"
-          branch: "bot/data-update"
-          delete-branch: true
-          add-paths: |
-            data/price_history.csv
-
-      # 2) Merge auto du PR avec la CLI GitHub
-      - name: Auto-merge PR (squash + delete branch)
-        if: steps.cpr.outputs.pull-request-number != ''
-        env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}    # gh lit GH_TOKEN
+      - name: Commit & push
         run: |
-          set -e
-          echo "Merging PR #${{ steps.cpr.outputs.pull-request-number }} ..."
-          gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --squash --delete-branch \
-          || gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --merge --delete-branch
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/*/price_history.csv
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "update price history for all profiles [skip ci]"
+            git push origin main
+          fi
