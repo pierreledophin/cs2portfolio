@@ -38,7 +38,7 @@ h2, h3 { margin-top: 1.0rem !important; margin-bottom: 1.6rem !important; }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1 style='margin-bottom:0'>CS2 Portfolio Tracker</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='margin-bottom:0'>CS2 Portfolio Tracker TEST VERSION</h1>", unsafe_allow_html=True)
 
 OWNER   = st.secrets.get("GH_OWNER", "")
 REPO    = st.secrets.get("GH_REPO", "")
