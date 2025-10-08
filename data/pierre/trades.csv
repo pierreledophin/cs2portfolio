@@ -1,12 +1,12 @@
 date,type,market_hash_name,qty,price_usd,note,trade_id
-2025-01-10,AWP | Atheris (Factory New),1,22.51,test,trd1
-2025-01-10,Operator | FBI SWAT,1,22.31,test,trd2
-2025-01-10,Glock-18 | Bunsen Burner (Factory New),1,2.0,test,trd2
-2025-01-10,AK-47 | Legion of Anubis (Minimal Wear),1,11.38,test,trd2
-2025-01-10,AWP | Duality (Field-Tested),1,0.0,test,trd2
-2025-01-10,SSG 08 | Zeno (Well-Worn),1,0.0,test,trd2
-2025-01-10,Desert Eagle | Heat Treated (Field-Tested),1,1.9,test,trd2
-2025-01-10,Soldier | Phoenix,1,2.0,2025-01-10,test,trd2
-2025-01-10,USP-S | Cortex (Well-Worn),1,1.5,test,trd2
-2025-01-10,USP-S | Neo-Noir (Minimal Wear),1,23.4,test,trd2
-2025-01-10,Snakebite Case,10,0.64,test,trd2
+2025-01-10,BUY,AWP | Atheris (Factory New),1,22.51,test,trd1
+2025-01-10,BUY,Operator | FBI SWAT,1,22.31,test,trd2
+2025-01-10,BUY,Glock-18 | Bunsen Burner (Factory New),1,2.0,test,trd3
+2025-01-10,BUY,AK-47 | Legion of Anubis (Minimal Wear),1,11.38,test,trd4
+2025-01-10,BUY,AWP | Duality (Field-Tested),1,0.0,test,trd5
+2025-01-10,BUY,SSG 08 | Zeno (Well-Worn),1,0.0,test,trd6
+2025-01-10,BUY,Desert Eagle | Heat Treated (Field-Tested),1,1.9,test,trd7
+2025-01-10,BUY,Soldier | Phoenix,1,2.0,test,trd8
+2025-01-10,BUY,USP-S | Cortex (Well-Worn),1,1.5,test,trd9
+2025-01-10,BUY,USP-S | Neo-Noir (Minimal Wear),1,23.4,test,trd10
+2025-01-10,BUY,Snakebite Case,10,0.64,test,trd11
