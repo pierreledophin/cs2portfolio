@@ -200,6 +200,72 @@ def _pct_bg_color(pct):
         ap = abs(pct)
         return _blend_to_pastel(base_red, 0.12 if ap < 5 else min(0.12 + ap/200, 0.40))
 
+# ---------- Lecture price_history depuis GitHub ----------
+def load_price_history_df() -> pd.DataFrame:
+    """Charge data/<profil>/price_history.csv via GitHub API (si dispo), sinon DataFrame vide."""
+    text, _sha, status = gh_get_file(PATH_HISTORY)
+    if status == 200 and text.strip():
+        try:
+            df = pd.read_csv(io.StringIO(text))
+            return df
+        except Exception:
+            return pd.DataFrame()
+    return pd.DataFrame()
+
+def build_portfolio_timeseries(holdings_df: pd.DataFrame, hist_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Construit une série quotidienne 'total_value_usd' en multipliant
+    les prix historiques par les quantités ACTUELLES (pas rétroactif).
+    """
+    if holdings_df.empty or hist_df.empty:
+        return pd.DataFrame()
+
+    # Normalise colonnes d'historique
+    if "price_usd" not in hist_df.columns and "price_cents" in hist_df.columns:
+        hist_df["price_usd"] = pd.to_numeric(hist_df["price_cents"], errors="coerce") / 100.0
+
+    needed = {"ts_utc", "market_hash_name", "price_usd"}
+    if not needed.issubset(set(hist_df.columns)):
+        return pd.DataFrame()
+
+    hist = hist_df.copy()
+    hist["ts_utc"] = pd.to_datetime(hist["ts_utc"], errors="coerce")
+    hist = hist.dropna(subset=["ts_utc"])
+    hist["date"] = hist["ts_utc"].dt.floor("D")
+
+    # On ne garde que les items présents dans holdings ACTUEL
+    items = holdings_df[holdings_df["qty"] > 0]["market_hash_name"].unique().tolist()
+    if not items:
+        return pd.DataFrame()
+    hist = hist[hist["market_hash_name"].isin(items)]
+
+    # Dernier prix du jour par item
+    daily_last = (
+        hist.sort_values(["market_hash_name", "date", "ts_utc"])
+            .groupby(["market_hash_name", "date"], as_index=False)
+            .tail(1)[["market_hash_name", "date", "price_usd"]]
+    )
+
+    # Pivot -> colonnes = items, index = date
+    pivot = daily_last.pivot(index="date", columns="market_hash_name", values="price_usd").sort_index()
+
+    # Forward-fill pour combler les jours sans mise à jour
+    pivot = pivot.ffill()
+
+    # Multiplie par les quantités actuelles
+    qty_map = holdings_df.set_index("market_hash_name")["qty"].to_dict()
+    for col in pivot.columns:
+        pivot[col] = pivot[col] * float(qty_map.get(col, 0))
+
+    # Somme en valeur totale
+    pivot["total_value_usd"] = pivot.sum(axis=1)
+
+    # DataFrame final (une seule série utile)
+    ts = pivot[["total_value_usd"]].copy()
+    ts.index.name = "date"
+    ts.reset_index(inplace=True)
+    return ts
+
 # ---------- Interface ----------
 tab1, tab2, tab3 = st.tabs(["Portefeuille", "Achat / Vente", "Transactions"])
 trades = load_trades()
@@ -263,6 +329,18 @@ with tab1:
         "% évolution": st.column_config.NumberColumn("% évolution", format="%.2f%%"),
     })
 
+    # ---- Graphique d'évolution de la valeur du portefeuille (quotidien) ----
+    st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
+    st.subheader("Évolution de la valeur du portefeuille")
+    hist_df = load_price_history_df()
+    ts = build_portfolio_timeseries(holdings_df=holdings, hist_df=hist_df)
+    if ts.empty:
+        st.info("Pas encore assez d'historique pour tracer la courbe (ou `price_history.csv` introuvable).")
+    else:
+        ts = ts.sort_values("date")
+        ts = ts.set_index("date")
+        st.line_chart(ts["total_value_usd"])
+
 # ---------- Onglet 2 : Achat / Vente ----------
 with tab2:
     st.subheader("Nouvelle transaction")
@@ -313,3 +391,4 @@ with tab3:
                 st.error("ID introuvable.")
         st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
         st.dataframe(to_display, use_container_width=True, hide_index=True)
+
