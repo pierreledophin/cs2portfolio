@@ -223,16 +223,22 @@ def _pnl_bg_color(value):
 def _pct_bg_color(pct):
     base_green = "#22c55e"
     base_red   = "#ef4444"
-    if pct is None:
+
+    # Si vide, NaN ou None -> fond neutre
+    if pct is None or pd.isna(pct) or pct == "":
         return "#ffffff"
-    if abs(pct) < 0.0001:  # aucune couleur si 0%
+
+    # Si proche de zéro -> fond neutre
+    if abs(pct) < 0.0001:
         return "#ffffff"
+
     # très clair si <5%, et globalement plus pastel
     if pct >= 0:
         return _blend_to_pastel(base_green, 0.12 if pct < 5 else min(0.12 + pct/200, 0.40))
     else:
         ap = abs(pct)
         return _blend_to_pastel(base_red, 0.12 if ap < 5 else min(0.12 + ap/200, 0.40))
+
 
 # ---------- Interface ----------
 tab1, tab2, tab3 = st.tabs(["Portefeuille", "Achat / Vente", "Transactions"])
