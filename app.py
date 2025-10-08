@@ -168,7 +168,9 @@ def _blend_to_pastel(hex_color, intensity):
     hex_color = hex_color.lstrip("#")
     r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
     wr, wg, wb = 255, 255, 255
-    nr = int(wr + (r - wr) * intensity); ng = int(wg + (g - wg) * intensity); nb = int(wb + (b - wb) * intensity)
+    nr = int(wr + (r - wr) * intensity)
+    ng = int(wg + (g - wg) * intensity)
+    nb = int(wb + (b - wb) * intensity)
     return f"#{nr:02x}{ng:02x}{nb:02x}"
 
 def _pnl_bg_color(value):
@@ -180,7 +182,10 @@ def _pnl_bg_color(value):
 def _pct_bg_color(pct):
     base_green = "#22c55e"; base_red = "#ef4444"
     # vide / NaN / inf / 0 => neutre
-    if pct is None or pct == "" or pd.isna(pct) or not np.isfinite(pct) or abs(float(pct)) < 1e-4:
+    try:
+        if pct is None or pct == "" or pd.isna(pct) or not np.isfinite(pct) or abs(float(pct)) < 1e-4:
+            return "#ffffff"
+    except Exception:
         return "#ffffff"
     if pct >= 0:
         return _blend_to_pastel(base_green, 0.12 if pct < 5 else min(0.12 + pct/200, 0.40))
@@ -203,16 +208,13 @@ def build_portfolio_timeseries(holdings_df: pd.DataFrame, hist_df: pd.DataFrame)
         hist_df["price_usd"] = pd.to_numeric(hist_df["price_cents"], errors="coerce") / 100.0
     needed = {"ts_utc", "market_hash_name", "price_usd"}
     if not needed.issubset(set(hist_df.columns)): return pd.DataFrame()
-
     hist = hist_df.copy()
     hist["ts_utc"] = pd.to_datetime(hist["ts_utc"], errors="coerce")
     hist = hist.dropna(subset=["ts_utc"])
     hist["date"] = hist["ts_utc"].dt.floor("D")
-
     items = holdings_df[holdings_df["qty"] > 0]["market_hash_name"].unique().tolist()
     if not items: return pd.DataFrame()
     hist = hist[hist["market_hash_name"].isin(items)]
-
     daily_last = (
         hist.sort_values(["market_hash_name", "date", "ts_utc"])
             .groupby(["market_hash_name", "date"], as_index=False)
@@ -232,7 +234,6 @@ with st.sidebar:
         st.cache_data.clear()
         st.success("Prix Live rafraîchis.")
         st.rerun()
-
     if st.button("Lancer MAJ GitHub (robot)"):
         if not GH_PAT:
             st.error("GH_PAT manquant dans les secrets Streamlit.")
@@ -263,13 +264,17 @@ with tab1:
     holdings["valeur"] = holdings["Prix actuel USD"] * holdings["qty"]
     holdings["gain"] = (holdings["Prix actuel USD"] - holdings["buy_price_usd"]) * holdings["qty"]
 
-    # % d’évolution (neutre si buy_price_usd <= 0 ; no inf)
-    evo = np.where(
-        holdings["buy_price_usd"] > 0,
-        (holdings["Prix actuel USD"] - holdings["buy_price_usd"]) / holdings["buy_price_usd"] * 100,
-        np.nan
+    # --- Calcul robuste de l'évolution % (ne calcule que si buy>0) ---
+    buy = pd.to_numeric(holdings["buy_price_usd"], errors="coerce")
+    price_now = pd.to_numeric(holdings["Prix actuel USD"], errors="coerce")
+    diff = price_now - buy
+    evo_array = np.divide(
+        diff.to_numpy(dtype="float64") * 100.0,
+        buy.to_numpy(dtype="float64"),
+        out=np.full(diff.shape, np.nan, dtype="float64"),
+        where=(buy.to_numpy(dtype="float64") > 0)
     )
-    holdings["evolution_pct"] = pd.to_numeric(pd.Series(evo), errors="coerce").replace([np.inf, -np.inf], np.nan)
+    holdings["evolution_pct"] = pd.to_numeric(pd.Series(evo_array), errors="coerce").replace([np.inf, -np.inf], np.nan)
 
     # Totaux
     total_val = holdings["valeur"].sum()
@@ -318,7 +323,7 @@ with tab1:
         }
     )
 
-    # Important pour ImageColumn: string URLs (None -> "")
+    # Important pour ImageColumn: URLs en str (None -> "")
     to_show["Image"] = to_show["Image"].fillna("").astype(str)
 
     # Style de la colonne % évolution (fond neutre si 0 / vide / NaN / inf)
@@ -378,8 +383,8 @@ with tab2:
         else:
             new_trade = pd.DataFrame([{
                 "date": datetime.now().strftime("%Y-%m-%d"),
-                "type": t_type, "market_hash_name": name, "qty": qty,
-                "price_usd": price, "note": note, "trade_id": "trd_" + uuid.uuid4().hex[:8]
+                "type": t_type,"market_hash_name": name,"qty": qty,
+                "price_usd": price,"note": note,"trade_id": "trd_" + uuid.uuid4().hex[:8]
             }])
             trades = pd.concat([trades, new_trade], ignore_index=True)
             save_trades(trades, f"add {t_type} {name}")
