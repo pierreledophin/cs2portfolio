@@ -10,3 +10,4 @@ date,type,market_hash_name,qty,price_usd,note,trade_id
 2025-01-10,BUY,USP-S | Cortex (Well-Worn),1,1.5,test,trd9
 2025-01-10,BUY,USP-S | Neo-Noir (Minimal Wear),1,23.4,test,trd10
 2025-01-10,BUY,Snakebite Case,10,0.64,test,trd11
+2025-10-08,BUY,AK-47 | Legion of Anubis (Minimal Wear),1,200.0,,trd_b362cda6
