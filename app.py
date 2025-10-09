@@ -57,9 +57,10 @@ PATH_TRADES   = f"{DATA_DIR}/trades.csv"
 PATH_HOLDINGS = f"{DATA_DIR}/holdings.csv"
 PATH_HISTORY  = f"{DATA_DIR}/price_history.csv"
 
-# ---------- NOUVEAUX FICHIERS FINANCE ----------
-PATH_FINANCE       = f"{DATA_DIR}/finances.csv"          # DEPOSIT / WITHDRAW (cash réel)
-PATH_CSFLOAT_SNAP  = f"{DATA_DIR}/csfloat_snapshot.csv"  # snapshots du solde CSFloat (manuel)
+# ---------- FICHIERS FINANCE ----------
+PATH_FINANCE       = f"{DATA_DIR}/finances.csv"            # DEPOSIT / WITHDRAW
+PATH_CSFLOAT_SNAP  = f"{DATA_DIR}/csfloat_snapshot.csv"    # snapshots du solde CSFloat (manuel)
+PATH_FIN_BASELINE  = f"{DATA_DIR}/finance_baseline.csv"    # baseline "capital net déposé (lifetime)"
 
 # ---------- GitHub helpers ----------
 def _gh_headers():
@@ -92,19 +93,21 @@ def gh_dispatch_workflow(workflow_file="fetch-prices.yml"):
 # ---------- Init fichiers ----------
 def ensure_trades_exists():
     if not os.path.exists(PATH_TRADES):
-        df = pd.DataFrame(columns=["date","type","market_hash_name","qty","price_usd","note","trade_id"])
-        df.to_csv(PATH_TRADES, index=False)
+        pd.DataFrame(columns=["date","type","market_hash_name","qty","price_usd","note","trade_id"]).to_csv(PATH_TRADES, index=False)
 
-def ensure_finance_exists():
+def ensure_finance_files_exist():
     if not os.path.exists(PATH_FINANCE):
-        df = pd.DataFrame(columns=["date","type","amount_usd","note","finance_id"])
-        df.to_csv(PATH_FINANCE, index=False)
+        pd.DataFrame(columns=["date","type","amount_usd","note","finance_id"]).to_csv(PATH_FINANCE, index=False)
     if not os.path.exists(PATH_CSFLOAT_SNAP):
-        df = pd.DataFrame(columns=["snapshot_date","balance_usd"])
-        df.to_csv(PATH_CSFLOAT_SNAP, index=False)
+        pd.DataFrame(columns=["snapshot_date","balance_usd"]).to_csv(PATH_CSFLOAT_SNAP, index=False)
+    if not os.path.exists(PATH_FIN_BASELINE):
+        # baseline par défaut = 0
+        pd.DataFrame([{"baseline_date": date.today().strftime("%Y-%m-%d"),
+                       "baseline_net_deposited_usd": 0.0,
+                       "note": "init"}]).to_csv(PATH_FIN_BASELINE, index=False)
 
 ensure_trades_exists()
-ensure_finance_exists()
+ensure_finance_files_exist()
 
 # ---------- Trades I/O ----------
 def load_trades():
@@ -116,7 +119,7 @@ def load_trades():
 def save_trades(df, msg="update trades"):
     df.to_csv(PATH_TRADES, index=False)
     if GH_PAT and OWNER:
-        text, sha, _ = gh_get_file(PATH_TRADES)
+        _text, sha, _ = gh_get_file(PATH_TRADES)
         csv_buf = io.StringIO(); df.to_csv(csv_buf, index=False)
         resp = gh_put_file(PATH_TRADES, csv_buf.getvalue(), sha, msg)
         if 200 <= resp.status_code < 300:
@@ -134,7 +137,7 @@ def load_finances():
 def save_finances(df, msg="update finances"):
     df.to_csv(PATH_FINANCE, index=False)
     if GH_PAT and OWNER:
-        text, sha, _ = gh_get_file(PATH_FINANCE)
+        _text, sha, _ = gh_get_file(PATH_FINANCE)
         csv_buf = io.StringIO(); df.to_csv(csv_buf, index=False)
         resp = gh_put_file(PATH_FINANCE, csv_buf.getvalue(), sha, msg)
         if 200 <= resp.status_code < 300:
@@ -151,11 +154,28 @@ def load_csfloat_snapshot():
 def save_csfloat_snapshot(df, msg="update csfloat snapshot"):
     df.to_csv(PATH_CSFLOAT_SNAP, index=False)
     if GH_PAT and OWNER:
-        text, sha, _ = gh_get_file(PATH_CSFLOAT_SNAP)
+        _text, sha, _ = gh_get_file(PATH_CSFLOAT_SNAP)
         csv_buf = io.StringIO(); df.to_csv(csv_buf, index=False)
         resp = gh_put_file(PATH_CSFLOAT_SNAP, csv_buf.getvalue(), sha, msg)
         if 200 <= resp.status_code < 300:
             st.toast("Snapshot CSFloat sauvegardé sur GitHub.")
+        else:
+            st.error(f"Erreur GitHub: {resp.status_code}")
+
+def load_finance_baseline():
+    try:
+        return pd.read_csv(PATH_FIN_BASELINE)
+    except Exception:
+        return pd.DataFrame(columns=["baseline_date","baseline_net_deposited_usd","note"])
+
+def save_finance_baseline(df, msg="update finance baseline"):
+    df.to_csv(PATH_FIN_BASELINE, index=False)
+    if GH_PAT and OWNER:
+        _text, sha, _ = gh_get_file(PATH_FIN_BASELINE)
+        csv_buf = io.StringIO(); df.to_csv(csv_buf, index=False)
+        resp = gh_put_file(PATH_FIN_BASELINE, csv_buf.getvalue(), sha, msg)
+        if 200 <= resp.status_code < 300:
+            st.toast("Baseline (capital net déposé) sauvegardée sur GitHub.")
         else:
             st.error(f"Erreur GitHub: {resp.status_code}")
 
@@ -279,29 +299,22 @@ def build_portfolio_timeseries(holdings_df: pd.DataFrame, hist_df: pd.DataFrame)
 
 # ---------- Calculs "live" holdings + KPIs ----------
 def enrich_holdings_live(holdings_df: pd.DataFrame):
-    """Ajoute les icônes, prix actuels, valeur, P&L et %; retourne (df, totals)."""
     if holdings_df.empty:
         totals = {"total_val": 0.0, "total_cost": 0.0, "total_pnl": 0.0, "total_pct": 0.0}
         df = pd.DataFrame(columns=["market_hash_name","qty","buy_price_usd","buy_date","notes","Image","Prix actuel USD","valeur","gain","evolution_pct"])
         return df, totals
-
     df = holdings_df.copy()
     df["Image"] = df["market_hash_name"].apply(fetch_icon)
     df["Prix actuel USD"] = df["market_hash_name"].apply(fetch_price)
     df["valeur"] = df["Prix actuel USD"] * df["qty"]
     df["gain"] = (df["Prix actuel USD"] - df["buy_price_usd"]) * df["qty"]
-
     buy = pd.to_numeric(df["buy_price_usd"], errors="coerce")
     price_now = pd.to_numeric(df["Prix actuel USD"], errors="coerce")
     diff = price_now - buy
-    evo_array = np.divide(
-        diff.to_numpy(dtype="float64") * 100.0,
-        buy.to_numpy(dtype="float64"),
-        out=np.full(diff.shape, np.nan, dtype="float64"),
-        where=(buy.to_numpy(dtype="float64") > 0)
-    )
+    evo_array = np.divide(diff.to_numpy(dtype="float64") * 100.0, buy.to_numpy(dtype="float64"),
+                          out=np.full(diff.shape, np.nan, dtype="float64"),
+                          where=(buy.to_numpy(dtype="float64") > 0))
     df["evolution_pct"] = pd.to_numeric(pd.Series(evo_array), errors="coerce").replace([np.inf, -np.inf], np.nan)
-
     total_val = df["valeur"].sum()
     total_cost = (df["buy_price_usd"] * df["qty"]).sum()
     total_pnl = total_val - total_cost
@@ -310,9 +323,16 @@ def enrich_holdings_live(holdings_df: pd.DataFrame):
     return df, totals
 
 # ---------- Calculs financiers globaux ----------
-def compute_financials(trades_df: pd.DataFrame, finance_df: pd.DataFrame, snap_df: pd.DataFrame):
-    """Retourne un dict KPI pour l'onglet Statistiques financières."""
-    # snapshot (dernier)
+def compute_financials(trades_df: pd.DataFrame, finance_df: pd.DataFrame, snap_df: pd.DataFrame, baseline_df: pd.DataFrame):
+    # Baseline (dernier enregistrement)
+    baseline_df = baseline_df.copy()
+    if not baseline_df.empty:
+        baseline_df["baseline_date"] = pd.to_datetime(baseline_df["baseline_date"], errors="coerce")
+        baseline_df = baseline_df.dropna(subset=["baseline_date"]).sort_values("baseline_date")
+    baseline_val = float(baseline_df["baseline_net_deposited_usd"].iloc[-1]) if not baseline_df.empty else 0.0
+    baseline_date = baseline_df["baseline_date"].iloc[-1] if not baseline_df.empty else None
+
+    # Snapshot CSFloat (dernier)
     snap_df = snap_df.copy()
     if not snap_df.empty:
         snap_df["snapshot_date"] = pd.to_datetime(snap_df["snapshot_date"], errors="coerce")
@@ -320,38 +340,37 @@ def compute_financials(trades_df: pd.DataFrame, finance_df: pd.DataFrame, snap_d
     snapshot_bal = float(snap_df["balance_usd"].iloc[-1]) if not snap_df.empty else 0.0
     snapshot_date = snap_df["snapshot_date"].iloc[-1] if not snap_df.empty else None
 
-    # achats/ventes depuis snapshot
+    # Achats/ventes depuis snapshot
     td = trades_df.copy()
     td["date"] = pd.to_datetime(td["date"], errors="coerce")
     if snapshot_date is not None:
         td = td[td["date"] >= snapshot_date]
+    buys_usd  = (td[td["type"]=="BUY"]["qty"]  * td[td["type"]=="BUY"]["price_usd"]).sum()
+    sells_usd = (td[td["type"]=="SELL"]["qty"] * td[td["type"]=="SELL"]["price_usd"]).sum()
 
-    buys_usd  = (td[td["type"]=="BUY"]["qty"] * td[td["type"]=="BUY"]["price_usd"]).sum()
-    sells_usd = (td[td["type"]=="SELL"]["qty"]* td[td["type"]=="SELL"]["price_usd"]).sum()
-
-    # dépôts / retraits
+    # Dépôts / retraits : somme "mouvements" (depuis toujours) et "depuis snapshot"
     fin = finance_df.copy()
     if not fin.empty:
         fin["date"] = pd.to_datetime(fin["date"], errors="coerce")
-    net_deposited_all = fin.apply(
-        lambda r: r["amount_usd"] if r.get("type")=="DEPOSIT" else (-r["amount_usd"] if r.get("type")=="WITHDRAW" else 0.0),
-        axis=1
-    ).sum() if not fin.empty else 0.0
 
+    def _mov_sum(df):
+        if df.empty: return 0.0
+        return df.apply(lambda r: r["amount_usd"] if r.get("type")=="DEPOSIT" else (-r["amount_usd"] if r.get("type")=="WITHDRAW" else 0.0), axis=1).sum()
+
+    mov_all   = _mov_sum(fin) if not fin.empty else 0.0
     if snapshot_date is not None and not fin.empty:
-        fin_since = fin[fin["date"] >= snapshot_date]
+        mov_since = _mov_sum(fin[fin["date"] >= snapshot_date])
     else:
-        fin_since = fin if not fin.empty else pd.DataFrame(columns=["date","type","amount_usd"])
+        mov_since = mov_all
 
-    net_deposited_since = fin_since.apply(
-        lambda r: r["amount_usd"] if r.get("type")=="DEPOSIT" else (-r["amount_usd"] if r.get("type")=="WITHDRAW" else 0.0),
-        axis=1
-    ).sum() if not fin_since.empty else 0.0
+    # Capital net déposé (lifetime) = baseline + mouvements saisis dans l'app
+    net_deposited_all = float(baseline_val + mov_all)
+    net_deposited_since = float(mov_since)
 
-    # Solde CSFloat attendu
+    # Solde CSFloat attendu = snapshot + dépôts_nets_depuis_snapshot + ventes - achats
     csfloat_cash_expected = float(snapshot_bal + net_deposited_since + sells_usd - buys_usd)
 
-    # P&L réalisé
+    # P&L réalisé (WAC simplifié, info seulement)
     pnl_real = 0.0
     for _, row in trades_df[trades_df["type"]=="SELL"].iterrows():
         name = row["market_hash_name"]; qty_s = row["qty"]; price_s = row["price_usd"]
@@ -361,6 +380,8 @@ def compute_financials(trades_df: pd.DataFrame, finance_df: pd.DataFrame, snap_d
         pnl_real += (price_s - pru)*qty_s
 
     return {
+        "baseline_val": float(baseline_val),
+        "baseline_date": baseline_date,
         "snapshot_date": snapshot_date,
         "snapshot_bal": float(snapshot_bal),
         "net_deposited_all": float(net_deposited_all),
@@ -407,7 +428,6 @@ with tab1:
     if holdings_live.empty:
         st.info("Aucune position.")
     else:
-        # KPI cards
         col1, col2, col3, col4 = st.columns(4)
         col1.markdown(f"""
         <div class="kpi-card">
@@ -436,7 +456,6 @@ with tab1:
 
         st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
 
-        # Tableau stylé
         to_show = holdings_live[["Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain","evolution_pct"]].rename(
             columns={
                 "market_hash_name":"Item",
@@ -452,7 +471,6 @@ with tab1:
         def _evo_style(val):
             return f"background-color: {_pct_bg_color(val)};"
 
-        # apply -> map (pandas 2.2+)
         styler = (
             to_show.style
             .format({
@@ -527,7 +545,7 @@ with tab3:
             cost = (sub["qty"]*sub["price_usd"]).sum(); q = sub["qty"].sum()
             pru = cost/q if q>0 else 0
             pnl_real += (price_s - pru)*qty_s
-        st.metric("P&L réalisé cumulé", f"${pnl_real:,.2f}")
+        st.metric("P&L réalisé cumulé (WAC)", f"${pnl_real:,.2f}")
 
         to_display = trades.sort_values("date", ascending=False)
         delete_id = st.text_input("ID de transaction à supprimer (trade_id)")
@@ -547,8 +565,45 @@ with tab4:
 
     finances = load_finances()
     cs_snap  = load_csfloat_snapshot()
+    fin_base = load_finance_baseline()
 
-    # ---- Saisie snapshot CSFloat ----
+    # ---- Baseline (capital net déposé lifetime) ----
+    with st.expander("⚙️ Ajuster le capital net déposé (lifetime) — baseline"):
+        current_baseline = float(fin_base["baseline_net_deposited_usd"].iloc[-1]) if not fin_base.empty else 0.0
+        st.info(f"Baseline actuelle : ${current_baseline:,.2f}")
+        bcol1, bcol2, bcol3 = st.columns(3)
+        base_date = bcol1.date_input("Date baseline", value=date.today())
+        base_val  = bcol2.number_input("NOUVELLE baseline (USD)", min_value=0.0, step=0.01)
+        base_note = bcol3.text_input("Note (optionnel)")
+        if st.button("Enregistrer la baseline"):
+            df = fin_base.copy()
+            row = {"baseline_date": pd.to_datetime(base_date).strftime("%Y-%m-%d"),
+                   "baseline_net_deposited_usd": base_val,
+                   "note": base_note}
+            df = pd.concat([df, pd.DataFrame([row])], ignore_index=True)
+            save_finance_baseline(df, "update baseline net deposited")
+            st.success("Baseline enregistrée."); st.rerun()
+
+        if st.button("Baseliner sur les mouvements actuels (conseil: pour repartir propre)"):
+            # met la baseline = somme actuelle des mouvements saisis (DEPOSIT-WITHDRAW)
+            if finances.empty:
+                new_val = 0.0
+            else:
+                finances["date"] = pd.to_datetime(finances["date"], errors="coerce")
+                def _mov_sum(df):
+                    return df.apply(lambda r: r["amount_usd"] if r["type"]=="DEPOSIT" else (-r["amount_usd"] if r["type"]=="WITHDRAW" else 0.0), axis=1).sum()
+                new_val = float(_mov_sum(finances))
+            df = fin_base.copy()
+            row = {"baseline_date": date.today().strftime("%Y-%m-%d"),
+                   "baseline_net_deposited_usd": new_val,
+                   "note": "baseline = somme mouvements actuels"}
+            df = pd.concat([df, pd.DataFrame([row])], ignore_index=True)
+            save_finance_baseline(df, "baseline set to current movements sum")
+            st.success(f"Baseline mise à ${new_val:,.2f}."); st.rerun()
+
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
+    # ---- Snapshot CSFloat ----
     with st.expander("📌 Définir / Mettre à jour le snapshot CSFloat (solde constaté sur la plateforme)"):
         colA, colB = st.columns(2)
         snap_date = colA.date_input("Date du snapshot", value=date.today())
@@ -564,7 +619,7 @@ with tab4:
 
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
-    # ---- Saisie mouvements d'argent ----
+    # ---- Mouvements d'argent ----
     with st.expander("💸 Ajouter un mouvement (DEPOSIT / WITHDRAW)"):
         fcol1, fcol2, fcol3 = st.columns(3)
         f_date = fcol1.date_input("Date", value=date.today())
@@ -587,10 +642,10 @@ with tab4:
                 st.success("Mouvement enregistré."); st.rerun()
 
     # ---- Calculs KPI ----
-    fin = compute_financials(trades, finances, cs_snap)
+    fin = compute_financials(trades, finances, cs_snap, fin_base)
 
     account_equity = fin["csfloat_cash_expected"] + float(total_val)  # Cash attendu + valeur positions (live)
-    true_profit    = account_equity - fin["net_deposited_all"]       # “vrai bénéfice” éco
+    true_profit    = account_equity - fin["net_deposited_all"]       # “vrai bénéfice” = Equity - capital net déposé (lifetime)
 
     # KPI cards
     k1, k2, k3, k4 = st.columns(4)
@@ -621,14 +676,21 @@ with tab4:
 
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
-    # Détails
-    st.markdown("#### Détails")
+    # Détails et vérifications
+    st.markdown("#### Détails & Reconcil")
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Snapshot CSFloat", f"${fin['snapshot_bal']:,.2f}",
               delta=f"au {fin['snapshot_date'].date()}" if fin["snapshot_date"] is not None else None)
     c2.metric("Dépôts nets depuis snapshot", f"${fin['net_deposited_since']:,.2f}")
     c3.metric("Ventes depuis snapshot", f"${fin['sells_usd_since']:,.2f}")
     c4.metric("Achats depuis snapshot", f"${fin['buys_usd_since']:,.2f}")
+
+    b1, b2, b3 = st.columns(3)
+    b1.metric("Baseline (capital net déposé)", f"${fin['baseline_val']:,.2f}",
+              delta=f"depuis {fin['baseline_date'].date()}" if fin["baseline_date"] is not None else None)
+    contrib_mov = fin["net_deposited_all"] - fin["baseline_val"]
+    b2.metric("Mouvements saisis (depuis toujours)", f"${contrib_mov:,.2f}")
+    b3.metric("Equity - Net Deposited (= Vrai bénéfice)", f"${(account_equity - fin['net_deposited_all']):,.2f}")
 
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
