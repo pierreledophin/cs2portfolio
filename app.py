@@ -60,7 +60,7 @@ PATH_HISTORY  = f"{DATA_DIR}/price_history.csv"
 # ---------- FICHIERS FINANCE ----------
 PATH_FINANCE       = f"{DATA_DIR}/finances.csv"            # DEPOSIT / WITHDRAW
 PATH_CSFLOAT_SNAP  = f"{DATA_DIR}/csfloat_snapshot.csv"    # snapshots du solde CSFloat (manuel)
-PATH_FIN_BASELINE  = f"{DATA_DIR}/finance_baseline.csv"    # baseline "capital net déposé (lifetime)"
+PATH_FIN_BASELINE  = f"{DATA_DIR}/finance_baseline.csv"    # baseline capital net déposé (lifetime)
 
 # ---------- GitHub helpers ----------
 def _gh_headers():
@@ -80,7 +80,13 @@ def gh_get_file(path):
 
 def gh_put_file(path, content, sha, message):
     url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}"
-    payload = {"message": message, "content": base64.b64encode(content.encode("utf-8")).decode("ascii"), "branch": BRANCH, "sha": sha}
+    payload = {
+        "message": message,
+        "content": base64.b64encode(content.encode("utf-8")).decode("ascii"),
+        "branch": BRANCH,
+    }
+    if sha:
+        payload["sha"] = sha  # pour update; omis pour create
     r = requests.put(url, headers=_gh_headers(), data=json.dumps(payload), timeout=20)
     return r
 
@@ -101,10 +107,11 @@ def ensure_finance_files_exist():
     if not os.path.exists(PATH_CSFLOAT_SNAP):
         pd.DataFrame(columns=["snapshot_date","balance_usd"]).to_csv(PATH_CSFLOAT_SNAP, index=False)
     if not os.path.exists(PATH_FIN_BASELINE):
-        # baseline par défaut = 0
-        pd.DataFrame([{"baseline_date": date.today().strftime("%Y-%m-%d"),
-                       "baseline_net_deposited_usd": 0.0,
-                       "note": "init"}]).to_csv(PATH_FIN_BASELINE, index=False)
+        pd.DataFrame([{
+            "baseline_date": date.today().strftime("%Y-%m-%d"),
+            "baseline_net_deposited_usd": 0.0,
+            "note": "init"
+        }]).to_csv(PATH_FIN_BASELINE, index=False)
 
 ensure_trades_exists()
 ensure_finance_files_exist()
@@ -348,14 +355,17 @@ def compute_financials(trades_df: pd.DataFrame, finance_df: pd.DataFrame, snap_d
     buys_usd  = (td[td["type"]=="BUY"]["qty"]  * td[td["type"]=="BUY"]["price_usd"]).sum()
     sells_usd = (td[td["type"]=="SELL"]["qty"] * td[td["type"]=="SELL"]["price_usd"]).sum()
 
-    # Dépôts / retraits : somme "mouvements" (depuis toujours) et "depuis snapshot"
+    # Dépôts / retraits
     fin = finance_df.copy()
     if not fin.empty:
         fin["date"] = pd.to_datetime(fin["date"], errors="coerce")
 
     def _mov_sum(df):
         if df.empty: return 0.0
-        return df.apply(lambda r: r["amount_usd"] if r.get("type")=="DEPOSIT" else (-r["amount_usd"] if r.get("type")=="WITHDRAW" else 0.0), axis=1).sum()
+        return df.apply(
+            lambda r: r["amount_usd"] if r.get("type")=="DEPOSIT" else (-r["amount_usd"] if r.get("type")=="WITHDRAW" else 0.0),
+            axis=1
+        ).sum()
 
     mov_all   = _mov_sum(fin) if not fin.empty else 0.0
     if snapshot_date is not None and not fin.empty:
@@ -363,14 +373,14 @@ def compute_financials(trades_df: pd.DataFrame, finance_df: pd.DataFrame, snap_d
     else:
         mov_since = mov_all
 
-    # Capital net déposé (lifetime) = baseline + mouvements saisis dans l'app
+    # Capital net déposé (lifetime) = baseline + mouvements saisis
     net_deposited_all = float(baseline_val + mov_all)
     net_deposited_since = float(mov_since)
 
-    # Solde CSFloat attendu = snapshot + dépôts_nets_depuis_snapshot + ventes - achats
+    # Solde CSFloat attendu
     csfloat_cash_expected = float(snapshot_bal + net_deposited_since + sells_usd - buys_usd)
 
-    # P&L réalisé (WAC simplifié, info seulement)
+    # P&L réalisé (WAC simplifié, informatif)
     pnl_real = 0.0
     for _, row in trades_df[trades_df["type"]=="SELL"].iterrows():
         name = row["market_hash_name"]; qty_s = row["qty"]; price_s = row["price_usd"]
@@ -394,11 +404,11 @@ def compute_financials(trades_df: pd.DataFrame, finance_df: pd.DataFrame, snap_d
 
 # ---------- Sidebar ----------
 with st.sidebar:
-    if st.button("Actualiser les prix (Live)"):
+    if st.button("Actualiser les prix (Live)", key="btn_refresh_prices"):
         st.cache_data.clear()
         st.success("Prix Live rafraîchis.")
         st.rerun()
-    if st.button("Lancer MAJ GitHub (robot)"):
+    if st.button("Lancer MAJ GitHub (robot)", key="btn_dispatch_workflow"):
         if not GH_PAT:
             st.error("GH_PAT manquant dans les secrets Streamlit.")
         else:
@@ -512,13 +522,13 @@ with tab1:
 with tab2:
     st.subheader("Nouvelle transaction")
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
-    t_type = st.radio("Type", ["BUY","SELL"], horizontal=True)
-    name = st.text_input("Nom exact (market_hash_name)")
-    qty = st.number_input("Quantité", min_value=1, step=1)
-    price = st.number_input("Prix unitaire USD", min_value=0.0, step=0.01)
-    note = st.text_input("Note (facultatif)")
+    t_type = st.radio("Type", ["BUY","SELL"], horizontal=True, key="trade_type")
+    name = st.text_input("Nom exact (market_hash_name)", key="trade_item_name")
+    qty = st.number_input("Quantité", min_value=1, step=1, key="trade_qty")
+    price = st.number_input("Prix unitaire USD", min_value=0.0, step=0.01, key="trade_price")
+    note = st.text_input("Note (facultatif)", key="trade_note")
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
-    if st.button("Enregistrer la transaction"):
+    if st.button("Enregistrer la transaction", key="btn_save_trade"):
         if not name:
             st.error("Nom requis.")
         else:
@@ -548,11 +558,11 @@ with tab3:
         st.metric("P&L réalisé cumulé (WAC)", f"${pnl_real:,.2f}")
 
         to_display = trades.sort_values("date", ascending=False)
-        delete_id = st.text_input("ID de transaction à supprimer (trade_id)")
-        if st.button("Supprimer"):
-            if delete_id in trades["trade_id"].values:
-                trades = trades[trades["trade_id"]!=delete_id]
-                save_trades(trades, f"delete trade {delete_id}")
+        delete_id = st.text_input("ID de transaction à supprimer (trade_id)", key="delete_trade_id")
+        if st.button("Supprimer", key="btn_delete_trade"):
+            if delete_id in to_display["trade_id"].values:
+                new_trades = trades[trades["trade_id"]!=delete_id]
+                save_trades(new_trades, f"delete trade {delete_id}")
                 st.success(f"Transaction {delete_id} supprimée."); st.cache_data.clear(); st.rerun()
             else:
                 st.error("ID introuvable.")
@@ -572,10 +582,10 @@ with tab4:
         current_baseline = float(fin_base["baseline_net_deposited_usd"].iloc[-1]) if not fin_base.empty else 0.0
         st.info(f"Baseline actuelle : ${current_baseline:,.2f}")
         bcol1, bcol2, bcol3 = st.columns(3)
-        base_date = bcol1.date_input("Date baseline", value=date.today())
-        base_val  = bcol2.number_input("NOUVELLE baseline (USD)", min_value=0.0, step=0.01)
-        base_note = bcol3.text_input("Note (optionnel)")
-        if st.button("Enregistrer la baseline"):
+        base_date = bcol1.date_input("Date baseline", value=date.today(), key="baseline_date")
+        base_val  = bcol2.number_input("NOUVELLE baseline (USD)", min_value=0.0, step=0.01, key="baseline_value")
+        base_note = bcol3.text_input("Note (optionnel)", key="baseline_note")
+        if st.button("Enregistrer la baseline", key="btn_save_baseline"):
             df = fin_base.copy()
             row = {"baseline_date": pd.to_datetime(base_date).strftime("%Y-%m-%d"),
                    "baseline_net_deposited_usd": base_val,
@@ -584,8 +594,7 @@ with tab4:
             save_finance_baseline(df, "update baseline net deposited")
             st.success("Baseline enregistrée."); st.rerun()
 
-        if st.button("Baseliner sur les mouvements actuels (conseil: pour repartir propre)"):
-            # met la baseline = somme actuelle des mouvements saisis (DEPOSIT-WITHDRAW)
+        if st.button("Baseliner sur les mouvements actuels (conseil: pour repartir propre)", key="btn_baseline_autoset"):
             if finances.empty:
                 new_val = 0.0
             else:
@@ -606,9 +615,9 @@ with tab4:
     # ---- Snapshot CSFloat ----
     with st.expander("📌 Définir / Mettre à jour le snapshot CSFloat (solde constaté sur la plateforme)"):
         colA, colB = st.columns(2)
-        snap_date = colA.date_input("Date du snapshot", value=date.today())
-        snap_bal  = colB.number_input("Solde CSFloat constaté (USD)", min_value=0.0, step=0.01)
-        if st.button("Enregistrer le snapshot CSFloat"):
+        snap_date = colA.date_input("Date du snapshot", value=date.today(), key="snap_date")
+        snap_bal  = colB.number_input("Solde CSFloat constaté (USD)", min_value=0.0, step=0.01, key="snap_balance")
+        if st.button("Enregistrer le snapshot CSFloat", key="btn_save_snapshot"):
             df = load_csfloat_snapshot()
             df = pd.concat([df, pd.DataFrame([{
                 "snapshot_date": pd.to_datetime(snap_date).strftime("%Y-%m-%d"),
@@ -622,11 +631,11 @@ with tab4:
     # ---- Mouvements d'argent ----
     with st.expander("💸 Ajouter un mouvement (DEPOSIT / WITHDRAW)"):
         fcol1, fcol2, fcol3 = st.columns(3)
-        f_date = fcol1.date_input("Date", value=date.today())
-        f_type = fcol2.radio("Type", ["DEPOSIT","WITHDRAW"], horizontal=True)
-        f_amt  = fcol3.number_input("Montant USD", min_value=0.0, step=0.01)
-        f_note = st.text_input("Note (optionnel)")
-        if st.button("Enregistrer le mouvement"):
+        f_date = fcol1.date_input("Date", value=date.today(), key="mov_date")
+        f_type = fcol2.radio("Type", ["DEPOSIT","WITHDRAW"], horizontal=True, key="mov_type")
+        f_amt  = fcol3.number_input("Montant USD", min_value=0.0, step=0.01, key="mov_amount")
+        f_note = st.text_input("Note (optionnel)", key="mov_note")
+        if st.button("Enregistrer le mouvement", key="btn_save_movement"):
             if f_amt <= 0:
                 st.error("Montant invalide.")
             else:
@@ -645,7 +654,7 @@ with tab4:
     fin = compute_financials(trades, finances, cs_snap, fin_base)
 
     account_equity = fin["csfloat_cash_expected"] + float(total_val)  # Cash attendu + valeur positions (live)
-    true_profit    = account_equity - fin["net_deposited_all"]       # “vrai bénéfice” = Equity - capital net déposé (lifetime)
+    true_profit    = account_equity - fin["net_deposited_all"]       # Vrai bénéfice = Equity - capital net déposé (lifetime)
 
     # KPI cards
     k1, k2, k3, k4 = st.columns(4)
@@ -676,7 +685,7 @@ with tab4:
 
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
-    # Détails et vérifications
+    # Détails & Reconcil
     st.markdown("#### Détails & Reconcil")
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Snapshot CSFloat", f"${fin['snapshot_bal']:,.2f}",
@@ -700,11 +709,11 @@ with tab4:
         st.info("Aucun mouvement enregistré.")
     else:
         fin_display = finances.sort_values("date", ascending=False).copy()
-        del_id = st.text_input("ID de mouvement à supprimer (finance_id)")
-        if st.button("Supprimer le mouvement"):
-            if del_id in finances["finance_id"].values:
-                finances = finances[finances["finance_id"] != del_id]
-                save_finances(finances, f"delete finance {del_id}")
+        del_id = st.text_input("ID de mouvement à supprimer (finance_id)", key="delete_finance_id")
+        if st.button("Supprimer le mouvement", key="btn_delete_movement"):
+            if del_id in fin_display["finance_id"].values:
+                new_finances = finances[finances["finance_id"] != del_id]
+                save_finances(new_finances, f"delete finance {del_id}")
                 st.success(f"Mouvement {del_id} supprimé."); st.cache_data.clear(); st.rerun()
             else:
                 st.error("ID introuvable.")
