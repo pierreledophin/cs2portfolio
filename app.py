@@ -1,5 +1,5 @@
 import io, os, base64, json, uuid, requests, pandas as pd, numpy as np, streamlit as st
-from datetime import datetime
+from datetime import datetime, date
 
 # ---------- Configuration ----------
 st.set_page_config(page_title="CS2 Portfolio (CSFloat)", layout="wide")
@@ -38,7 +38,7 @@ h2, h3 { margin-top: 1.0rem !important; margin-bottom: 1.6rem !important; }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1 style='margin-bottom:0'>CS2 Portfolio Tracker</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='margin-bottom:0'>CS2 Portfolio Tracker TEST VERSION</h1>", unsafe_allow_html=True)
 
 OWNER   = st.secrets.get("GH_OWNER", "")
 REPO    = st.secrets.get("GH_REPO", "")
@@ -53,9 +53,13 @@ profile = st.radio("Profil", PROFILES, horizontal=True, key="profile_select")
 
 DATA_DIR = f"data/{profile}"
 os.makedirs(DATA_DIR, exist_ok=True)
-PATH_TRADES = f"{DATA_DIR}/trades.csv"
+PATH_TRADES   = f"{DATA_DIR}/trades.csv"
 PATH_HOLDINGS = f"{DATA_DIR}/holdings.csv"
-PATH_HISTORY = f"{DATA_DIR}/price_history.csv"
+PATH_HISTORY  = f"{DATA_DIR}/price_history.csv"
+
+# ---------- NOUVEAUX FICHIERS FINANCE ----------
+PATH_FINANCE       = f"{DATA_DIR}/finances.csv"          # DEPOSIT / WITHDRAW (cash réel)
+PATH_CSFLOAT_SNAP  = f"{DATA_DIR}/csfloat_snapshot.csv"  # snapshots du solde CSFloat (manuel)
 
 # ---------- GitHub helpers ----------
 def _gh_headers():
@@ -85,13 +89,24 @@ def gh_dispatch_workflow(workflow_file="fetch-prices.yml"):
     r = requests.post(url, headers=_gh_headers(), data=json.dumps(payload), timeout=20)
     return r
 
-# ---------- Init trades ----------
+# ---------- Init fichiers ----------
 def ensure_trades_exists():
     if not os.path.exists(PATH_TRADES):
         df = pd.DataFrame(columns=["date","type","market_hash_name","qty","price_usd","note","trade_id"])
         df.to_csv(PATH_TRADES, index=False)
-ensure_trades_exists()
 
+def ensure_finance_exists():
+    if not os.path.exists(PATH_FINANCE):
+        df = pd.DataFrame(columns=["date","type","amount_usd","note","finance_id"])
+        df.to_csv(PATH_FINANCE, index=False)
+    if not os.path.exists(PATH_CSFLOAT_SNAP):
+        df = pd.DataFrame(columns=["snapshot_date","balance_usd"])
+        df.to_csv(PATH_CSFLOAT_SNAP, index=False)
+
+ensure_trades_exists()
+ensure_finance_exists()
+
+# ---------- Trades I/O ----------
 def load_trades():
     try:
         return pd.read_csv(PATH_TRADES)
@@ -109,7 +124,42 @@ def save_trades(df, msg="update trades"):
         else:
             st.error(f"Erreur GitHub: {resp.status_code}")
 
-# ---------- Calculs ----------
+# ---------- Finance I/O ----------
+def load_finances():
+    try:
+        return pd.read_csv(PATH_FINANCE)
+    except Exception:
+        return pd.DataFrame(columns=["date","type","amount_usd","note","finance_id"])
+
+def save_finances(df, msg="update finances"):
+    df.to_csv(PATH_FINANCE, index=False)
+    if GH_PAT and OWNER:
+        text, sha, _ = gh_get_file(PATH_FINANCE)
+        csv_buf = io.StringIO(); df.to_csv(csv_buf, index=False)
+        resp = gh_put_file(PATH_FINANCE, csv_buf.getvalue(), sha, msg)
+        if 200 <= resp.status_code < 300:
+            st.toast("Mouvements financiers sauvegardés sur GitHub.")
+        else:
+            st.error(f"Erreur GitHub: {resp.status_code}")
+
+def load_csfloat_snapshot():
+    try:
+        return pd.read_csv(PATH_CSFLOAT_SNAP)
+    except Exception:
+        return pd.DataFrame(columns=["snapshot_date","balance_usd"])
+
+def save_csfloat_snapshot(df, msg="update csfloat snapshot"):
+    df.to_csv(PATH_CSFLOAT_SNAP, index=False)
+    if GH_PAT and OWNER:
+        text, sha, _ = gh_get_file(PATH_CSFLOAT_SNAP)
+        csv_buf = io.StringIO(); df.to_csv(csv_buf, index=False)
+        resp = gh_put_file(PATH_CSFLOAT_SNAP, csv_buf.getvalue(), sha, msg)
+        if 200 <= resp.status_code < 300:
+            st.toast("Snapshot CSFloat sauvegardé sur GitHub.")
+        else:
+            st.error(f"Erreur GitHub: {resp.status_code}")
+
+# ---------- Calcul holdings ----------
 def rebuild_holdings(trades: pd.DataFrame):
     if trades.empty:
         pd.DataFrame(columns=["market_hash_name","qty","buy_price_usd","buy_date","notes"]).to_csv(PATH_HOLDINGS,index=False)
@@ -181,7 +231,6 @@ def _pnl_bg_color(value):
 
 def _pct_bg_color(pct):
     base_green = "#22c55e"; base_red = "#ef4444"
-    # vide / NaN / inf / 0 => neutre
     try:
         if pct is None or pct == "" or pd.isna(pct) or not np.isfinite(pct) or abs(float(pct)) < 1e-4:
             return "#ffffff"
@@ -228,6 +277,100 @@ def build_portfolio_timeseries(holdings_df: pd.DataFrame, hist_df: pd.DataFrame)
     ts = pivot[["total_value_usd"]].copy(); ts.index.name = "date"; ts.reset_index(inplace=True)
     return ts
 
+# ---------- Calculs "live" holdings + KPIs ----------
+def enrich_holdings_live(holdings_df: pd.DataFrame):
+    """Ajoute les icônes, prix actuels, valeur, P&L et %; retourne (df, totals)."""
+    if holdings_df.empty:
+        totals = {"total_val": 0.0, "total_cost": 0.0, "total_pnl": 0.0, "total_pct": 0.0}
+        df = pd.DataFrame(columns=["market_hash_name","qty","buy_price_usd","buy_date","notes","Image","Prix actuel USD","valeur","gain","evolution_pct"])
+        return df, totals
+
+    df = holdings_df.copy()
+    df["Image"] = df["market_hash_name"].apply(fetch_icon)
+    df["Prix actuel USD"] = df["market_hash_name"].apply(fetch_price)
+    df["valeur"] = df["Prix actuel USD"] * df["qty"]
+    df["gain"] = (df["Prix actuel USD"] - df["buy_price_usd"]) * df["qty"]
+
+    buy = pd.to_numeric(df["buy_price_usd"], errors="coerce")
+    price_now = pd.to_numeric(df["Prix actuel USD"], errors="coerce")
+    diff = price_now - buy
+    evo_array = np.divide(
+        diff.to_numpy(dtype="float64") * 100.0,
+        buy.to_numpy(dtype="float64"),
+        out=np.full(diff.shape, np.nan, dtype="float64"),
+        where=(buy.to_numpy(dtype="float64") > 0)
+    )
+    df["evolution_pct"] = pd.to_numeric(pd.Series(evo_array), errors="coerce").replace([np.inf, -np.inf], np.nan)
+
+    total_val = df["valeur"].sum()
+    total_cost = (df["buy_price_usd"] * df["qty"]).sum()
+    total_pnl = total_val - total_cost
+    total_pct = (total_pnl / total_cost * 100) if total_cost>0 else 0.0
+    totals = {"total_val": float(total_val), "total_cost": float(total_cost), "total_pnl": float(total_pnl), "total_pct": float(total_pct)}
+    return df, totals
+
+# ---------- Calculs financiers globaux ----------
+def compute_financials(trades_df: pd.DataFrame, finance_df: pd.DataFrame, snap_df: pd.DataFrame):
+    """Retourne un dict KPI pour l'onglet Statistiques financières."""
+    # snapshot (dernier)
+    snap_df = snap_df.copy()
+    if not snap_df.empty:
+        snap_df["snapshot_date"] = pd.to_datetime(snap_df["snapshot_date"], errors="coerce")
+        snap_df = snap_df.dropna(subset=["snapshot_date"]).sort_values("snapshot_date")
+    snapshot_bal = float(snap_df["balance_usd"].iloc[-1]) if not snap_df.empty else 0.0
+    snapshot_date = snap_df["snapshot_date"].iloc[-1] if not snap_df.empty else None
+
+    # achats/ventes depuis snapshot
+    td = trades_df.copy()
+    td["date"] = pd.to_datetime(td["date"], errors="coerce")
+    if snapshot_date is not None:
+        td = td[td["date"] >= snapshot_date]
+
+    buys_usd  = (td[td["type"]=="BUY"]["qty"] * td[td["type"]=="BUY"]["price_usd"]).sum()
+    sells_usd = (td[td["type"]=="SELL"]["qty"]* td[td["type"]=="SELL"]["price_usd"]).sum()
+
+    # dépôts / retraits
+    fin = finance_df.copy()
+    if not fin.empty:
+        fin["date"] = pd.to_datetime(fin["date"], errors="coerce")
+    net_deposited_all = fin.apply(
+        lambda r: r["amount_usd"] if r.get("type")=="DEPOSIT" else (-r["amount_usd"] if r.get("type")=="WITHDRAW" else 0.0),
+        axis=1
+    ).sum() if not fin.empty else 0.0
+
+    if snapshot_date is not None and not fin.empty:
+        fin_since = fin[fin["date"] >= snapshot_date]
+    else:
+        fin_since = fin if not fin.empty else pd.DataFrame(columns=["date","type","amount_usd"])
+
+    net_deposited_since = fin_since.apply(
+        lambda r: r["amount_usd"] if r.get("type")=="DEPOSIT" else (-r["amount_usd"] if r.get("type")=="WITHDRAW" else 0.0),
+        axis=1
+    ).sum() if not fin_since.empty else 0.0
+
+    # Solde CSFloat attendu
+    csfloat_cash_expected = float(snapshot_bal + net_deposited_since + sells_usd - buys_usd)
+
+    # P&L réalisé
+    pnl_real = 0.0
+    for _, row in trades_df[trades_df["type"]=="SELL"].iterrows():
+        name = row["market_hash_name"]; qty_s = row["qty"]; price_s = row["price_usd"]
+        sub = trades_df[(trades_df["market_hash_name"]==name)&(trades_df["type"]=="BUY")]
+        cost = (sub["qty"]*sub["price_usd"]).sum(); q = sub["qty"].sum()
+        pru = cost/q if q>0 else 0.0
+        pnl_real += (price_s - pru)*qty_s
+
+    return {
+        "snapshot_date": snapshot_date,
+        "snapshot_bal": float(snapshot_bal),
+        "net_deposited_all": float(net_deposited_all),
+        "net_deposited_since": float(net_deposited_since),
+        "buys_usd_since": float(buys_usd),
+        "sells_usd_since": float(sells_usd),
+        "csfloat_cash_expected": float(csfloat_cash_expected),
+        "pnl_realized": float(pnl_real),
+    }
+
 # ---------- Sidebar ----------
 with st.sidebar:
     if st.button("Actualiser les prix (Live)"):
@@ -244,128 +387,110 @@ with st.sidebar:
             else:
                 st.error(f"Échec ({resp.status_code}) : {resp.text[:200]}")
 
-# ---------- UI ----------
-tab1, tab2, tab3 = st.tabs(["Portefeuille", "Achat / Vente", "Transactions"])
+# ---------- Data chargées en amont ----------
 trades = load_trades()
+holdings_base = rebuild_holdings(trades)
+holdings_live, totals = enrich_holdings_live(holdings_base)
+total_val  = totals["total_val"]
+total_cost = totals["total_cost"]
+total_pnl  = totals["total_pnl"]
+total_pct  = totals["total_pct"]
 
-# ---------- Onglet 1 ----------
+# ---------- UI ----------
+tab1, tab2, tab3, tab4 = st.tabs(["Portefeuille", "Achat / Vente", "Transactions", "Statistiques financières"])
+
+# ---------- Onglet 1 : Portefeuille ----------
 with tab1:
     st.subheader("Portefeuille actuel")
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
-    holdings = rebuild_holdings(trades)
-    if holdings.empty:
+    if holdings_live.empty:
         st.info("Aucune position.")
-        st.stop()
-
-    # Données live
-    holdings["Image"] = holdings["market_hash_name"].apply(fetch_icon)
-    holdings["Prix actuel USD"] = holdings["market_hash_name"].apply(fetch_price)
-    holdings["valeur"] = holdings["Prix actuel USD"] * holdings["qty"]
-    holdings["gain"] = (holdings["Prix actuel USD"] - holdings["buy_price_usd"]) * holdings["qty"]
-
-    # --- Calcul robuste de l'évolution % (ne calcule que si buy>0) ---
-    buy = pd.to_numeric(holdings["buy_price_usd"], errors="coerce")
-    price_now = pd.to_numeric(holdings["Prix actuel USD"], errors="coerce")
-    diff = price_now - buy
-    evo_array = np.divide(
-        diff.to_numpy(dtype="float64") * 100.0,
-        buy.to_numpy(dtype="float64"),
-        out=np.full(diff.shape, np.nan, dtype="float64"),
-        where=(buy.to_numpy(dtype="float64") > 0)
-    )
-    holdings["evolution_pct"] = pd.to_numeric(pd.Series(evo_array), errors="coerce").replace([np.inf, -np.inf], np.nan)
-
-    # Totaux
-    total_val = holdings["valeur"].sum()
-    total_cost = (holdings["buy_price_usd"] * holdings["qty"]).sum()
-    total_pnl = total_val - total_cost
-    total_pct = (total_pnl / total_cost * 100) if total_cost>0 else 0
-
-    # KPI cards
-    col1, col2, col3, col4 = st.columns(4)
-    col1.markdown(f"""
-    <div class="kpi-card">
-      <div class="kpi-title">Valeur portefeuille</div>
-      <div class="kpi-value">${total_val:,.2f}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    col2.markdown(f"""
-    <div class="kpi-card" style="background:{_blend_to_pastel('#3b82f6',0.10)}">
-      <div class="kpi-title">Coût total</div>
-      <div class="kpi-value">${total_cost:,.2f}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    col3.markdown(f"""
-    <div class="kpi-card" style="background:{_pnl_bg_color(total_pnl)}">
-      <div class="kpi-title">P&L latent</div>
-      <div class="kpi-value">${total_pnl:,.2f}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    col4.markdown(f"""
-    <div class="kpi-card" style="background:{_pct_bg_color(total_pct)}">
-      <div class="kpi-title">% d’évolution</div>
-      <div class="kpi-value">{total_pct:,.2f}%</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
-
-    # Tableau stylé
-    to_show = holdings[["Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain","evolution_pct"]].rename(
-        columns={
-            "market_hash_name":"Item",
-            "qty":"Quantité",
-            "buy_price_usd":"Prix achat USD",
-            "Prix actuel USD":"Prix vente USD",
-            "gain":"Gain latent USD",
-            "evolution_pct":"% évolution"
-        }
-    )
-    to_show["Image"] = to_show["Image"].fillna("").astype(str)
-
-    def _evo_style(val):
-        return f"background-color: {_pct_bg_color(val)};"
-
-    # ⬇️ CHANGEMENT MINIMAL: applymap -> map (pandas 2.2+)
-    styler = (
-        to_show.style
-        .format({
-            "Prix achat USD": "${:,.2f}",
-            "Prix vente USD": "${:,.2f}",
-            "Gain latent USD": "${:,.2f}",
-            "% évolution": "{:,.2f}%"
-        })
-        .map(lambda v: _evo_style(v), subset=["% évolution"])
-    )
-
-    st.dataframe(
-        styler,
-        use_container_width=True,
-        hide_index=True,
-        column_config={
-            "Image": st.column_config.ImageColumn("Image", width="small"),
-            "Item": "Item",
-            "Quantité": st.column_config.NumberColumn("Quantité", format="%d"),
-            "Prix achat USD": st.column_config.NumberColumn("Prix achat USD", format="$%.2f"),
-            "Prix vente USD": st.column_config.NumberColumn("Prix vente USD", format="$%.2f"),
-            "Gain latent USD": st.column_config.NumberColumn("Gain latent USD", format="$%.2f"),
-            "% évolution": st.column_config.NumberColumn("% évolution", format="%.2f%%"),
-        }
-    )
-
-    st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
-
-    st.markdown("### Évolution de la valeur du portefeuille")
-    hist_df = load_price_history_df()
-    ts = build_portfolio_timeseries(holdings_df=holdings, hist_df=hist_df)
-    if ts.empty:
-        st.info("Pas encore assez d’historique pour tracer la courbe.")
     else:
-        ts = ts.sort_values("date").set_index("date")
-        st.line_chart(ts["total_value_usd"])
+        # KPI cards
+        col1, col2, col3, col4 = st.columns(4)
+        col1.markdown(f"""
+        <div class="kpi-card">
+          <div class="kpi-title">Valeur portefeuille</div>
+          <div class="kpi-value">${total_val:,.2f}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        col2.markdown(f"""
+        <div class="kpi-card" style="background:{_blend_to_pastel('#3b82f6',0.10)}">
+          <div class="kpi-title">Coût total</div>
+          <div class="kpi-value">${total_cost:,.2f}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        col3.markdown(f"""
+        <div class="kpi-card" style="background:{_pnl_bg_color(total_pnl)}">
+          <div class="kpi-title">P&L latent</div>
+          <div class="kpi-value">${total_pnl:,.2f}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        col4.markdown(f"""
+        <div class="kpi-card" style="background:{_pct_bg_color(total_pct)}">
+          <div class="kpi-title">% d’évolution</div>
+          <div class="kpi-value">{total_pct:,.2f}%</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-# ---------- Onglet 2 ----------
+        st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
+
+        # Tableau stylé
+        to_show = holdings_live[["Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain","evolution_pct"]].rename(
+            columns={
+                "market_hash_name":"Item",
+                "qty":"Quantité",
+                "buy_price_usd":"Prix achat USD",
+                "Prix actuel USD":"Prix vente USD",
+                "gain":"Gain latent USD",
+                "evolution_pct":"% évolution"
+            }
+        )
+        to_show["Image"] = to_show["Image"].fillna("").astype(str)
+
+        def _evo_style(val):
+            return f"background-color: {_pct_bg_color(val)};"
+
+        # apply -> map (pandas 2.2+)
+        styler = (
+            to_show.style
+            .format({
+                "Prix achat USD": "${:,.2f}",
+                "Prix vente USD": "${:,.2f}",
+                "Gain latent USD": "${:,.2f}",
+                "% évolution": "{:,.2f}%"
+            })
+            .map(lambda v: _evo_style(v), subset=["% évolution"])
+        )
+
+        st.dataframe(
+            styler,
+            use_container_width=True,
+            hide_index=True,
+            column_config={
+                "Image": st.column_config.ImageColumn("Image", width="small"),
+                "Item": "Item",
+                "Quantité": st.column_config.NumberColumn("Quantité", format="%d"),
+                "Prix achat USD": st.column_config.NumberColumn("Prix achat USD", format="$%.2f"),
+                "Prix vente USD": st.column_config.NumberColumn("Prix vente USD", format="$%.2f"),
+                "Gain latent USD": st.column_config.NumberColumn("Gain latent USD", format="$%.2f"),
+                "% évolution": st.column_config.NumberColumn("% évolution", format="%.2f%%"),
+            }
+        )
+
+        st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
+
+        st.markdown("### Évolution de la valeur du portefeuille")
+        hist_df = load_price_history_df()
+        ts = build_portfolio_timeseries(holdings_df=holdings_base, hist_df=hist_df)
+        if ts.empty:
+            st.info("Pas encore assez d’historique pour tracer la courbe.")
+        else:
+            ts = ts.sort_values("date").set_index("date")
+            st.line_chart(ts["total_value_usd"])
+
+# ---------- Onglet 2 : Achat / Vente ----------
 with tab2:
     st.subheader("Nouvelle transaction")
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
@@ -388,7 +513,7 @@ with tab2:
             save_trades(trades, f"add {t_type} {name}")
             st.success("Transaction enregistrée."); st.cache_data.clear(); st.rerun()
 
-# ---------- Onglet 3 ----------
+# ---------- Onglet 3 : Transactions ----------
 with tab3:
     st.subheader("Historique des transactions")
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
@@ -414,3 +539,111 @@ with tab3:
             else:
                 st.error("ID introuvable.")
         st.dataframe(to_display, use_container_width=True, hide_index=True)
+
+# ---------- Onglet 4 : Statistiques financières ----------
+with tab4:
+    st.subheader("Statistiques financières")
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
+    finances = load_finances()
+    cs_snap  = load_csfloat_snapshot()
+
+    # ---- Saisie snapshot CSFloat ----
+    with st.expander("📌 Définir / Mettre à jour le snapshot CSFloat (solde constaté sur la plateforme)"):
+        colA, colB = st.columns(2)
+        snap_date = colA.date_input("Date du snapshot", value=date.today())
+        snap_bal  = colB.number_input("Solde CSFloat constaté (USD)", min_value=0.0, step=0.01)
+        if st.button("Enregistrer le snapshot CSFloat"):
+            df = load_csfloat_snapshot()
+            df = pd.concat([df, pd.DataFrame([{
+                "snapshot_date": pd.to_datetime(snap_date).strftime("%Y-%m-%d"),
+                "balance_usd": snap_bal
+            }])], ignore_index=True)
+            save_csfloat_snapshot(df, "add csfloat snapshot")
+            st.success("Snapshot CSFloat enregistré."); st.rerun()
+
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
+    # ---- Saisie mouvements d'argent ----
+    with st.expander("💸 Ajouter un mouvement (DEPOSIT / WITHDRAW)"):
+        fcol1, fcol2, fcol3 = st.columns(3)
+        f_date = fcol1.date_input("Date", value=date.today())
+        f_type = fcol2.radio("Type", ["DEPOSIT","WITHDRAW"], horizontal=True)
+        f_amt  = fcol3.number_input("Montant USD", min_value=0.0, step=0.01)
+        f_note = st.text_input("Note (optionnel)")
+        if st.button("Enregistrer le mouvement"):
+            if f_amt <= 0:
+                st.error("Montant invalide.")
+            else:
+                new_fin = pd.DataFrame([{
+                    "date": pd.to_datetime(f_date).strftime("%Y-%m-%d"),
+                    "type": f_type,
+                    "amount_usd": f_amt,
+                    "note": f_note,
+                    "finance_id": "fin_" + uuid.uuid4().hex[:8]
+                }])
+                finances = pd.concat([finances, new_fin], ignore_index=True)
+                save_finances(finances, f"add {f_type} {f_amt}")
+                st.success("Mouvement enregistré."); st.rerun()
+
+    # ---- Calculs KPI ----
+    fin = compute_financials(trades, finances, cs_snap)
+
+    account_equity = fin["csfloat_cash_expected"] + float(total_val)  # Cash attendu + valeur positions (live)
+    true_profit    = account_equity - fin["net_deposited_all"]       # “vrai bénéfice” éco
+
+    # KPI cards
+    k1, k2, k3, k4 = st.columns(4)
+    k1.markdown(f"""
+      <div class="kpi-card">
+        <div class="kpi-title">Capital net déposé (lifetime)</div>
+        <div class="kpi-value">${fin["net_deposited_all"]:,.2f}</div>
+      </div>
+    """, unsafe_allow_html=True)
+    k2.markdown(f"""
+      <div class="kpi-card">
+        <div class="kpi-title">Cash CSFloat attendu</div>
+        <div class="kpi-value">${fin["csfloat_cash_expected"]:,.2f}</div>
+      </div>
+    """, unsafe_allow_html=True)
+    k3.markdown(f"""
+      <div class="kpi-card">
+        <div class="kpi-title">Equity (Cash + Valeur positions)</div>
+        <div class="kpi-value">${account_equity:,.2f}</div>
+      </div>
+    """, unsafe_allow_html=True)
+    k4.markdown(f"""
+      <div class="kpi-card" style="background:{_pnl_bg_color(true_profit)}">
+        <div class="kpi-title">Vrai bénéfice</div>
+        <div class="kpi-value">${true_profit:,.2f}</div>
+      </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
+    # Détails
+    st.markdown("#### Détails")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Snapshot CSFloat", f"${fin['snapshot_bal']:,.2f}",
+              delta=f"au {fin['snapshot_date'].date()}" if fin["snapshot_date"] is not None else None)
+    c2.metric("Dépôts nets depuis snapshot", f"${fin['net_deposited_since']:,.2f}")
+    c3.metric("Ventes depuis snapshot", f"${fin['sells_usd_since']:,.2f}")
+    c4.metric("Achats depuis snapshot", f"${fin['buys_usd_since']:,.2f}")
+
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
+    # Tableau des mouvements + suppression
+    st.markdown("### Mouvements enregistrés")
+    if finances.empty:
+        st.info("Aucun mouvement enregistré.")
+    else:
+        fin_display = finances.sort_values("date", ascending=False).copy()
+        del_id = st.text_input("ID de mouvement à supprimer (finance_id)")
+        if st.button("Supprimer le mouvement"):
+            if del_id in finances["finance_id"].values:
+                finances = finances[finances["finance_id"] != del_id]
+                save_finances(finances, f"delete finance {del_id}")
+                st.success(f"Mouvement {del_id} supprimé."); st.cache_data.clear(); st.rerun()
+            else:
+                st.error("ID introuvable.")
+        st.dataframe(fin_display, use_container_width=True, hide_index=True)
