@@ -581,31 +581,138 @@ with tab2:
             st.success("Transaction enregistrée."); st.cache_data.clear(); st.rerun()
 
 # ---------- Onglet 3 : Transactions ----------
+def compute_trade_history_table(trades_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Construit un historique par ligne de transaction avec:
+    - Prix achat (pour BUY = prix saisi; pour SELL = PRU courant WAC)
+    - Prix vente (seulement pour SELL)
+    - Profit/Perte en valeur et en %
+    Hypothèse: WAC (coût moyen pondéré) par item.
+    """
+    if trades_df.empty:
+        return pd.DataFrame(columns=[
+            "type","market_hash_name","qty","buy_price_usd","sell_price_usd",
+            "pnl_value_usd","pnl_pct"
+        ])
+
+    df = trades_df.copy()
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
+    df = df.sort_values(["market_hash_name","date"]).reset_index(drop=True)
+
+    out_rows = []
+    for name, g in df.groupby("market_hash_name", sort=False):
+        pos = 0.0
+        avg_cost = 0.0  # PRU courant
+
+        for _, r in g.iterrows():
+            ttype = str(r["type"]).upper()
+            qty   = float(r["qty"])
+            price = float(r["price_usd"])
+
+            if ttype == "BUY":
+                # Met à jour le PRU (WAC)
+                total_cost_before = avg_cost * pos
+                pos_new = pos + qty
+                avg_cost = (total_cost_before + price * qty) / pos_new if pos_new > 0 else 0.0
+                pos = pos_new
+
+                out_rows.append({
+                    "type": "BUY",
+                    "market_hash_name": name,
+                    "qty": qty,
+                    "buy_price_usd": price,
+                    "sell_price_usd": None,
+                    "pnl_value_usd": None,
+                    "pnl_pct": None,
+                    "date": r["date"]
+                })
+
+            elif ttype == "SELL":
+                # Utilise le PRU courant pour valoriser le coût de revient
+                buy_price_used = avg_cost
+                pnl_val = (price - buy_price_used) * qty
+                pnl_pct = (pnl_val / (buy_price_used * qty) * 100.0) if buy_price_used > 0 else None
+
+                out_rows.append({
+                    "type": "SELL",
+                    "market_hash_name": name,
+                    "qty": qty,
+                    "buy_price_usd": buy_price_used,
+                    "sell_price_usd": price,
+                    "pnl_value_usd": pnl_val,
+                    "pnl_pct": pnl_pct,
+                    "date": r["date"]
+                })
+
+                # Met à jour la position (on suppose pas de ventes > position)
+                pos = max(0.0, pos - qty)
+                # Le PRU ne change pas sur une vente en WAC
+
+    hist = pd.DataFrame(out_rows)
+    if not hist.empty:
+        hist = hist.sort_values("date", ascending=False).reset_index(drop=True)
+    return hist
+
 with tab3:
-    st.subheader("Historique des transactions")
+    st.subheader("Historique")
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
     if trades.empty:
         st.info("Aucune transaction.")
     else:
-        pnl_real = 0
-        for _, row in trades[trades["type"]=="SELL"].iterrows():
-            name = row["market_hash_name"]; qty_s = row["qty"]; price_s = row["price_usd"]
-            sub = trades[(trades["market_hash_name"]==name)&(trades["type"]=="BUY")]
-            cost = (sub["qty"]*sub["price_usd"]).sum(); q = sub["qty"].sum()
-            pru = cost/q if q>0 else 0
-            pnl_real += (price_s - pru)*qty_s
-        st.metric("P&L réalisé cumulé (WAC)", f"${pnl_real:,.2f}")
+        # Tableau calculé avec WAC
+        hist = compute_trade_history_table(trades)
 
-        to_display = trades.sort_values("date", ascending=False)
+        # Filtre d'affichage
+        view_choice = st.radio(
+            "Filtrer",
+            ["Achats et Ventes", "Achats uniquement", "Ventes uniquement"],
+            horizontal=True,
+            key="hist_filter"
+        )
+        if view_choice == "Achats uniquement":
+            hist_view = hist[hist["type"] == "BUY"].copy()
+        elif view_choice == "Ventes uniquement":
+            hist_view = hist[hist["type"] == "SELL"].copy()
+        else:
+            hist_view = hist.copy()
+
+        # Colonnes demandées (en-têtes FR)
+        display = hist_view.rename(columns={
+            "market_hash_name": "Item",
+            "qty": "Quantité",
+            "buy_price_usd": "Prix achat USD",
+            "sell_price_usd": "Prix vente USD",
+            "pnl_value_usd": "Profit/Perte USD",
+            "pnl_pct": "% Profit/Perte",
+        })[["Item","Quantité","Prix achat USD","Prix vente USD","Profit/Perte USD","% Profit/Perte"]]
+
+        st.dataframe(
+            display,
+            use_container_width=True,
+            hide_index=True,
+            column_config={
+                "Quantité": st.column_config.NumberColumn("Quantité", format="%d"),
+                "Prix achat USD": st.column_config.NumberColumn("Prix achat USD", format="$%.2f"),
+                "Prix vente USD": st.column_config.NumberColumn("Prix vente USD", format="$%.2f"),
+                "Profit/Perte USD": st.column_config.NumberColumn("Profit/Perte USD", format="$%.2f"),
+                "% Profit/Perte": st.column_config.NumberColumn("% Profit/Perte", format="%.2f%%"),
+            }
+        )
+
+        st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+
+        # Option de suppression (conserve ta fonctionnalité existante)
         delete_id = st.text_input("ID de transaction à supprimer (trade_id)", key="delete_trade_id")
         if st.button("Supprimer", key="btn_delete_trade"):
-            if delete_id in to_display["trade_id"].values:
-                new_trades = trades[trades["trade_id"]!=delete_id]
+            if delete_id in trades["trade_id"].astype(str).values:
+                new_trades = trades[trades["trade_id"].astype(str) != delete_id]
                 save_trades(new_trades, f"delete trade {delete_id}")
-                st.success(f"Transaction {delete_id} supprimée."); st.cache_data.clear(); st.rerun()
+                st.success(f"Transaction {delete_id} supprimée.")
+                st.cache_data.clear()
+                st.rerun()
             else:
                 st.error("ID introuvable.")
-        st.dataframe(to_display, use_container_width=True, hide_index=True)
 
 # ---------- Onglet 4 : Statistiques financières ----------
 with tab4:
