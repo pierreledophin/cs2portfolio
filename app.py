@@ -349,12 +349,20 @@ def _normalize_history_df(hist_df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-def build_portfolio_timeseries(trades_df: pd.DataFrame, hist_df: pd.DataFrame) -> pd.DataFrame:
+def build_portfolio_timeseries(
+    trades_df: pd.DataFrame,
+    hist_df: pd.DataFrame,
+    start_date_min: pd.Timestamp | None = None,
+    end_date_max: pd.Timestamp | None = None,
+) -> pd.DataFrame:
     """
     Construit la valeur du portefeuille jour par jour (vectorisé).
     - Positions(t) = cumsum des quantités nettes BUY-SELL par item
     - Prix(t) = dernier prix du jour par item, puis ffill sur les dates
     - Valeur totale = somme(Position_item(t) * Prix_item(t))
+
+    start_date_min: si fourni, force le début de la série à cette date (ex: 2025-10-01)
+    end_date_max:   si fourni, force la fin de la série à cette date (ex: aujourd'hui)
     """
     if trades_df.empty or hist_df.empty:
         return pd.DataFrame()
@@ -390,12 +398,19 @@ def build_portfolio_timeseries(trades_df: pd.DataFrame, hist_df: pd.DataFrame) -
     if h_daily.empty or t_daily.empty:
         return pd.DataFrame()
 
-    # Gamme de dates commune
-    start = min(h_daily["date"].min(), t_daily["date"].min())
-    end   = h_daily["date"].max()
-    if pd.isna(start) or pd.isna(end) or start > end:
+    # --- Détermination de la fenêtre temporelle ---
+    base_start = min(h_daily["date"].min(), t_daily["date"].min())
+    base_end   = h_daily["date"].max()
+
+    if start_date_min is not None:
+        base_start = max(base_start, pd.to_datetime(start_date_min).floor("D"))
+    if end_date_max is not None:
+        base_end = max(base_end, pd.to_datetime(end_date_max).floor("D"))
+
+    if pd.isna(base_start) or pd.isna(base_end) or base_start > base_end:
         return pd.DataFrame()
-    dates = pd.date_range(start, end, freq="D")
+
+    dates = pd.date_range(base_start, base_end, freq="D")
 
     # Matrice positions: cumsum des quantités nettes
     pos = (
@@ -406,7 +421,7 @@ def build_portfolio_timeseries(trades_df: pd.DataFrame, hist_df: pd.DataFrame) -
         .cumsum()
     )
 
-    # Matrice prix: dernier prix connu du jour puis ffill
+    # Matrice prix: dernier prix connu du jour puis ffill (couvre les jours sans quotes)
     prices = (
         h_daily.pivot(index="date", columns="market_hash_name", values="price_usd")
         .reindex(dates)
@@ -633,10 +648,15 @@ with tab1:
 
         st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
 
-        # ----- Courbe d'évolution de la valeur du portefeuille (vectorisée) -----
+        # ----- Courbe d'évolution de la valeur du portefeuille -----
         st.markdown("### Évolution de la valeur du portefeuille")
         hist_df = load_price_history_df()
-        ts = build_portfolio_timeseries(trades_df=trades, hist_df=hist_df)
+        ts = build_portfolio_timeseries(
+            trades_df=trades,
+            hist_df=hist_df,
+            start_date_min=pd.Timestamp(2025, 10, 1),            # début forcé au 1er oct. 2025
+            end_date_max=pd.Timestamp.today().normalize(),       # inclut les jours récents (ffill)
+        )
         if ts.empty:
             st.info("Pas assez d’historique ou colonnes manquantes dans price_history.csv.")
         else:
@@ -822,7 +842,6 @@ with tab3:
                 st.rerun()
             else:
                 st.error("ID introuvable.")
-
 
 # ---------- Onglet 4 : Statistiques financières ----------
 with tab4:
