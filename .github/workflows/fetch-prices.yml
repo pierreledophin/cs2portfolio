@@ -36,6 +36,51 @@ jobs:
             fi
           done
 
+      # >>> NOUVELLE ÉTAPE : normalise les CSV pour garantir price_usd
+      - name: Normalize price_history (ensure price_usd)
+        run: |
+          python - <<'PY'
+          import pandas as pd, numpy as np, glob
+          changed = False
+          for path in glob.glob('data/*/price_history.csv'):
+              try:
+                  df = pd.read_csv(path)
+              except Exception as e:
+                  print(f"[skip] {path}: {e}")
+                  continue
+
+              need_save = False
+              # Crée/convertit price_usd
+              if 'price_usd' not in df.columns:
+                  df['price_usd'] = np.nan
+                  need_save = True
+              df['price_usd'] = pd.to_numeric(df['price_usd'], errors='coerce')
+
+              if 'price_cents' in df.columns:
+                  cents = pd.to_numeric(df['price_cents'], errors='coerce')
+                  mask = df['price_usd'].isna() & cents.notna()
+                  if mask.any():
+                      df.loc[mask, 'price_usd'] = cents[mask] / 100.0
+                      need_save = True
+
+              # Ordre de colonnes cohérent (optionnel)
+              cols = df.columns.tolist()
+              order = [c for c in ['ts_utc','market_hash_name','price_cents','price_usd'] if c in cols]
+              other = [c for c in cols if c not in order]
+              if order:
+                  df = df[order + other]
+
+              if need_save:
+                  df.to_csv(path, index=False)
+                  changed = True
+                  print(f"[fixed] {path}")
+              else:
+                  print(f"[ok] {path} already has price_usd")
+
+          # Petit marqueur pour debug si besoin
+          open('.normalized','w').write('1' if changed else '0')
+          PY
+
       - name: Commit & push
         run: |
           git config user.name "github-actions[bot]"
@@ -44,6 +89,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes"
           else
-            git commit -m "update price history for all profiles [skip ci]"
+            git commit -m "normalize price_history: ensure price_usd present [skip ci]"
             git push origin main
           fi
