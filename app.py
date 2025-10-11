@@ -317,31 +317,83 @@ def load_price_history_df() -> pd.DataFrame:
             return pd.DataFrame()
     return pd.DataFrame()
 
-def build_portfolio_timeseries(holdings_df: pd.DataFrame, hist_df: pd.DataFrame) -> pd.DataFrame:
-    if holdings_df.empty or hist_df.empty: return pd.DataFrame()
+def build_portfolio_timeseries(trades_df: pd.DataFrame, hist_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Construit la valeur du portefeuille jour par jour en suivant les quantités détenues par item,
+    à partir de l'historique complet des transactions (BUY/SELL) et des prix historiques.
+    """
+    if trades_df.empty or hist_df.empty:
+        return pd.DataFrame()
+
+    trades_df = trades_df.copy()
+    trades_df["date"] = pd.to_datetime(trades_df["date"], errors="coerce")
+    trades_df = trades_df.dropna(subset=["date", "market_hash_name", "qty", "price_usd"])
+
+    hist_df = hist_df.copy()
+    if "ts_utc" not in hist_df.columns:
+        return pd.DataFrame()
+    hist_df["ts_utc"] = pd.to_datetime(hist_df["ts_utc"], errors="coerce")
+    hist_df = hist_df.dropna(subset=["ts_utc", "market_hash_name"])
+    hist_df["date"] = hist_df["ts_utc"].dt.floor("D")
+
+    # Colonne de prix en USD
     if "price_usd" not in hist_df.columns and "price_cents" in hist_df.columns:
         hist_df["price_usd"] = pd.to_numeric(hist_df["price_cents"], errors="coerce") / 100.0
-    needed = {"ts_utc", "market_hash_name", "price_usd"}
-    if not needed.issubset(set(hist_df.columns)): return pd.DataFrame()
-    hist = hist_df.copy()
-    hist["ts_utc"] = pd.to_datetime(hist["ts_utc"], errors="coerce")
-    hist = hist.dropna(subset=["ts_utc"])
-    hist["date"] = hist["ts_utc"].dt.floor("D")
-    items = holdings_df[holdings_df["qty"] > 0]["market_hash_name"].unique().tolist()
-    if not items: return pd.DataFrame()
-    hist = hist[hist["market_hash_name"].isin(items)]
-    daily_last = (
-        hist.sort_values(["market_hash_name", "date", "ts_utc"])
-            .groupby(["market_hash_name", "date"], as_index=False)
-            .tail(1)[["market_hash_name", "date", "price_usd"]]
+    if "price_usd" not in hist_df.columns:
+        return pd.DataFrame()
+
+    hist_df = hist_df[["date", "market_hash_name", "price_usd"]].dropna()
+
+    # Période des prix
+    start_date = hist_df["date"].min()
+    end_date   = hist_df["date"].max()
+    if pd.isna(start_date) or pd.isna(end_date):
+        return pd.DataFrame()
+    all_dates = pd.date_range(start_date, end_date, freq="D")
+
+    # Pré-agrège les trades par date/item/type
+    trades_daily = (
+        trades_df.groupby(["date", "market_hash_name", "type"], as_index=False)["qty"]
+        .sum()
     )
-    pivot = daily_last.pivot(index="date", columns="market_hash_name", values="price_usd").sort_index().ffill()
-    qty_map = holdings_df.set_index("market_hash_name")["qty"].to_dict()
-    for col in pivot.columns:
-        pivot[col] = pivot[col] * float(qty_map.get(col, 0))
-    pivot["total_value_usd"] = pivot.sum(axis=1)
-    ts = pivot[["total_value_usd"]].copy(); ts.index.name = "date"; ts.reset_index(inplace=True)
-    return ts
+
+    portfolio_values = []
+    # État des positions par item au fil de l'eau
+    pos_map = {}  # item -> qty détenue
+
+    # Prix du jour = dernier prix connu jusqu'à la date d
+    hist_sorted = hist_df.sort_values(["market_hash_name", "date"])
+
+    for d in all_dates:
+        # Applique les trades du jour d (ordre type indifférent pour cumuler)
+        today_trades = trades_daily[trades_daily["date"] == d]
+        if not today_trades.empty:
+            for _, tr in today_trades.iterrows():
+                item = tr["market_hash_name"]
+                tqty = float(tr["qty"])
+                if tr["type"] == "BUY":
+                    pos_map[item] = pos_map.get(item, 0.0) + tqty
+                elif tr["type"] == "SELL":
+                    pos_map[item] = max(0.0, pos_map.get(item, 0.0) - tqty)
+
+        # Derniers prix connus par item jusqu'à d
+        day_prices = (
+            hist_sorted[hist_sorted["date"] <= d]
+            .groupby("market_hash_name", as_index=False)
+            .tail(1)
+            .set_index("market_hash_name")["price_usd"]
+            .to_dict()
+        )
+
+        total_val = 0.0
+        for item, q in pos_map.items():
+            if q > 0 and item in day_prices:
+                total_val += q * float(day_prices[item])
+
+        portfolio_values.append({"date": d, "total_value_usd": total_val})
+
+    return pd.DataFrame(portfolio_values)
+
 
 # ---------- Calculs "live" holdings + KPIs ----------
 def enrich_holdings_live(holdings_df: pd.DataFrame):
@@ -505,6 +557,7 @@ with tab1:
 
         st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
 
+        # ----- Tableau des positions (tri par % évolution décroissant) -----
         to_show = holdings_live[["Image","market_hash_name","qty","buy_price_usd","Prix actuel USD","gain","evolution_pct"]].rename(
             columns={
                 "market_hash_name":"Item",
@@ -516,6 +569,9 @@ with tab1:
             }
         )
         to_show["Image"] = to_show["Image"].fillna("").astype(str)
+
+        # Tri par défaut : plus forte évolution en haut
+        to_show = to_show.sort_values("% évolution", ascending=False, na_position="last")
 
         def _evo_style(val):
             return f"background-color: {_pct_bg_color(val)};"
@@ -548,9 +604,10 @@ with tab1:
 
         st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
 
+        # ----- Courbe d'évolution de la valeur du portefeuille (corrigée) -----
         st.markdown("### Évolution de la valeur du portefeuille")
         hist_df = load_price_history_df()
-        ts = build_portfolio_timeseries(holdings_df=holdings_base, hist_df=hist_df)
+        ts = build_portfolio_timeseries(trades_df=trades, hist_df=hist_df)  # << utilise les trades
         if ts.empty:
             st.info("Pas encore assez d’historique pour tracer la courbe.")
         else:
