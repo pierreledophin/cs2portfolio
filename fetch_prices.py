@@ -8,7 +8,7 @@ HEADERS = {"Authorization": CSFLOAT_API_KEY} if CSFLOAT_API_KEY else {}
 
 # Usage:
 #   python fetch_prices.py data/pierre/holdings.csv
-#   (écrit/append dans data/pierre/price_history.csv)
+#   -> écrit/append dans data/pierre/price_history.csv
 
 def read_holdings(path: str) -> pd.DataFrame:
     if not os.path.isfile(path):
@@ -20,43 +20,30 @@ def read_holdings(path: str) -> pd.DataFrame:
             raise ValueError("Colonne 'market_hash_name' manquante dans holdings.csv")
         if "qty" not in df.columns:
             df["qty"] = 1
+        n = len(df.index)
+        u = df["market_hash_name"].dropna().nunique()
+        print(f"[INFO] holdings: {n} lignes, {u} items uniques.")
         return df
     except Exception as e:
         print(f"[ERROR] lecture holdings: {e}")
         return pd.DataFrame(columns=["market_hash_name","qty","buy_price_usd"])
 
 def _interpret_price(raw_price) -> Tuple[Optional[int], Optional[float]]:
-    """
-    Renvoie (price_cents:int, price_usd:float) à partir du champ 'price' de l'API.
-    - Si l'API renvoie bien des centimes (comportement attendu), on convertit en USD.
-    - Si jamais l'API renvoyait déjà des USD (float avec décimales), on reconstruit les centimes.
-    On reste conservatif: un entier sans décimales est traité comme des centimes.
-    """
     if raw_price is None:
         return None, None
-
-    # Nombre ?
     try:
         val = float(raw_price)
     except Exception:
         return None, None
-
-    # Si décimal non entier -> probablement USD déjà
-    if abs(val - round(val)) > 1e-9:
+    if abs(val - round(val)) > 1e-9:  # décimal -> USD
         usd = round(val, 2)
         cents = int(round(usd * 100))
         return cents, usd
-
-    # Valeur entière -> on suppose des centimes (format CSFloat attendu)
-    cents = int(round(val))
+    cents = int(round(val))           # entier -> cents
     usd = round(cents / 100.0, 2)
     return cents, usd
 
 def fetch_lowest_price(name: str) -> Tuple[Optional[int], Optional[float]]:
-    """
-    Retourne (price_cents, price_usd) pour un item EXACT (market_hash_name).
-    Utilise le prix 'buy_now' le plus bas.
-    """
     if not CSFLOAT_API_KEY:
         print("[WARN] CSFLOAT_API_KEY manquant; impossible de fetch.")
         return None, None
@@ -78,20 +65,17 @@ def fetch_lowest_price(name: str) -> Tuple[Optional[int], Optional[float]]:
         if not isinstance(listings, list) or not listings:
             print(f"[NO LISTING] {name}")
             return None, None
-
         raw = listings[0].get("price")
         cents, usd = _interpret_price(raw)
         if cents is None or usd is None:
             print(f"[WARN] {name}: prix invalide ({raw})")
             return None, None
         return cents, usd
-
     except Exception as e:
         print(f"[ERROR] {name}: {e}")
         return None, None
 
 def append_history(history_path: str, rows: list[dict]):
-    """Append des lignes dans price_history.csv (crée le fichier si besoin)."""
     file_exists = os.path.isfile(history_path)
     fieldnames = ["ts_utc", "market_hash_name", "price_cents", "price_usd"]
     os.makedirs(os.path.dirname(history_path), exist_ok=True)
@@ -123,9 +107,7 @@ def main():
     names = sorted(holds["market_hash_name"].dropna().unique().tolist())
     print(f"[INFO] {len(names)} items à traiter depuis {holdings_path}")
 
-    # Timestamp ISO-8601 UTC simplifié
     ts = datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
-
     out_rows = []
     for i, name in enumerate(names, start=1):
         cents, usd = fetch_lowest_price(name)
@@ -135,14 +117,13 @@ def main():
         else:
             print(f"[SKIP] {i:02d}/{len(names)} {name} (aucun prix)")
 
-        # petite pause anti-rate-limit
         time.sleep(0.3)
 
     if out_rows:
         append_history(history_path, out_rows)
         print(f"[DONE] {len(out_rows)} lignes ajoutées → {history_path}")
     else:
-        print("[WARN] Aucune ligne ajoutée (noms invalides ou pas d'offres buy_now).")
+        print("[WARN] Aucune ligne ajoutée (noms invalides, pas d'offres buy_now, ou API vide).")
 
 if __name__ == "__main__":
     main()
