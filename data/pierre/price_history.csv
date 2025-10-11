@@ -231,116 +231,116 @@ ts_utc,market_hash_name,price_cents,price_usd
 2025-10-08T07:23:29+00:00,Soldier | Phoenix,1490.0,14.9
 2025-10-08T07:23:29+00:00,USP-S | Cortex (Well-Worn),214.0,2.14
 2025-10-08T07:23:29+00:00,USP-S | Neo-Noir (Minimal Wear),2239.0,22.39
-2025-10-08T09:44:55Z,AK-47 | Legion of Anubis (Minimal Wear),10.12,0.1012
-2025-10-08T09:44:55Z,AWP | Atheris (Factory New),23.41,0.2341
-2025-10-08T09:44:55Z,AWP | Duality (Field-Tested),1.64,0.0163999999999999
-2025-10-08T09:44:55Z,Desert Eagle | Heat Treated (Field-Tested),1.46,0.0146
-2025-10-08T09:44:55Z,Glock-18 | Bunsen Burner (Factory New),4.55,0.0455
-2025-10-08T09:44:55Z,Operator | FBI SWAT,26.71,0.2671
-2025-10-08T09:44:55Z,SSG 08 | Zeno (Well-Worn),1.0,0.01
-2025-10-08T09:44:55Z,Snakebite Case,0.65,0.0065
-2025-10-08T09:44:55Z,Soldier | Phoenix,14.9,0.149
-2025-10-08T09:44:55Z,USP-S | Cortex (Well-Worn),2.14,0.0214
-2025-10-08T09:44:55Z,USP-S | Neo-Noir (Minimal Wear),23.03,0.2303
-2025-10-08T18:14:29Z,AK-47 | Legion of Anubis (Minimal Wear),10.13,0.1013
-2025-10-08T18:14:29Z,AWP | Atheris (Factory New),23.0,0.23
-2025-10-08T18:14:29Z,AWP | Duality (Field-Tested),1.63,0.0163
-2025-10-08T18:14:29Z,Desert Eagle | Heat Treated (Field-Tested),1.47,0.0147
-2025-10-08T18:14:29Z,Glock-18 | Bunsen Burner (Factory New),3.57,0.0356999999999999
-2025-10-08T18:14:29Z,Operator | FBI SWAT,27.19,0.2719
-2025-10-08T18:14:29Z,SSG 08 | Zeno (Well-Worn),4.0,0.04
-2025-10-08T18:14:29Z,Snakebite Case,0.64,0.0064
-2025-10-08T18:14:29Z,Soldier | Phoenix,14.15,0.1415
-2025-10-08T18:14:29Z,USP-S | Cortex (Well-Worn),2.37,0.0237
-2025-10-08T18:14:29Z,USP-S | Neo-Noir (Minimal Wear),22.39,0.2239
-2025-10-08T19:19:25Z,AK-47 | Legion of Anubis (Minimal Wear),10.13,0.1013
-2025-10-08T19:19:25Z,AWP | Atheris (Factory New),22.69,0.2269
-2025-10-08T19:19:25Z,AWP | Duality (Field-Tested),1.63,0.0163
-2025-10-08T19:19:25Z,Desert Eagle | Heat Treated (Field-Tested),1.47,0.0147
-2025-10-08T19:19:25Z,Glock-18 | Bunsen Burner (Factory New),4.09,0.0409
-2025-10-08T19:19:25Z,Operator | FBI SWAT,26.69,0.2669
-2025-10-08T19:19:25Z,SSG 08 | Zeno (Well-Worn),4.0,0.04
-2025-10-08T19:19:25Z,Snakebite Case,0.64,0.0064
-2025-10-08T19:19:25Z,Soldier | Phoenix,14.15,0.1415
-2025-10-08T19:19:25Z,USP-S | Cortex (Well-Worn),2.15,0.0215
-2025-10-08T19:19:25Z,USP-S | Neo-Noir (Minimal Wear),23.03,0.2303
-2025-10-09T07:23:55Z,AK-47 | Legion of Anubis (Minimal Wear),10.13,0.1013
-2025-10-09T07:23:55Z,AWP | Atheris (Factory New),23.39,0.2339
-2025-10-09T07:23:55Z,AWP | Duality (Field-Tested),1.68,0.0168
-2025-10-09T07:23:55Z,Desert Eagle | Heat Treated (Field-Tested),1.48,0.0148
-2025-10-09T07:23:55Z,Glock-18 | Bunsen Burner (Factory New),4.44,0.0444
-2025-10-09T07:23:55Z,Operator | FBI SWAT,28.0,0.28
-2025-10-09T07:23:55Z,SSG 08 | Zeno (Well-Worn),4.0,0.04
-2025-10-09T07:23:55Z,Snakebite Case,0.65,0.0065
-2025-10-09T07:23:55Z,Soldier | Phoenix,14.39,0.1439
-2025-10-09T07:23:55Z,USP-S | Cortex (Well-Worn),2.11,0.0210999999999999
-2025-10-09T07:23:55Z,USP-S | Neo-Noir (Minimal Wear),23.14,0.2314
-2025-10-09T19:20:35Z,AK-47 | Legion of Anubis (Minimal Wear),10.08,0.1008
-2025-10-09T19:20:35Z,AWP | Atheris (Factory New),24.41,0.2441
-2025-10-09T19:20:35Z,AWP | Duality (Field-Tested),1.65,0.0165
-2025-10-09T19:20:35Z,Desert Eagle | Heat Treated (Field-Tested),1.48,0.0148
-2025-10-09T19:20:35Z,Glock-18 | Bunsen Burner (Factory New),5.0,0.05
-2025-10-09T19:20:35Z,Operator | FBI SWAT,27.98,0.2798
-2025-10-09T19:20:35Z,SSG 08 | Zeno (Well-Worn),4.0,0.04
-2025-10-09T19:20:35Z,Snakebite Case,0.65,0.0065
-2025-10-09T19:20:35Z,Soldier | Phoenix,14.22,0.1422
-2025-10-09T19:20:35Z,USP-S | Cortex (Well-Worn),2.2,0.022
-2025-10-09T19:20:35Z,USP-S | Neo-Noir (Minimal Wear),23.14,0.2314
-2025-10-10T07:23:48Z,AK-47 | Legion of Anubis (Minimal Wear),9.81,0.0981
-2025-10-10T07:23:48Z,AWP | Atheris (Factory New),23.78,0.2378
-2025-10-10T07:23:48Z,AWP | Duality (Field-Tested),1.61,0.0161
-2025-10-10T07:23:48Z,Desert Eagle | Heat Treated (Field-Tested),1.48,0.0148
-2025-10-10T07:23:48Z,Glock-18 | Bunsen Burner (Factory New),6.49,0.0649
-2025-10-10T07:23:48Z,Operator | FBI SWAT,26.55,0.2655
-2025-10-10T07:23:48Z,SSG 08 | Zeno (Well-Worn),4.0,0.04
-2025-10-10T07:23:48Z,Snakebite Case,0.65,0.0065
-2025-10-10T07:23:48Z,Soldier | Phoenix,13.76,0.1376
-2025-10-10T07:23:48Z,USP-S | Cortex (Well-Worn),2.07,0.0207
-2025-10-10T07:23:48Z,USP-S | Neo-Noir (Minimal Wear),23.74,0.2373999999999999
-2025-10-10T19:19:40Z,AK-47 | Legion of Anubis (Minimal Wear),9.52,0.0951999999999999
-2025-10-10T19:19:40Z,AWP | Atheris (Factory New),25.0,0.25
-2025-10-10T19:19:40Z,AWP | Duality (Field-Tested),1.6,0.016
-2025-10-10T19:19:40Z,Desert Eagle | Heat Treated (Field-Tested),1.46,0.0146
-2025-10-10T19:19:40Z,Glock-18 | Bunsen Burner (Factory New),6.18,0.0617999999999999
-2025-10-10T19:19:40Z,Operator | FBI SWAT,27.73,0.2773
-2025-10-10T19:19:40Z,SSG 08 | Zeno (Well-Worn),4.0,0.04
-2025-10-10T19:19:40Z,Snakebite Case,0.63,0.0063
-2025-10-10T19:19:40Z,Soldier | Phoenix,13.73,0.1373
-2025-10-10T19:19:40Z,USP-S | Cortex (Well-Worn),2.08,0.0208
-2025-10-10T19:19:40Z,USP-S | Neo-Noir (Minimal Wear),23.79,0.2379
-2025-10-11T07:19:59Z,AK-47 | Legion of Anubis (Minimal Wear),9.8,0.098
-2025-10-11T07:19:59Z,AWP | Atheris (Factory New),26.41,0.2641
-2025-10-11T07:19:59Z,AWP | Duality (Field-Tested),1.6,0.016
-2025-10-11T07:19:59Z,Desert Eagle | Heat Treated (Field-Tested),1.47,0.0147
-2025-10-11T07:19:59Z,Glock-18 | Bunsen Burner (Factory New),6.17,0.0617
-2025-10-11T07:19:59Z,Operator | FBI SWAT,28.07,0.2807
-2025-10-11T07:19:59Z,SSG 08 | Zeno (Well-Worn),4.0,0.04
-2025-10-11T07:19:59Z,Snakebite Case,0.65,0.0065
-2025-10-11T07:19:59Z,Soldier | Phoenix,14.44,0.1444
-2025-10-11T07:19:59Z,USP-S | Cortex (Well-Worn),2.12,0.0212
-2025-10-11T07:19:59Z,USP-S | Neo-Noir (Minimal Wear),23.79,0.2379
-2025-10-11T14:17:43Z,AK-47 | Legion of Anubis (Minimal Wear),9.91,0.0991
-2025-10-11T14:17:43Z,AWP | Atheris (Factory New),25.64,0.2564
-2025-10-11T14:17:43Z,AWP | Duality (Field-Tested),1.6,0.016
-2025-10-11T14:17:43Z,Desert Eagle | Heat Treated (Field-Tested),1.43,0.0143
-2025-10-11T14:17:43Z,Glock-18 | Bunsen Burner (Factory New),5.72,0.0572
-2025-10-11T14:17:43Z,Operator | FBI SWAT,26.5,0.265
-2025-10-11T14:17:43Z,SSG 08 | Zeno (Well-Worn),4.0,0.04
-2025-10-11T14:17:43Z,Snakebite Case,0.65,0.0065
-2025-10-11T14:17:43Z,Soldier | Phoenix,14.43,0.1442999999999999
-2025-10-11T14:17:43Z,USP-S | Cortex (Well-Worn),2.08,0.0208
-2025-10-11T14:17:43Z,USP-S | Neo-Noir (Minimal Wear),24.49,0.2448999999999999
-2025-10-11T14:28:31Z,AK-47 | Legion of Anubis (Minimal Wear),9.91,0.09910000000000001
-2025-10-11T14:28:31Z,AWP | Atheris (Factory New),25.64,0.2564
-2025-10-11T14:28:31Z,AWP | Duality (Field-Tested),1.6,0.016
-2025-10-11T14:28:31Z,Desert Eagle | Heat Treated (Field-Tested),1.43,0.0143
-2025-10-11T14:28:31Z,Glock-18 | Bunsen Burner (Factory New),5.72,0.0572
-2025-10-11T14:28:31Z,Operator | FBI SWAT,26.5,0.265
-2025-10-11T14:28:31Z,SSG 08 | Zeno (Well-Worn),4.0,0.04
-2025-10-11T14:28:31Z,Snakebite Case,0.65,0.006500000000000001
-2025-10-11T14:28:31Z,Soldier | Phoenix,14.43,0.14429999999999998
-2025-10-11T14:28:31Z,USP-S | Cortex (Well-Worn),2.12,0.0212
-2025-10-11T14:28:31Z,USP-S | Neo-Noir (Minimal Wear),24.49,0.24489999999999998
+2025-10-08T09:44:55Z,AK-47 | Legion of Anubis (Minimal Wear),1012,10.12
+2025-10-08T09:44:55Z,AWP | Atheris (Factory New),2341,23.41
+2025-10-08T09:44:55Z,AWP | Duality (Field-Tested),164,1.64
+2025-10-08T09:44:55Z,Desert Eagle | Heat Treated (Field-Tested),146,1.46
+2025-10-08T09:44:55Z,Glock-18 | Bunsen Burner (Factory New),455,4.55
+2025-10-08T09:44:55Z,Operator | FBI SWAT,2671,26.71
+2025-10-08T09:44:55Z,SSG 08 | Zeno (Well-Worn),100,1.0
+2025-10-08T09:44:55Z,Snakebite Case,65,0.65
+2025-10-08T09:44:55Z,Soldier | Phoenix,1490,14.9
+2025-10-08T09:44:55Z,USP-S | Cortex (Well-Worn),214,2.14
+2025-10-08T09:44:55Z,USP-S | Neo-Noir (Minimal Wear),2303,23.03
+2025-10-08T18:14:29Z,AK-47 | Legion of Anubis (Minimal Wear),1013,10.13
+2025-10-08T18:14:29Z,AWP | Atheris (Factory New),2300,23.0
+2025-10-08T18:14:29Z,AWP | Duality (Field-Tested),163,1.63
+2025-10-08T18:14:29Z,Desert Eagle | Heat Treated (Field-Tested),147,1.47
+2025-10-08T18:14:29Z,Glock-18 | Bunsen Burner (Factory New),357,3.57
+2025-10-08T18:14:29Z,Operator | FBI SWAT,2719,27.19
+2025-10-08T18:14:29Z,SSG 08 | Zeno (Well-Worn),400,4.0
+2025-10-08T18:14:29Z,Snakebite Case,64,0.64
+2025-10-08T18:14:29Z,Soldier | Phoenix,1415,14.15
+2025-10-08T18:14:29Z,USP-S | Cortex (Well-Worn),237,2.37
+2025-10-08T18:14:29Z,USP-S | Neo-Noir (Minimal Wear),2239,22.39
+2025-10-08T19:19:25Z,AK-47 | Legion of Anubis (Minimal Wear),1013,10.13
+2025-10-08T19:19:25Z,AWP | Atheris (Factory New),2269,22.69
+2025-10-08T19:19:25Z,AWP | Duality (Field-Tested),163,1.63
+2025-10-08T19:19:25Z,Desert Eagle | Heat Treated (Field-Tested),147,1.47
+2025-10-08T19:19:25Z,Glock-18 | Bunsen Burner (Factory New),409,4.09
+2025-10-08T19:19:25Z,Operator | FBI SWAT,2669,26.69
+2025-10-08T19:19:25Z,SSG 08 | Zeno (Well-Worn),400,4.0
+2025-10-08T19:19:25Z,Snakebite Case,64,0.64
+2025-10-08T19:19:25Z,Soldier | Phoenix,1415,14.15
+2025-10-08T19:19:25Z,USP-S | Cortex (Well-Worn),215,2.15
+2025-10-08T19:19:25Z,USP-S | Neo-Noir (Minimal Wear),2303,23.03
+2025-10-09T07:23:55Z,AK-47 | Legion of Anubis (Minimal Wear),1013,10.13
+2025-10-09T07:23:55Z,AWP | Atheris (Factory New),2339,23.39
+2025-10-09T07:23:55Z,AWP | Duality (Field-Tested),168,1.68
+2025-10-09T07:23:55Z,Desert Eagle | Heat Treated (Field-Tested),148,1.48
+2025-10-09T07:23:55Z,Glock-18 | Bunsen Burner (Factory New),444,4.44
+2025-10-09T07:23:55Z,Operator | FBI SWAT,2800,28.0
+2025-10-09T07:23:55Z,SSG 08 | Zeno (Well-Worn),400,4.0
+2025-10-09T07:23:55Z,Snakebite Case,65,0.65
+2025-10-09T07:23:55Z,Soldier | Phoenix,1439,14.39
+2025-10-09T07:23:55Z,USP-S | Cortex (Well-Worn),211,2.11
+2025-10-09T07:23:55Z,USP-S | Neo-Noir (Minimal Wear),2314,23.14
+2025-10-09T19:20:35Z,AK-47 | Legion of Anubis (Minimal Wear),1008,10.08
+2025-10-09T19:20:35Z,AWP | Atheris (Factory New),2441,24.41
+2025-10-09T19:20:35Z,AWP | Duality (Field-Tested),165,1.65
+2025-10-09T19:20:35Z,Desert Eagle | Heat Treated (Field-Tested),148,1.48
+2025-10-09T19:20:35Z,Glock-18 | Bunsen Burner (Factory New),500,5.0
+2025-10-09T19:20:35Z,Operator | FBI SWAT,2798,27.98
+2025-10-09T19:20:35Z,SSG 08 | Zeno (Well-Worn),400,4.0
+2025-10-09T19:20:35Z,Snakebite Case,65,0.65
+2025-10-09T19:20:35Z,Soldier | Phoenix,1422,14.22
+2025-10-09T19:20:35Z,USP-S | Cortex (Well-Worn),220,2.2
+2025-10-09T19:20:35Z,USP-S | Neo-Noir (Minimal Wear),2314,23.14
+2025-10-10T07:23:48Z,AK-47 | Legion of Anubis (Minimal Wear),981,9.81
+2025-10-10T07:23:48Z,AWP | Atheris (Factory New),2378,23.78
+2025-10-10T07:23:48Z,AWP | Duality (Field-Tested),161,1.61
+2025-10-10T07:23:48Z,Desert Eagle | Heat Treated (Field-Tested),148,1.48
+2025-10-10T07:23:48Z,Glock-18 | Bunsen Burner (Factory New),649,6.49
+2025-10-10T07:23:48Z,Operator | FBI SWAT,2655,26.55
+2025-10-10T07:23:48Z,SSG 08 | Zeno (Well-Worn),400,4.0
+2025-10-10T07:23:48Z,Snakebite Case,65,0.65
+2025-10-10T07:23:48Z,Soldier | Phoenix,1376,13.76
+2025-10-10T07:23:48Z,USP-S | Cortex (Well-Worn),207,2.07
+2025-10-10T07:23:48Z,USP-S | Neo-Noir (Minimal Wear),2374,23.74
+2025-10-10T19:19:40Z,AK-47 | Legion of Anubis (Minimal Wear),952,9.52
+2025-10-10T19:19:40Z,AWP | Atheris (Factory New),2500,25.0
+2025-10-10T19:19:40Z,AWP | Duality (Field-Tested),160,1.6
+2025-10-10T19:19:40Z,Desert Eagle | Heat Treated (Field-Tested),146,1.46
+2025-10-10T19:19:40Z,Glock-18 | Bunsen Burner (Factory New),618,6.18
+2025-10-10T19:19:40Z,Operator | FBI SWAT,2773,27.73
+2025-10-10T19:19:40Z,SSG 08 | Zeno (Well-Worn),400,4.0
+2025-10-10T19:19:40Z,Snakebite Case,63,0.63
+2025-10-10T19:19:40Z,Soldier | Phoenix,1373,13.73
+2025-10-10T19:19:40Z,USP-S | Cortex (Well-Worn),208,2.08
+2025-10-10T19:19:40Z,USP-S | Neo-Noir (Minimal Wear),2379,23.79
+2025-10-11T07:19:59Z,AK-47 | Legion of Anubis (Minimal Wear),980,9.8
+2025-10-11T07:19:59Z,AWP | Atheris (Factory New),2641,26.41
+2025-10-11T07:19:59Z,AWP | Duality (Field-Tested),160,1.6
+2025-10-11T07:19:59Z,Desert Eagle | Heat Treated (Field-Tested),147,1.47
+2025-10-11T07:19:59Z,Glock-18 | Bunsen Burner (Factory New),617,6.17
+2025-10-11T07:19:59Z,Operator | FBI SWAT,2807,28.07
+2025-10-11T07:19:59Z,SSG 08 | Zeno (Well-Worn),400,4.0
+2025-10-11T07:19:59Z,Snakebite Case,65,0.65
+2025-10-11T07:19:59Z,Soldier | Phoenix,1444,14.44
+2025-10-11T07:19:59Z,USP-S | Cortex (Well-Worn),212,2.12
+2025-10-11T07:19:59Z,USP-S | Neo-Noir (Minimal Wear),2379,23.79
+2025-10-11T14:17:43Z,AK-47 | Legion of Anubis (Minimal Wear),991,9.91
+2025-10-11T14:17:43Z,AWP | Atheris (Factory New),2564,25.64
+2025-10-11T14:17:43Z,AWP | Duality (Field-Tested),160,1.6
+2025-10-11T14:17:43Z,Desert Eagle | Heat Treated (Field-Tested),143,1.43
+2025-10-11T14:17:43Z,Glock-18 | Bunsen Burner (Factory New),572,5.72
+2025-10-11T14:17:43Z,Operator | FBI SWAT,2650,26.5
+2025-10-11T14:17:43Z,SSG 08 | Zeno (Well-Worn),400,4.0
+2025-10-11T14:17:43Z,Snakebite Case,65,0.65
+2025-10-11T14:17:43Z,Soldier | Phoenix,1443,14.43
+2025-10-11T14:17:43Z,USP-S | Cortex (Well-Worn),208,2.08
+2025-10-11T14:17:43Z,USP-S | Neo-Noir (Minimal Wear),2449,24.49
+2025-10-11T14:28:31Z,AK-47 | Legion of Anubis (Minimal Wear),991,9.91
+2025-10-11T14:28:31Z,AWP | Atheris (Factory New),2564,25.64
+2025-10-11T14:28:31Z,AWP | Duality (Field-Tested),160,1.6
+2025-10-11T14:28:31Z,Desert Eagle | Heat Treated (Field-Tested),143,1.43
+2025-10-11T14:28:31Z,Glock-18 | Bunsen Burner (Factory New),572,5.72
+2025-10-11T14:28:31Z,Operator | FBI SWAT,2650,26.5
+2025-10-11T14:28:31Z,SSG 08 | Zeno (Well-Worn),400,4.0
+2025-10-11T14:28:31Z,Snakebite Case,65,0.65
+2025-10-11T14:28:31Z,Soldier | Phoenix,1443,14.43
+2025-10-11T14:28:31Z,USP-S | Cortex (Well-Worn),212,2.12
+2025-10-11T14:28:31Z,USP-S | Neo-Noir (Minimal Wear),2449,24.49
 2025-10-11T14:32:43Z,AK-47 | Legion of Anubis (Minimal Wear),991,9.91
 2025-10-11T14:32:43Z,AWP | Atheris (Factory New),2564,25.64
 2025-10-11T14:32:43Z,AWP | Duality (Field-Tested),160,1.6
@@ -380,4 +380,44 @@ ts_utc,market_hash_name,price_cents,price_usd
 2025-10-11T19:13:39Z,Snakebite Case,65,0.65
 2025-10-11T19:13:39Z,Soldier | Phoenix,1439,14.39
 2025-10-11T19:13:39Z,USP-S | Cortex (Well-Worn),212,2.12
+2025-10-11T19:13:39Z,USP-S | Neo-Noir (Minimal Wear),2449,24.492025-10-11T14:32:43Z,AK-47 | Legion of Anubis (Minimal Wear),991,9.91
+2025-10-11T14:32:43Z,AWP | Atheris (Factory New),2564,25.64
+2025-10-11T14:32:43Z,AWP | Duality (Field-Tested),160,1.6
+2025-10-11T14:32:43Z,Desert Eagle | Heat Treated (Field-Tested),143,1.43
+2025-10-11T14:32:43Z,Glock-18 | Bunsen Burner (Factory New),572,5.72
+2025-10-11T14:32:43Z,Operator | FBI SWAT,2650,26.5
+2025-10-11T14:32:43Z,SSG 08 | Zeno (Well-Worn),400,4.0
+2025-10-11T14:32:43Z,Snakebite Case,65,0.65
+2025-10-11T14:32:43Z,Soldier | Phoenix,1440,14.4
+2025-10-11T14:32:43Z,USP-S | Cortex (Well-Worn),212,2.12
+2025-10-11T14:32:43Z,USP-S | Neo-Noir (Minimal Wear),2449,24.49
+2025-10-11T14:35:05Z,AK-47 | Legion of Anubis (Minimal Wear),991,9.91
+2025-10-11T14:35:05Z,AWP | Atheris (Factory New),2564,25.64
+2025-10-11T14:35:05Z,AWP | Duality (Field-Tested),160,1.6
+2025-10-11T14:35:05Z,Desert Eagle | Heat Treated (Field-Tested),143,1.43
+2025-10-11T14:35:05Z,Glock-18 | Bunsen Burner (Factory New),572,5.72
+2025-10-11T14:35:05Z,Operator | FBI SWAT,2650,26.5
+2025-10-11T14:35:05Z,SSG 08 | Zeno (Well-Worn),400,4.0
+2025-10-11T14:35:05Z,Snakebite Case,65,0.65
+2025-10-11T14:35:05Z,Soldier | Phoenix,1440,14.4
+2025-10-11T14:35:05Z,USP-S | Cortex (Well-Worn),212,2.12
+2025-10-11T14:35:05Z,USP-S | Neo-Noir (Minimal Wear),2449,24.49
+2025-10-11T15:30:48Z,AK-47 | Legion of Anubis (Minimal Wear),991,9.91
+2025-10-11T15:30:48Z,AWP | Atheris (Factory New),2564,25.64
+2025-10-11T15:30:48Z,AWP | Duality (Field-Tested),160,1.6
+2025-10-11T15:30:48Z,Desert Eagle | Heat Treated (Field-Tested),146,1.46
+2025-10-11T15:30:48Z,Glock-18 | Bunsen Burner (Factory New),572,5.72
+2025-10-11T15:30:48Z,M4A1-S | Black Lotus (Minimal Wear),1120,11.2
+2025-10-11T19:13:39Z,AK-47 | Legion of Anubis (Minimal Wear),1006,10.06
+2025-10-11T19:13:39Z,AWP | Atheris (Factory New),2597,25.97
+2025-10-11T19:13:39Z,AWP | Duality (Field-Tested),163,1.63
+2025-10-11T19:13:39Z,Desert Eagle | Heat Treated (Field-Tested),145,1.45
+2025-10-11T19:13:39Z,Glock-18 | Bunsen Burner (Factory New),570,5.7
+2025-10-11T19:13:39Z,M4A1-S | Black Lotus (Minimal Wear),1121,11.21
+2025-10-11T19:13:39Z,Operator | FBI SWAT,2806,28.06
+2025-10-11T19:13:39Z,SSG 08 | Zeno (Well-Worn),400,4.0
+2025-10-11T19:13:39Z,Snakebite Case,65,0.65
+2025-10-11T19:13:39Z,Soldier | Phoenix,1439,14.39
+2025-10-11T19:13:39Z,USP-S | Cortex (Well-Worn),212,2.12
 2025-10-11T19:13:39Z,USP-S | Neo-Noir (Minimal Wear),2449,24.49
+
