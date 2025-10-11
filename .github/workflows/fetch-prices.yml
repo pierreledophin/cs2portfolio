@@ -3,7 +3,7 @@ name: fetch-prices
 on:
   schedule:
     - cron: '0 7,19 * * *'   # 07:00 & 19:00 UTC
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -31,102 +31,40 @@ jobs:
             pip install -r requirements.txt
           fi
 
-      - name: Run fetch for each profile (strict & verbose)
+      - name: Run fetch for each profile
         env:
           CSFLOAT_API_KEY: ${{ secrets.CSFLOAT_API_KEY }}
         run: |
           set -euo pipefail
           shopt -s nullglob
           for d in data/*; do
-            if [ -d "$d" ]; then
-              echo "=============================="
-              echo ">>> Processing profile: $(basename "$d")"
-              echo "=============================="
+            [ -d "$d" ] || continue
+            echo "=============================="
+            echo ">>> Processing profile: $(basename "$d")"
+            echo "=============================="
+            if [ -f "$d/holdings.csv" ]; then
+              echo "head -n 5 $d/holdings.csv:"
+              head -n 5 "$d/holdings.csv" || true
 
-              if [ -f "$d/holdings.csv" ]; then
-                echo "head -n 5 $d/holdings.csv:"
-                head -n 5 "$d/holdings.csv" || true
+              echo "Running: python fetch_prices.py '$d/holdings.csv'"
+              python fetch_prices.py "$d/holdings.csv" || true
 
-                echo "Running: python fetch_prices.py '$d/holdings.csv'"
-                python fetch_prices.py "$d/holdings.csv" || true
-
-                if [ -f "$d/price_history.csv" ]; then
-                  ROWS=$(( $(wc -l < "$d/price_history.csv") - 1 ))
-                  echo "[INFO] $(basename "$d"): price_history.csv has ${ROWS} data rows."
-                else
-                  echo "[WARN] $(basename "$d"): price_history.csv not created."
-                fi
+              if [ -f "$d/price_history.csv" ]; then
+                rows=$(( $(wc -l < "$d/price_history.csv") - 1 ))
+                echo "[INFO] $(basename "$d"): price_history.csv has ${rows} data rows."
               else
-                echo "[SKIP] $d/holdings.csv not found"
+                echo "[WARN] $(basename "$d"): price_history.csv not created."
               fi
+            else
+              echo "[SKIP] $d/holdings.csv not found"
             fi
           done
-
-      - name: Normalize history files (defensive)
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-import os, glob, csv
-import numpy as np
-import pandas as pd
-
-changed = False
-for path in glob.glob("data/*/price_history.csv"):
-    try:
-        df = pd.read_csv(path)
-    except Exception as e:
-        print(f"[WARN] can't read {path}: {e}")
-        continue
-
-    orig = df.copy()
-    # Ensure required columns
-    if "ts_utc" not in df.columns or "market_hash_name" not in df.columns:
-        print(f"[WARN] missing cols in {path}, skipping")
-        continue
-
-    # Ensure price_usd exists and is consistent with price_cents or already USD-like
-    if "price_usd" not in df.columns:
-        df["price_usd"] = np.nan
-    df["price_usd"] = pd.to_numeric(df["price_usd"], errors="coerce")
-
-    if "price_cents" in df.columns:
-        c = pd.to_numeric(df["price_cents"], errors="coerce")
-
-        # Try to infer if 'price_cents' column is actually cents or already USD-like
-        scale = "unknown"
-        if df["price_usd"].notna().sum() > 0 and c.notna().sum() > 0:
-            ratio = (df["price_usd"] / c).replace([np.inf, -np.inf], np.nan).dropna()
-            if not ratio.empty:
-                med = float(ratio.median())
-                if 0.008 < med < 0.012:
-                    scale = "cents"
-                elif 0.8 < med < 1.2:
-                    scale = "usd"
-
-        if scale == "unknown":
-            frac_ratio = ((c - np.floor(c)).abs() > 1e-9).mean()
-            c_max = float(c.max()) if c.notna().any() else np.nan
-            scale = "usd" if (frac_ratio > 0.2 or (not np.isnan(c_max) and c_max < 1000)) else "cents"
-
-        target = c/100.0 if scale == "cents" else c
-        mask = df["price_usd"].isna() | (df["price_usd"].sub(target).abs() > 0.005)
-        df.loc[mask, "price_usd"] = target
-
-    if not df.equals(orig):
-        df.to_csv(path, index=False, quoting=csv.QUOTE_MINIMAL)
-        changed = True
-        print(f"[fix] normalized {path}")
-
-print("[ok] normalization done" + (" with changes" if changed else " (no changes)"))
-PY
 
       - name: Commit & push
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          # Stage new/changed history files (force in case of ignore)
           git add -f data/*/price_history.csv || true
 
           echo "=== staged diff ==="
