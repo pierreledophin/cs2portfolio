@@ -587,17 +587,18 @@ def compute_trade_history_table(trades_df: pd.DataFrame) -> pd.DataFrame:
     - Prix achat (pour BUY = prix saisi; pour SELL = PRU courant WAC)
     - Prix vente (seulement pour SELL)
     - Profit/Perte en valeur et en %
-    Hypothèse: WAC (coût moyen pondéré) par item.
+    Utilise un PRU WAC (coût moyen pondéré) par item.
     """
     if trades_df.empty:
         return pd.DataFrame(columns=[
             "type","market_hash_name","qty","buy_price_usd","sell_price_usd",
-            "pnl_value_usd","pnl_pct"
+            "pnl_value_usd","pnl_pct","date","trade_id"
         ])
 
     df = trades_df.copy()
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
-    df = df.sort_values(["market_hash_name","date"]).reset_index(drop=True)
+    # On garde aussi l'ordre chronologique par item pour le WAC
+    df = df.sort_values(["market_hash_name","date","trade_id"]).reset_index(drop=True)
 
     out_rows = []
     for name, g in df.groupby("market_hash_name", sort=False):
@@ -608,6 +609,7 @@ def compute_trade_history_table(trades_df: pd.DataFrame) -> pd.DataFrame:
             ttype = str(r["type"]).upper()
             qty   = float(r["qty"])
             price = float(r["price_usd"])
+            tid   = r.get("trade_id")
 
             if ttype == "BUY":
                 # Met à jour le PRU (WAC)
@@ -624,7 +626,8 @@ def compute_trade_history_table(trades_df: pd.DataFrame) -> pd.DataFrame:
                     "sell_price_usd": None,
                     "pnl_value_usd": None,
                     "pnl_pct": None,
-                    "date": r["date"]
+                    "date": r["date"],
+                    "trade_id": tid
                 })
 
             elif ttype == "SELL":
@@ -641,17 +644,18 @@ def compute_trade_history_table(trades_df: pd.DataFrame) -> pd.DataFrame:
                     "sell_price_usd": price,
                     "pnl_value_usd": pnl_val,
                     "pnl_pct": pnl_pct,
-                    "date": r["date"]
+                    "date": r["date"],
+                    "trade_id": tid
                 })
 
-                # Met à jour la position (on suppose pas de ventes > position)
+                # Met à jour la position (WAC ne change pas sur vente)
                 pos = max(0.0, pos - qty)
-                # Le PRU ne change pas sur une vente en WAC
 
     hist = pd.DataFrame(out_rows)
     if not hist.empty:
         hist = hist.sort_values("date", ascending=False).reset_index(drop=True)
     return hist
+
 
 with tab3:
     st.subheader("Historique")
@@ -677,7 +681,7 @@ with tab3:
         else:
             hist_view = hist.copy()
 
-        # Colonnes demandées (en-têtes FR)
+        # Colonnes demandées + trade_id
         display = hist_view.rename(columns={
             "market_hash_name": "Item",
             "qty": "Quantité",
@@ -685,13 +689,32 @@ with tab3:
             "sell_price_usd": "Prix vente USD",
             "pnl_value_usd": "Profit/Perte USD",
             "pnl_pct": "% Profit/Perte",
-        })[["Item","Quantité","Prix achat USD","Prix vente USD","Profit/Perte USD","% Profit/Perte"]]
+            "trade_id": "Trade ID",
+        })[["Trade ID","Item","Quantité","Prix achat USD","Prix vente USD","Profit/Perte USD","% Profit/Perte"]]
+
+        # Style: vert/rouge graduel sur le pourcentage
+        def _evo_style(val):
+            return f"background-color: {_pct_bg_color(val)};"
+
+        styler = (
+            display.style
+            .format({
+                "Quantité": "{:,.0f}",
+                "Prix achat USD": "${:,.2f}",
+                "Prix vente USD": "${:,.2f}",
+                "Profit/Perte USD": "${:,.2f}",
+                "% Profit/Perte": "{:,.2f}%"
+            }, na_rep="")
+            .map(lambda v: _evo_style(v), subset=["% Profit/Perte"])
+        )
 
         st.dataframe(
-            display,
+            styler,
             use_container_width=True,
             hide_index=True,
             column_config={
+                "Trade ID": st.column_config.TextColumn("Trade ID"),
+                "Item": "Item",
                 "Quantité": st.column_config.NumberColumn("Quantité", format="%d"),
                 "Prix achat USD": st.column_config.NumberColumn("Prix achat USD", format="$%.2f"),
                 "Prix vente USD": st.column_config.NumberColumn("Prix vente USD", format="$%.2f"),
@@ -702,7 +725,7 @@ with tab3:
 
         st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
-        # Option de suppression (conserve ta fonctionnalité existante)
+        # Suppression (conserve la fonctionnalité existante)
         delete_id = st.text_input("ID de transaction à supprimer (trade_id)", key="delete_trade_id")
         if st.button("Supprimer", key="btn_delete_trade"):
             if delete_id in trades["trade_id"].astype(str).values:
@@ -713,6 +736,7 @@ with tab3:
                 st.rerun()
             else:
                 st.error("ID introuvable.")
+
 
 # ---------- Onglet 4 : Statistiques financières ----------
 with tab4:
