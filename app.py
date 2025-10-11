@@ -152,6 +152,18 @@ def save_trades(df, msg="update trades"):
         else:
             st.error(f"Erreur GitHub: {resp.status_code}")
 
+# ---------- Holdings I/O (NOUVEAU : push sur GitHub) ----------
+def save_holdings(df, msg="update holdings"):
+    df.to_csv(PATH_HOLDINGS, index=False)
+    if GH_PAT and OWNER:
+        _text, sha, _ = gh_get_file(PATH_HOLDINGS)
+        csv_buf = io.StringIO(); df.to_csv(csv_buf, index=False)
+        resp = gh_put_file(PATH_HOLDINGS, csv_buf.getvalue(), sha, msg)
+        if 200 <= resp.status_code < 300:
+            st.toast("Positions (holdings) sauvegardées sur GitHub.")
+        else:
+            st.error(f"Erreur GitHub (holdings): {resp.status_code}")
+
 # ---------- Finance I/O ----------
 def load_finances():
     try:
@@ -263,7 +275,7 @@ def _blend_to_pastel(hex_color, intensity):
     r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
     wr, wg, wb = 255, 255, 255
     nr = int(wr + (r - wr) * intensity)
-    ng = int(wg + (g - wb) * intensity)
+    ng = int(wg + (g - wg) * intensity)
     nb = int(wb + (b - wb) * intensity)
     return f"#{nr:02x}{ng:02x}{nb:02x}"
 
@@ -565,7 +577,7 @@ with tab1:
 
         st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
 
-        # Courbe d'évolution (avec ffill des derniers jours)
+        # Courbe d'évolution
         st.markdown("### Évolution de la valeur du portefeuille")
         hist_df = load_price_history_df()
         ts = build_portfolio_timeseries(trades_df=trades, hist_df=hist_df)
@@ -591,11 +603,16 @@ with tab2:
         else:
             new_trade = pd.DataFrame([{
                 "date": datetime.now().strftime("%Y-%m-%d"),
-                "type": t_type,"market_hash_name": name,"qty": qty,
-                "price_usd": price,"note": note,"trade_id": "trd_" + uuid.uuid4().hex[:8]
+                "type": t_type, "market_hash_name": name, "qty": qty,
+                "price_usd": price, "note": note, "trade_id": "trd_" + uuid.uuid4().hex[:8]
             }])
             trades = pd.concat([trades, new_trade], ignore_index=True)
             save_trades(trades, f"add {t_type} {name}")
+
+            # >>> Rebuild & push holdings.csv (IMPORTANT)
+            holdings_now = rebuild_holdings(trades)
+            save_holdings(holdings_now, f"rebuild holdings after {t_type} {name}")
+
             st.success("Transaction enregistrée."); st.cache_data.clear(); st.rerun()
 
 # ---------- Onglet 3 : Transactions ----------
@@ -660,7 +677,8 @@ with tab3:
         def _evo_style(val): return f"background-color: {_pct_bg_color(val)};"
 
         styler = (display.style
-                  .format({"Quantité":"{:,.0f}","Prix achat USD":"${:,.2f}","Prix vente USD":"${:,.2f}","Profit/Perte USD":"${:,.2f}","% Profit/Perte":"{:,.2f}%"}, na_rep="")
+                  .format({"Quantité":"{:,.0f}","Prix achat USD":"${:,.2f}","Prix vente USD":"${:,.2f}","Profit/Perte USD":"${:,.2f}","% Profit/Perte":"{:,.2f}%"},
+                          na_rep="")
                   .map(lambda v: _evo_style(v), subset=["% Profit/Perte"]))
 
         st.dataframe(styler, use_container_width=True, hide_index=True, column_config={
@@ -680,6 +698,11 @@ with tab3:
             if delete_id in trades["trade_id"].astype(str).values:
                 new_trades = trades[trades["trade_id"].astype(str) != delete_id]
                 save_trades(new_trades, f"delete trade {delete_id}")
+
+                # >>> Rebuild & push holdings.csv après suppression
+                holdings_now = rebuild_holdings(new_trades)
+                save_holdings(holdings_now, f"rebuild holdings after delete {delete_id}")
+
                 st.success(f"Transaction {delete_id} supprimée.")
                 st.cache_data.clear()
                 st.rerun()
