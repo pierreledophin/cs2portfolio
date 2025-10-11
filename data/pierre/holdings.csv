@@ -1,12 +1,12 @@
 market_hash_name,qty,buy_price_usd,buy_date,notes
-AWP | Atheris (Factory New),1,22.51,2025-01-10,test
-Operator | FBI SWAT,1,22.31,2025-01-10,test
-Glock-18 | Bunsen Burner (Factory New),1,2.0,2025-01-10,test
-AK-47 | Legion of Anubis (Minimal Wear),1,11.38,2025-01-10,test
-AWP | Duality (Field-Tested),1,0.0,2025-01-10,test
-SSG 08 | Zeno (Well-Worn),1,0.0,2025-01-10,test
-Desert Eagle | Heat Treated (Field-Tested),1,1.9,2025-01-10,test
-Soldier | Phoenix,1,2.0,2025-01-10,test
-USP-S | Cortex (Well-Worn),1,1.5,2025-01-10,test
-USP-S | Neo-Noir (Minimal Wear),1,23.4,2025-01-10,test
-Snakebite Case,10,0.64,2025-10-02,
+AK-47 | Legion of Anubis (Minimal Wear),1,11.38,2025-01-10,
+AWP | Atheris (Factory New),1,22.51,2025-01-10,
+AWP | Duality (Field-Tested),1,0.0,2025-01-10,
+Desert Eagle | Heat Treated (Field-Tested),1,1.9,2025-01-10,
+Glock-18 | Bunsen Burner (Factory New),1,2.0,2025-01-10,
+M4A1-S | Black Lotus (Minimal Wear),1,5.78,2025-10-09,
+Operator | FBI SWAT,1,22.31,2025-01-10,
+SSG 08 | Zeno (Well-Worn),1,0.0,2025-01-10,
+Snakebite Case,10,0.64,2025-01-10,
+Soldier | Phoenix,1,2.0,2025-01-10,
+USP-S | Neo-Noir (Minimal Wear),1,23.4,2025-01-10,
