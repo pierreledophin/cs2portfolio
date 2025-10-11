@@ -4,3 +4,4 @@ date,type,market_hash_name,qty,price_usd,note,trade_id
 2025-10-09,BUY,AK-47 | Point Disarray (Field-Tested),1,16.0,,trd_5621b33e
 2025-10-09,BUY,USP-S | The Traitor (Well-Worn),1,15.0,,trd_e31ba2a3
 2025-10-11,BUY,AK-47 | Point Disarray (Factory New),1,10.0,,trd_b28eab29
+2025-10-11,SELL,AK-47 | Point Disarray (Factory New),1,10.0,,trd_93f7d938
