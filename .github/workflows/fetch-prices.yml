@@ -36,11 +36,58 @@ jobs:
             fi
           done
 
-      # >>> NOUVELLE ÉTAPE : normalise les CSV pour garantir price_usd
-      - name: Normalize price_history (ensure price_usd)
+      # Normalisation robuste : garantit price_usd, détecte si price_cents est en cents ou déjà en USD.
+      - name: Normalize price_history (ensure price_usd with scale detection)
         run: |
           python - <<'PY'
           import pandas as pd, numpy as np, glob
+
+          def detect_scale(df: pd.DataFrame) -> str:
+              if 'price_cents' not in df.columns:
+                  return 'unknown'
+              c = pd.to_numeric(df['price_cents'], errors='coerce')
+              if c.dropna().empty:
+                  return 'unknown'
+              if 'price_usd' in df.columns:
+                  u = pd.to_numeric(df['price_usd'], errors='coerce')
+                  m = (u / c).replace([np.inf, -np.inf], np.nan).dropna()
+                  if not m.empty:
+                      med = float(median(m))
+              else:
+                  med = None
+
+              # Heuristiques si pas de ratio exploitable
+              frac_ratio = ((c - np.floor(c)).abs() > 1e-9).mean()
+              c_max = float(c.max()) if c.notna().any() else np.nan
+
+              # Si ratio dispo, prioritaire
+              if 'price_usd' in df.columns:
+                  u = pd.to_numeric(df['price_usd'], errors='coerce')
+                  m = (u / c).replace([np.inf, -np.inf], np.nan).dropna()
+                  if not m.empty:
+                      med = float(m.median())
+                      if 0.008 < med < 0.012:  # ~ 1/100
+                          return 'cents'
+                      if 0.8 < med < 1.2:     # ~ 1
+                          return 'usd'
+
+              # Sinon : décimales -> USD ; valeurs énormes entières -> cents
+              if frac_ratio > 0.2:
+                  return 'usd'
+              if c_max < 1000:
+                  return 'usd'
+              return 'cents'
+
+          def median(s):
+              s = list(s)
+              n = len(s)
+              if n == 0: return float('nan')
+              s.sort()
+              mid = n // 2
+              if n % 2 == 1:
+                  return s[mid]
+              return 0.5 * (s[mid - 1] + s[mid])
+
           changed = False
           for path in glob.glob('data/*/price_history.csv'):
               try:
@@ -49,21 +96,34 @@ jobs:
                   print(f"[skip] {path}: {e}")
                   continue
 
+              if 'ts_utc' not in df.columns or 'market_hash_name' not in df.columns:
+                  print(f"[skip] {path}: missing required columns")
+                  continue
+
               need_save = False
-              # Crée/convertit price_usd
               if 'price_usd' not in df.columns:
                   df['price_usd'] = np.nan
                   need_save = True
+
               df['price_usd'] = pd.to_numeric(df['price_usd'], errors='coerce')
 
               if 'price_cents' in df.columns:
-                  cents = pd.to_numeric(df['price_cents'], errors='coerce')
-                  mask = df['price_usd'].isna() & cents.notna()
-                  if mask.any():
-                      df.loc[mask, 'price_usd'] = cents[mask] / 100.0
-                      need_save = True
+                  c = pd.to_numeric(df['price_cents'], errors='coerce')
+                  scale = detect_scale(df)
+                  if scale == 'cents':
+                      target = c / 100.0
+                  elif scale == 'usd':
+                      target = c
+                  else:
+                      target = c  # fallback
 
-              # Ordre de colonnes cohérent (optionnel)
+                  mask = df['price_usd'].isna() | (df['price_usd'].sub(target).abs() > 0.005)
+                  if mask.any():
+                      df.loc[mask, 'price_usd'] = target
+                      need_save = True
+                      print(f"[{path}] scale={scale} | updated {int(mask.sum())} rows")
+
+              # Optionnel : ordre de colonnes
               cols = df.columns.tolist()
               order = [c for c in ['ts_utc','market_hash_name','price_cents','price_usd'] if c in cols]
               other = [c for c in cols if c not in order]
@@ -75,9 +135,8 @@ jobs:
                   changed = True
                   print(f"[fixed] {path}")
               else:
-                  print(f"[ok] {path} already has price_usd")
+                  print(f"[ok] {path} already normalized")
 
-          # Petit marqueur pour debug si besoin
           open('.normalized','w').write('1' if changed else '0')
           PY
 
