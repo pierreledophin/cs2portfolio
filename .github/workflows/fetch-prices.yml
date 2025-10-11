@@ -2,8 +2,8 @@ name: fetch-prices
 
 on:
   schedule:
-    - cron: "0 7,19 * * *"   # 07:00 & 19:00 UTC
-  workflow_dispatch:
+    - cron: '0 7,19 * * *'   # 07:00 & 19:00 UTC
+  workflow_dispatch: {}
 
 permissions:
   contents: write
@@ -21,7 +21,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
       - name: Install deps
         run: |
@@ -51,7 +51,7 @@ jobs:
                 python fetch_prices.py "$d/holdings.csv" || true
 
                 if [ -f "$d/price_history.csv" ]; then
-                  ROWS=$(($(wc -l < "$d/price_history.csv") - 1))
+                  ROWS=$(( $(wc -l < "$d/price_history.csv") - 1 ))
                   echo "[INFO] $(basename "$d"): price_history.csv has ${ROWS} data rows."
                 else
                   echo "[WARN] $(basename "$d"): price_history.csv not created."
@@ -63,9 +63,10 @@ jobs:
           done
 
       - name: Normalize history files (defensive)
+        shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          python - "$@" <<'PY'
 import os, pandas as pd, numpy as np, glob, csv
 changed = False
 for path in glob.glob("data/*/price_history.csv"):
@@ -118,6 +119,7 @@ print("[ok] normalization done" + (" with changes" if changed else " (no changes
 PY
 
       - name: Commit & push
+        shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
