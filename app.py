@@ -307,15 +307,38 @@ def _pct_bg_color(pct):
     ap = abs(pct)
     return _blend_to_pastel(base_red, 0.12 if ap < 5 else min(0.12 + ap/200, 0.40))
 
-# ---------- Lecture price_history ----------
 def load_price_history_df() -> pd.DataFrame:
+    """
+    Charge price_history.csv depuis GitHub et s'assure que:
+    - ts_utc (datetime-like), market_hash_name (str) sont présents
+    - price_usd existe; sinon, il est calculé depuis price_cents/100
+    """
     text, _sha, status = gh_get_file(PATH_HISTORY)
-    if status == 200 and text.strip():
-        try:
-            return pd.read_csv(io.StringIO(text))
-        except Exception:
-            return pd.DataFrame()
-    return pd.DataFrame()
+    if status != 200 or not str(text).strip():
+        return pd.DataFrame()
+
+    try:
+        df = pd.read_csv(io.StringIO(text))
+    except Exception:
+        return pd.DataFrame()
+
+    # Harmonisation colonnes essentielles
+    if "ts_utc" not in df.columns or "market_hash_name" not in df.columns:
+        return pd.DataFrame()
+
+    # Assure price_usd
+    if "price_usd" not in df.columns:
+        df["price_usd"] = np.nan
+
+    # Remplit price_usd manquant depuis price_cents (si dispo)
+    if "price_cents" in df.columns:
+        # Convertit price_usd existant et remplit les NaN
+        df["price_usd"] = pd.to_numeric(df["price_usd"], errors="coerce")
+        cents = pd.to_numeric(df["price_cents"], errors="coerce")
+        df["price_usd"] = df["price_usd"].fillna(cents / 100.0)
+
+    return df
+
 
 def _normalize_history_df(hist_df: pd.DataFrame) -> pd.DataFrame:
     """
