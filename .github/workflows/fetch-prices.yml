@@ -63,11 +63,13 @@ jobs:
           done
 
       - name: Normalize history files (defensive)
-        shell: bash
         run: |
           set -euo pipefail
-          python - "$@" <<'PY'
-import os, pandas as pd, numpy as np, glob, csv
+          python - <<'PY'
+import os, glob, csv
+import numpy as np
+import pandas as pd
+
 changed = False
 for path in glob.glob("data/*/price_history.csv"):
     try:
@@ -82,7 +84,7 @@ for path in glob.glob("data/*/price_history.csv"):
         print(f"[WARN] missing cols in {path}, skipping")
         continue
 
-    # Ensure price_usd exists and is consistent with price_cents or already in USD
+    # Ensure price_usd exists and is consistent with price_cents or already USD-like
     if "price_usd" not in df.columns:
         df["price_usd"] = np.nan
     df["price_usd"] = pd.to_numeric(df["price_usd"], errors="coerce")
@@ -119,7 +121,6 @@ print("[ok] normalization done" + (" with changes" if changed else " (no changes
 PY
 
       - name: Commit & push
-        shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
