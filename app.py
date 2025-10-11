@@ -12,31 +12,70 @@ h1, h2, h3 { letter-spacing: .2px; }
 h1 { margin-bottom: .6rem !important; }
 h2, h3 { margin-top: 1.0rem !important; margin-bottom: 1.6rem !important; }
 
-/* Cards KPI (pastel très clair) */
+/* --- KPI cards (style de base) --- */
 .kpi-card {
   border-radius: 16px; padding: 16px 18px;
   border: 1px solid rgba(0,0,0,.05);
   box-shadow: 0 6px 20px rgba(0,0,0,.03);
   background: #ffffff; margin-bottom: 14px;
+  transition: all .2s ease;
+}
+.kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.06);
 }
 .kpi-title { font-size: 12px; color: #6b7280; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .6px; }
 .kpi-value { font-size: 22px; font-weight: 700; }
+.kpi-sub { font-size: 11px; color:#9ca3af; margin-top:4px; }
 
-/* Segmented profil (radio) */
-.stRadio { padding: 8px 10px; border-radius: 12px; border: 1px solid rgba(0,0,0,.06); background: #fafafa; margin-bottom: 12px; }
+/* --- KPI grid top sticky --- */
+.kpi-grid {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: linear-gradient(180deg,#ffffff 75%,rgba(255,255,255,0) 100%);
+  padding-top: 6px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+
+/* Variantes de bordures colorées par KPI */
+.kpi--net   { border-left: 6px solid #a78bfa22; }
+.kpi--cash  { border-left: 6px solid #60a5fa22; }
+.kpi--eqty  { border-left: 6px solid #34d39922; }
+.kpi--true  { border-left: 6px solid #fca5a522; }
+
+/* --- Segmented profil (radio) --- */
+.stRadio {
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.06);
+  background: #fafafa;
+  margin-bottom: 12px;
+}
 [data-testid="stHorizontalBlock"] .stRadio > label { font-weight: 600; }
 
-/* Tabs */
-[data-baseweb="tab-list"] { gap: 8px; margin-bottom: 8px; }
+/* --- Tabs --- */
+[data-baseweb="tab-list"] {
+  gap: 8px;
+  margin-bottom: 8px;
+}
 
-/* Table: plus d'air dans les cellules */
-.stDataFrame td, .stDataFrame th { padding-top: 10px !important; padding-bottom: 10px !important; }
+/* --- Tables --- */
+.stDataFrame td, .stDataFrame th {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
 
-/* Petits espacers */
+/* --- Espacers --- */
 .section-gap { height: 12px; }
 .section-gap-lg { height: 18px; }
+
+/* --- Divers --- */
+hr, .stDivider { margin-top: 1rem; margin-bottom: 1rem; }
 </style>
 """, unsafe_allow_html=True)
+
 
 st.markdown("<h1 style='margin-bottom:0'>CS2 Portfolio Tracker TEST VERSION</h1>", unsafe_allow_html=True)
 
@@ -573,17 +612,59 @@ with tab4:
     st.subheader("Statistiques financières")
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
+    # -- Chargement des données
     finances = load_finances()
     cs_snap  = load_csfloat_snapshot()
     fin_base = load_finance_baseline()
 
-    # ---- Baseline (capital net déposé lifetime) ----
-    with st.expander("⚙️ Ajuster le capital net déposé (lifetime) — baseline"):
+    # -- Calculs pour les KPI
+    fin = compute_financials(trades, finances, cs_snap, fin_base)
+
+    account_equity = fin["csfloat_cash_expected"] + float(total_val)
+    true_profit    = account_equity - fin["net_deposited_all"]
+
+    # ========== TOP KPI (avant les expanders) ==========
+    st.markdown('<div class="kpi-grid">', unsafe_allow_html=True)
+    k1, k2, k3, k4 = st.columns(4)
+    k1.markdown(f"""
+      <div class="kpi-card kpi--net">
+        <div class="kpi-title">Capital net déposé (lifetime)</div>
+        <div class="kpi-value">${fin["net_deposited_all"]:,.2f}</div>
+        <div class="kpi-sub">Baseline incluse</div>
+      </div>
+    """, unsafe_allow_html=True)
+    k2.markdown(f"""
+      <div class="kpi-card kpi--cash">
+        <div class="kpi-title">Cash CSFloat attendu</div>
+        <div class="kpi-value">${fin["csfloat_cash_expected"]:,.2f}</div>
+        <div class="kpi-sub">Snapshot ± mouvements ± trades</div>
+      </div>
+    """, unsafe_allow_html=True)
+    k3.markdown(f"""
+      <div class="kpi-card kpi--eqty">
+        <div class="kpi-title">Equity (Cash + Valeur positions)</div>
+        <div class="kpi-value">${account_equity:,.2f}</div>
+        <div class="kpi-sub">Cash attendu + portefeuille live</div>
+      </div>
+    """, unsafe_allow_html=True)
+    k4.markdown(f"""
+      <div class="kpi-card kpi--true" style="background:{_pnl_bg_color(true_profit)}">
+        <div class="kpi-title">Vrai bénéfice</div>
+        <div class="kpi-value">${true_profit:,.2f}</div>
+        <div class="kpi-sub">Equity − Net deposited</div>
+      </div>
+    """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.divider()
+
+    # ---- Baseline ----
+    with st.expander("Ajuster le capital net déposé (lifetime) — baseline"):
         current_baseline = float(fin_base["baseline_net_deposited_usd"].iloc[-1]) if not fin_base.empty else 0.0
         st.info(f"Baseline actuelle : ${current_baseline:,.2f}")
         bcol1, bcol2, bcol3 = st.columns(3)
         base_date = bcol1.date_input("Date baseline", value=date.today(), key="baseline_date")
-        base_val  = bcol2.number_input("NOUVELLE baseline (USD)", min_value=0.0, step=0.01, key="baseline_value")
+        base_val  = bcol2.number_input("Nouvelle baseline (USD)", min_value=0.0, step=0.01, key="baseline_value")
         base_note = bcol3.text_input("Note (optionnel)", key="baseline_note")
         if st.button("Enregistrer la baseline", key="btn_save_baseline"):
             df = fin_base.copy()
@@ -592,9 +673,10 @@ with tab4:
                    "note": base_note}
             df = pd.concat([df, pd.DataFrame([row])], ignore_index=True)
             save_finance_baseline(df, "update baseline net deposited")
-            st.success("Baseline enregistrée."); st.rerun()
+            st.success("Baseline enregistrée.")
+            st.rerun()
 
-        if st.button("Baseliner sur les mouvements actuels (conseil: pour repartir propre)", key="btn_baseline_autoset"):
+        if st.button("Baseliner sur les mouvements actuels", key="btn_baseline_autoset"):
             if finances.empty:
                 new_val = 0.0
             else:
@@ -608,12 +690,13 @@ with tab4:
                    "note": "baseline = somme mouvements actuels"}
             df = pd.concat([df, pd.DataFrame([row])], ignore_index=True)
             save_finance_baseline(df, "baseline set to current movements sum")
-            st.success(f"Baseline mise à ${new_val:,.2f}."); st.rerun()
+            st.success(f"Baseline mise à ${new_val:,.2f}.")
+            st.rerun()
 
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
     # ---- Snapshot CSFloat ----
-    with st.expander("📌 Définir / Mettre à jour le snapshot CSFloat (solde constaté sur la plateforme)"):
+    with st.expander("Définir / Mettre à jour le snapshot CSFloat"):
         colA, colB = st.columns(2)
         snap_date = colA.date_input("Date du snapshot", value=date.today(), key="snap_date")
         snap_bal  = colB.number_input("Solde CSFloat constaté (USD)", min_value=0.0, step=0.01, key="snap_balance")
@@ -624,12 +707,13 @@ with tab4:
                 "balance_usd": snap_bal
             }])], ignore_index=True)
             save_csfloat_snapshot(df, "add csfloat snapshot")
-            st.success("Snapshot CSFloat enregistré."); st.rerun()
+            st.success("Snapshot CSFloat enregistré.")
+            st.rerun()
 
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
-    # ---- Mouvements d'argent ----
-    with st.expander("💸 Ajouter un mouvement (DEPOSIT / WITHDRAW)"):
+    # ---- Mouvements ----
+    with st.expander("Ajouter un mouvement (DEPOSIT / WITHDRAW)"):
         fcol1, fcol2, fcol3 = st.columns(3)
         f_date = fcol1.date_input("Date", value=date.today(), key="mov_date")
         f_type = fcol2.radio("Type", ["DEPOSIT","WITHDRAW"], horizontal=True, key="mov_type")
@@ -648,45 +732,13 @@ with tab4:
                 }])
                 finances = pd.concat([finances, new_fin], ignore_index=True)
                 save_finances(finances, f"add {f_type} {f_amt}")
-                st.success("Mouvement enregistré."); st.rerun()
-
-    # ---- Calculs KPI ----
-    fin = compute_financials(trades, finances, cs_snap, fin_base)
-
-    account_equity = fin["csfloat_cash_expected"] + float(total_val)  # Cash attendu + valeur positions (live)
-    true_profit    = account_equity - fin["net_deposited_all"]       # Vrai bénéfice = Equity - capital net déposé (lifetime)
-
-    # KPI cards
-    k1, k2, k3, k4 = st.columns(4)
-    k1.markdown(f"""
-      <div class="kpi-card">
-        <div class="kpi-title">Capital net déposé (lifetime)</div>
-        <div class="kpi-value">${fin["net_deposited_all"]:,.2f}</div>
-      </div>
-    """, unsafe_allow_html=True)
-    k2.markdown(f"""
-      <div class="kpi-card">
-        <div class="kpi-title">Cash CSFloat attendu</div>
-        <div class="kpi-value">${fin["csfloat_cash_expected"]:,.2f}</div>
-      </div>
-    """, unsafe_allow_html=True)
-    k3.markdown(f"""
-      <div class="kpi-card">
-        <div class="kpi-title">Equity (Cash + Valeur positions)</div>
-        <div class="kpi-value">${account_equity:,.2f}</div>
-      </div>
-    """, unsafe_allow_html=True)
-    k4.markdown(f"""
-      <div class="kpi-card" style="background:{_pnl_bg_color(true_profit)}">
-        <div class="kpi-title">Vrai bénéfice</div>
-        <div class="kpi-value">${true_profit:,.2f}</div>
-      </div>
-    """, unsafe_allow_html=True)
+                st.success("Mouvement enregistré.")
+                st.rerun()
 
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
-    # Détails & Reconcil
-    st.markdown("#### Détails & Reconcil")
+    # ---- Détails & rapprochement ----
+    st.markdown("#### Détails et rapprochement")
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Snapshot CSFloat", f"${fin['snapshot_bal']:,.2f}",
               delta=f"au {fin['snapshot_date'].date()}" if fin["snapshot_date"] is not None else None)
@@ -703,7 +755,7 @@ with tab4:
 
     st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
-    # Tableau des mouvements + suppression
+    # ---- Tableau des mouvements ----
     st.markdown("### Mouvements enregistrés")
     if finances.empty:
         st.info("Aucun mouvement enregistré.")
@@ -714,7 +766,9 @@ with tab4:
             if del_id in fin_display["finance_id"].values:
                 new_finances = finances[finances["finance_id"] != del_id]
                 save_finances(new_finances, f"delete finance {del_id}")
-                st.success(f"Mouvement {del_id} supprimé."); st.cache_data.clear(); st.rerun()
+                st.success(f"Mouvement {del_id} supprimé.")
+                st.cache_data.clear()
+                st.rerun()
             else:
                 st.error("ID introuvable.")
         st.dataframe(fin_display, use_container_width=True, hide_index=True)
