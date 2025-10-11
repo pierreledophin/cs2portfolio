@@ -1,16 +1,17 @@
 name: fetch-prices
+
 on:
   schedule:
-    - cron: "0 7,19 * * *"   # 07:00 et 19:00 UTC
+    - cron: "0 7,19 * * *"   # 07:00 & 19:00 UTC
   workflow_dispatch:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   fetch-multi:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,27 +25,11 @@ jobs:
 
       - name: Install deps
         run: |
-          python -m pip install -U pip
-          pip install -r requirements.txt
-
-      - name: Sanity check repo layout
-        run: |
-          set -euxo pipefail
-          git rev-parse --short HEAD
-          ls -la
-          echo "---- data tree ----"
-          ls -lR data || true
-
-      - name: Ensure CSFLOAT_API_KEY is present
-        env:
-          CSFLOAT_API_KEY: ${{ secrets.CSFLOAT_API_KEY }}
-        run: |
           set -euo pipefail
-          if [ -z "${CSFLOAT_API_KEY:-}" ]; then
-            echo "ERROR: CSFLOAT_API_KEY secret is missing."
-            exit 1
+          python -m pip install -U pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
           fi
-          echo "CSFLOAT_API_KEY is set (value masked)."
 
       - name: Run fetch for each profile (strict & verbose)
         env:
@@ -52,150 +37,103 @@ jobs:
         run: |
           set -euo pipefail
           shopt -s nullglob
-          any_change=0
           for d in data/*; do
-            prof="$(basename "$d")"
-            echo "=============================="
-            echo ">>> Processing profile: $prof"
-            echo "=============================="
+            if [ -d "$d" ]; then
+              echo "=============================="
+              echo ">>> Processing profile: $(basename "$d")"
+              echo "=============================="
 
-            if [ ! -f "$d/holdings.csv" ]; then
-              echo "[SKIP] $prof: holdings.csv not found."
-              continue
-            fi
+              if [ -f "$d/holdings.csv" ]; then
+                echo "head -n 5 $d/holdings.csv:"
+                head -n 5 "$d/holdings.csv" || true
 
-            if [ ! -s "$d/holdings.csv" ]; then
-              echo "[SKIP] $prof: holdings.csv exists but is empty."
-              echo "head -n 5 $d/holdings.csv:"
-              head -n 5 "$d/holdings.csv" || true
-              continue
-            fi
+                echo "Running: python fetch_prices.py '$d/holdings.csv'"
+                python fetch_prices.py "$d/holdings.csv" || true
 
-            echo "head -n 5 $d/holdings.csv:"
-            head -n 5 "$d/holdings.csv" || true
-
-            if ! head -n 1 "$d/holdings.csv" | grep -q 'market_hash_name'; then
-              echo "[SKIP] $prof: holdings.csv missing 'market_hash_name' column."
-              continue
-            fi
-
-            # Lance le fetch (on NE masque PAS les erreurs)
-            echo "Running: python fetch_prices.py '$d/holdings.csv'"
-            python fetch_prices.py "$d/holdings.csv"
-
-            # Affiche l'état de price_history
-            if [ -f "$d/price_history.csv" ]; then
-              lines=$(tail -n +2 "$d/price_history.csv" | wc -l | tr -d ' ')
-              echo "[INFO] $prof: price_history.csv has $lines data rows."
-              any_change=1
-            else
-              echo "[WARN] $prof: price_history.csv was not created."
+                if [ -f "$d/price_history.csv" ]; then
+                  ROWS=$(($(wc -l < "$d/price_history.csv") - 1))
+                  echo "[INFO] $(basename "$d"): price_history.csv has ${ROWS} data rows."
+                else
+                  echo "[WARN] $(basename "$d"): price_history.csv not created."
+                fi
+              else
+                echo "[SKIP] $d/holdings.csv not found"
+              fi
             fi
           done
 
-          if [ "$any_change" -eq 0 ]; then
-            echo "[NOTE] No profile produced/updated price_history.csv."
-          fi
-
-      - name: Normalize price_history (ensure price_usd with scale detection)
+      - name: Normalize history files (defensive)
         run: |
+          set -euo pipefail
           python - <<'PY'
-          import pandas as pd, numpy as np, glob
+import os, pandas as pd, numpy as np, glob, csv
+changed = False
+for path in glob.glob("data/*/price_history.csv"):
+    try:
+        df = pd.read_csv(path)
+    except Exception as e:
+        print(f"[WARN] can't read {path}: {e}")
+        continue
 
-          def median(s):
-              s = list(s)
-              n = len(s)
-              if n == 0: return float('nan')
-              s.sort()
-              mid = n // 2
-              if n % 2 == 1:
-                  return s[mid]
-              return 0.5 * (s[mid - 1] + s[mid])
+    orig = df.copy()
+    # Ensure required columns
+    if "ts_utc" not in df.columns or "market_hash_name" not in df.columns:
+        print(f"[WARN] missing cols in {path}, skipping")
+        continue
 
-          def detect_scale(df: pd.DataFrame) -> str:
-              if 'price_cents' not in df.columns:
-                  return 'unknown'
-              c = pd.to_numeric(df['price_cents'], errors='coerce')
-              if c.dropna().empty:
-                  return 'unknown'
+    # Ensure price_usd exists and is consistent with price_cents or already in USD
+    if "price_usd" not in df.columns:
+        df["price_usd"] = np.nan
+    df["price_usd"] = pd.to_numeric(df["price_usd"], errors="coerce")
 
-              if 'price_usd' in df.columns:
-                  u = pd.to_numeric(df['price_usd'], errors='coerce')
-                  m = (u / c).replace([np.inf, -np.inf], np.nan).dropna()
-                  if not m.empty:
-                      med = float(median(m))
-                      if 0.008 < med < 0.012:  # ~ 1/100
-                          return 'cents'
-                      if 0.8 < med < 1.2:     # ~ 1
-                          return 'usd'
+    if "price_cents" in df.columns:
+        c = pd.to_numeric(df["price_cents"], errors="coerce")
 
-              frac_ratio = ((c - np.floor(c)).abs() > 1e-9).mean()
-              c_max = float(c.max()) if c.notna().any() else np.nan
-              if frac_ratio > 0.2:
-                  return 'usd'
-              if c_max < 1000:
-                  return 'usd'
-              return 'cents'
+        # Try to infer if 'price_cents' column is actually cents or already USD-like
+        scale = "unknown"
+        if df["price_usd"].notna().sum() > 0 and c.notna().sum() > 0:
+            ratio = (df["price_usd"] / c).replace([np.inf, -np.inf], np.nan).dropna()
+            if not ratio.empty:
+                med = float(ratio.median())
+                if 0.008 < med < 0.012:
+                    scale = "cents"
+                elif 0.8 < med < 1.2:
+                    scale = "usd"
 
-          changed = False
-          for path in glob.glob('data/*/price_history.csv'):
-              try:
-                  df = pd.read_csv(path)
-              except Exception as e:
-                  print(f"[skip] {path}: {e}")
-                  continue
+        if scale == "unknown":
+            frac_ratio = ((c - np.floor(c)).abs() > 1e-9).mean()
+            c_max = float(c.max()) if c.notna().any() else np.nan
+            scale = "usd" if (frac_ratio > 0.2 or (not np.isnan(c_max) and c_max < 1000)) else "cents"
 
-              if 'ts_utc' not in df.columns or 'market_hash_name' not in df.columns:
-                  print(f"[skip] {path}: missing required columns")
-                  continue
+        target = c/100.0 if scale == "cents" else c
+        mask = df["price_usd"].isna() | (df["price_usd"].sub(target).abs() > 0.005)
+        df.loc[mask, "price_usd"] = target
 
-              need_save = False
-              if 'price_usd' not in df.columns:
-                  df['price_usd'] = np.nan
-                  need_save = True
+    if not df.equals(orig):
+        df.to_csv(path, index=False, quoting=csv.QUOTE_MINIMAL)
+        changed = True
+        print(f"[fix] normalized {path}")
 
-              df['price_usd'] = pd.to_numeric(df['price_usd'], errors='coerce')
-
-              if 'price_cents' in df.columns:
-                  c = pd.to_numeric(df['price_cents'], errors='coerce')
-                  scale = detect_scale(df)
-                  target = c/100.0 if scale=='cents' else c
-                  mask = df['price_usd'].isna() | (df['price_usd'].sub(target).abs() > 0.005)
-                  if mask.any():
-                      df.loc[mask, 'price_usd'] = target
-                      need_save = True
-                      print(f"[{path}] scale={scale} | updated {int(mask.sum())} rows")
-
-              # reorder columns (optional)
-              cols = df.columns.tolist()
-              order = [c for c in ['ts_utc','market_hash_name','price_cents','price_usd'] if c in cols]
-              other = [c for c in cols if c not in order]
-              if order:
-                  df = df[order + other]
-
-              if need_save:
-                  df.to_csv(path, index=False)
-                  changed = True
-                  print(f"[fixed] {path}")
-              else:
-                  print(f"[ok] {path} already normalized")
-
-          open('.normalized','w').write('1' if changed else '0')
-          PY
-
-      - name: Show git status/diff
-        run: |
-          git status --porcelain
-          git diff --stat || true
+print("[ok] normalization done" + (" with changes" if changed else " (no changes)"))
+PY
 
       - name: Commit & push
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/*/price_history.csv
+
+          # Stage new/changed history files (force in case of ignore)
+          git add -f data/*/price_history.csv || true
+
+          echo "=== staged diff ==="
+          git diff --cached --stat || true
+
           if git diff --cached --quiet; then
             echo "No changes to commit"
-          else:
+          else
             git commit -m "update price history for all profiles [skip ci]"
-            git push origin main
+            CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+            echo "Pushing to ${CURRENT_BRANCH}"
+            git push origin "${CURRENT_BRANCH}"
           fi
