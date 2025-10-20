@@ -12,3 +12,4 @@ date,type,market_hash_name,qty,price_usd,note,trade_id
 2025-01-10,BUY,Snakebite Case,10,0.64,test,trd11
 2025-10-09,BUY,M4A1-S | Black Lotus (Minimal Wear),1,5.78,,trd_4d42dcf2
 2025-10-13,SELL,Operator | FBI SWAT,1,25.38,,trd_13a95e25
+2025-10-20,SELL,M4A1-S | Black Lotus (Minimal Wear),1,12.78,,trd_08f1a26a
