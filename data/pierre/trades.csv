@@ -17,3 +17,4 @@ date,type,market_hash_name,qty,price_usd,note,trade_id
 2025-10-23,SELL,AK-47 | Legion of Anubis (Minimal Wear),1,29.3,,trd_8104d02a
 2025-10-23,SELL,USP-S | Neo-Noir (Minimal Wear),1,29.09,,trd_9608619a
 2025-10-23,SELL,AWP | Duality (Field-Tested),1,1.82,,trd_984f7a26
+2025-10-23,BUY,Trapper Aggressor | Guerrilla Warfare,1,27.6,,trd_2c6add21
