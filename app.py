@@ -225,15 +225,37 @@ def rebuild_holdings(trades: pd.DataFrame):
         return pd.DataFrame()
     holdings = []
     for name, g in trades.groupby("market_hash_name"):
-        buys = g[g["type"]=="BUY"].copy()
-        sells = g[g["type"]=="SELL"].copy()
-        total_buy = buys["qty"].sum()
-        total_sell = sells["qty"].sum()
-        remaining = total_buy - total_sell
-        if remaining > 0:
-            cost = (buys["qty"] * buys["price_usd"]).sum()
-            pru = cost / total_buy if total_buy>0 else 0
-            holdings.append([name, remaining, pru, buys.iloc[-1]["date"], ""])
+        buys = g[g["type"]=="BUY"].copy().sort_values("date")
+        sells = g[g["type"]=="SELL"].copy().sort_values("date")
+
+        buy_lots = []
+        for _, row in buys.iterrows():
+            qty = float(row["qty"])
+            if qty <= 0:
+                continue
+            buy_lots.append({
+                "qty": qty,
+                "price_usd": float(row["price_usd"]),
+                "date": row["date"]
+            })
+
+        for _, row in sells.iterrows():
+            sell_qty = float(row["qty"])
+            if sell_qty <= 0:
+                continue
+            for lot in buy_lots:
+                if sell_qty <= 0:
+                    break
+                if lot["qty"] <= 0:
+                    continue
+                consumed = min(lot["qty"], sell_qty)
+                lot["qty"] -= consumed
+                sell_qty -= consumed
+
+        for lot in buy_lots:
+            if lot["qty"] > 0:
+                holdings.append([name, lot["qty"], lot["price_usd"], lot["date"], ""])
+
     df = pd.DataFrame(holdings, columns=["market_hash_name","qty","buy_price_usd","buy_date","notes"])
     df.to_csv(PATH_HOLDINGS, index=False)
     return df
