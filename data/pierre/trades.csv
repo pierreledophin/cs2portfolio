@@ -21,3 +21,4 @@ date,type,market_hash_name,qty,price_usd,note,trade_id
 2025-10-25,BUY,★ Falchion Knife | Lore (Field-Tested),1,85.0,,trd_c426f93e
 2025-10-31,SELL,Trapper Aggressor | Guerrilla Warfare,1,30.67,,trd_4cd11972
 2026-04-28,BUY,M4A1-S | Stratosphere (Field-Tested),1,12.23,low float,trd_5bc19d91
+2026-04-28,BUY,Glock-18 | Vogue (Factory New),1,14.2,,trd_928d1246
