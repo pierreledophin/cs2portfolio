@@ -1,6 +1,6 @@
 import io, os, base64, json, uuid, requests, pandas as pd, numpy as np, streamlit as st, time
 from datetime import datetime, date
-from steam_integration import get_steam_id_from_vanity, fetch_steam_inventory, detect_new_skins, import_new_skins_to_holdings, validate_steam_api_key
+from steam_integration import get_steam_id_from_vanity, fetch_steam_inventory, detect_new_skins, import_new_skins_to_holdings, validate_steam_api_key, check_inventory_accessibility
 
 # ---------- Configuration ----------
 st.set_page_config(page_title="CS2 Portfolio (CSFloat)", layout="wide")
@@ -861,6 +861,27 @@ with tab5:
         with col2:
             st.markdown('<div style="height: 22px;"></div>', unsafe_allow_html=True)
             fetch_btn = st.button("🔍 Chercher skins", key="btn_fetch_steam", use_container_width=True)
+            
+            # Bouton pour obtenir SteamID64
+            if st.button("🔗 Obtenir mon SteamID64", key="get_steam_id_btn"):
+                st.markdown("""
+                ### Comment trouver ton SteamID64:
+                
+                **Méthode 1 - Site web:**
+                1. Va sur https://steamid.io/
+                2. Entre ton vanity URL (ex: pierreledophin)
+                3. Copie le SteamID64 (commence par 7656119...)
+                
+                **Méthode 2 - Profil Steam:**
+                1. Va sur ton profil Steam
+                2. Clique droit → "Copy Page URL"
+                3. L'URL contient ton SteamID64
+                
+                **Méthode 3 - Dans Steam:**
+                1. Ouvre Steam → Settings → Interface
+                2. Coche "Display Steam URL address bar when available"
+                3. Ton profil affichera l'URL avec le SteamID64
+                """)
         
         st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
         
@@ -889,6 +910,40 @@ with tab5:
                             - Ton inventaire Steam est **public**
                             - Tu as au moins **1 skin CS2**
                             """)
+                            
+                            # Bouton debug pour voir les logs
+                            if st.button("🔍 Debug - Voir les détails de la requête", key="debug_steam"):
+                                st.markdown("### Debug Info")
+                                st.code(f"""
+SteamID: {steam_id}
+URL appelée: https://steamcommunity.com/inventory/{steam_id}/730/2?l=english&count=5000
+
+Vérifications à faire:
+1. Ton profil Steam: https://steamcommunity.com/profiles/{steam_id}
+2. Ton inventaire: https://steamcommunity.com/profiles/{steam_id}/inventory/#730
+3. Paramètres de confidentialité Steam → "Mes achats" = Public
+4. Paramètres de confidentialité Steam → "Détails de mon inventaire" = Public
+
+Si ça ne marche toujours pas, essaie avec ton SteamID64 direct au lieu de la vanity URL.
+""")
+                                
+                                # Test d'accessibilité
+                                if st.button("🧪 Tester l'accessibilité de l'inventaire", key="test_accessibility"):
+                                    with st.spinner("Test d'accessibilité..."):
+                                        access_result = check_inventory_accessibility(steam_id)
+                                        st.markdown("#### Résultat du test d'accessibilité:")
+                                        st.write(f"**Status Code:** {access_result['status_code']}")
+                                        st.write(f"**Accessible:** {'✅ Oui' if access_result['accessible'] else '❌ Non'}")
+                                        st.write(f"**Raison:** {access_result['reason']}")
+                                        
+                                        if access_result['data']:
+                                            data = access_result['data']
+                                            st.write(f"**Assets trouvés:** {len(data.get('assets', []))}")
+                                            st.write(f"**Descriptions trouvées:** {len(data.get('descriptions', []))}")
+                                            if data.get('assets'):
+                                                st.write("**Échantillon d'assets:**")
+                                                for asset in data['assets'][:3]:
+                                                    st.write(f"- AssetID: {asset.get('assetid')}, ClassID: {asset.get('classid')}")
                         else:
                             # Charger les holdings actuels
                             current_holdings = pd.DataFrame()
@@ -998,4 +1053,34 @@ with tab5:
             | La clé API ne marche pas | Génère une nouvelle clé sur https://steamcommunity.com/dev/apikey |
             | Après import, les prix affichent 0.00$ | C'est normal. Utilise l'onglet "Achat/Vente" pour ajuster les prix par item |
             """)
+            
+            # Test de l'API Steam
+            st.markdown("### 🧪 Test de l'API Steam")
+            test_col1, test_col2 = st.columns(2)
+            
+            with test_col1:
+                test_steam_id = st.text_input("SteamID64 pour test", placeholder="76561198123456789", key="test_steam_id")
+            
+            with test_col2:
+                if st.button("🔬 Tester l'API", key="test_api_btn"):
+                    if test_steam_id:
+                        with st.spinner("Test en cours..."):
+                            try:
+                                # Test 1: ResolveVanityURL
+                                vanity_result = get_steam_id_from_vanity("pierreledophin", STEAM_API_KEY)
+                                st.write(f"✅ ResolveVanityURL: {'OK' if vanity_result else 'ÉCHEC'}")
+                                
+                                # Test 2: Inventory API
+                                test_items = fetch_steam_inventory(test_steam_id)
+                                st.write(f"✅ Inventory API: {len(test_items)} items trouvés")
+                                
+                                if test_items:
+                                    st.write("📋 Échantillon d'items:")
+                                    for item in test_items[:3]:
+                                        st.write(f"- {item['market_hash_name']}")
+                                
+                            except Exception as e:
+                                st.error(f"❌ Erreur lors du test: {e}")
+                    else:
+                        st.warning("Entre un SteamID64 pour le test")
 
