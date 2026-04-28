@@ -62,46 +62,61 @@ def fetch_steam_inventory(steam_id: str, timeout: int = 20) -> List[dict]:
         return []
     
     try:
-        # Inventory API v2 (plus fiable)
         url = f"{STEAM_COMMUNITY_BASE}/inventory/{steam_id}/{CS2_APPID}/{CS2_CONTEXT_ID}"
-        params = {"l": "english", "count": 5000}
-        print(f"[DEBUG] Fetching inventory from: {url}")
-        print(f"[DEBUG] Params: {params}")
+        counts = [5000, 500, None]
+        data = None
         
-        r = requests.get(url, params=params, timeout=timeout)
-        print(f"[DEBUG] Response status: {r.status_code}")
-        print(f"[DEBUG] Response headers: {dict(r.headers)}")
+        for count in counts:
+            params = {"l": "english"}
+            if count is not None:
+                params["count"] = count
+            print(f"[DEBUG] Fetching inventory from: {url}")
+            print(f"[DEBUG] Params: {params}")
+            r = requests.get(url, params=params, timeout=timeout)
+            print(f"[DEBUG] Response status: {r.status_code}")
+            print(f"[DEBUG] Response headers: {dict(r.headers)}")
+            
+            if r.status_code == 400 and count == 5000:
+                print("[WARN] 400 Bad Request with count=5000, retrying with count=500")
+                continue
+            if r.status_code == 400 and count == 500:
+                print("[WARN] 400 Bad Request with count=500, retrying without count")
+                continue
+            r.raise_for_status()
+            data = r.json()
+            break
         
-        r.raise_for_status()
-        data = r.json()
+        if data is None:
+            print("[ERROR] Inventory request failed after retries")
+            return []
         
         print(f"[DEBUG] Response data keys: {list(data.keys()) if isinstance(data, dict) else 'not dict'}")
         print(f"[DEBUG] Success field: {data.get('success') if isinstance(data, dict) else 'N/A'}")
         
-        # Vérifier les erreurs
         if not data.get("success"):
             print(f"[WARN] Inventory API returned success=false")
             print(f"[DEBUG] Full response: {data}")
             return []
         
-        # Vérifier s'il y a des assets
         assets = data.get("assets", [])
-        descriptions = data.get("descriptions", [])
+        descriptions_raw = data.get("descriptions", [])
         
         if not assets:
             print(f"[WARN] No assets found in inventory")
             return []
-        
-        if not descriptions:
+        if not descriptions_raw:
             print(f"[WARN] No descriptions found in inventory")
             return []
         
+        descriptions = {}
+        for desc in descriptions_raw:
+            classid = desc.get("classid")
+            if classid:
+                descriptions[classid] = desc
+        
         print(f"[DEBUG] Found {len(assets)} assets and {len(descriptions)} descriptions")
         
-        # Extraire les assets
-        assets = data.get("assets", [])
-        print(f"[DEBUG] Found {len(assets)} assets")
-        
+        items = []
         for asset in assets:
             classid = asset.get("classid")
             if not classid or classid not in descriptions:
