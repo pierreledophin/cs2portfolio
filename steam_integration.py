@@ -65,35 +65,54 @@ def fetch_steam_inventory(steam_id: str, timeout: int = 20) -> List[dict]:
         # Inventory API v2 (plus fiable)
         url = f"{STEAM_COMMUNITY_BASE}/inventory/{steam_id}/{CS2_APPID}/{CS2_CONTEXT_ID}"
         params = {"l": "english", "count": 5000}
+        print(f"[DEBUG] Fetching inventory from: {url}")
+        print(f"[DEBUG] Params: {params}")
+        
         r = requests.get(url, params=params, timeout=timeout)
+        print(f"[DEBUG] Response status: {r.status_code}")
+        print(f"[DEBUG] Response headers: {dict(r.headers)}")
+        
         r.raise_for_status()
         data = r.json()
+        
+        print(f"[DEBUG] Response data keys: {list(data.keys()) if isinstance(data, dict) else 'not dict'}")
+        print(f"[DEBUG] Success field: {data.get('success') if isinstance(data, dict) else 'N/A'}")
         
         # Vérifier les erreurs
         if not data.get("success"):
             print(f"[WARN] Inventory API returned success=false")
+            print(f"[DEBUG] Full response: {data}")
             return []
         
-        # Parser les items
-        items = []
-        descriptions = {}
+        # Vérifier s'il y a des assets
+        assets = data.get("assets", [])
+        descriptions = data.get("descriptions", [])
         
-        # Indexer les descriptions par classid
-        for desc in data.get("descriptions", []):
-            classid = desc.get("classid")
-            if classid:
-                descriptions[classid] = desc
+        if not assets:
+            print(f"[WARN] No assets found in inventory")
+            return []
+        
+        if not descriptions:
+            print(f"[WARN] No descriptions found in inventory")
+            return []
+        
+        print(f"[DEBUG] Found {len(assets)} assets and {len(descriptions)} descriptions")
         
         # Extraire les assets
-        for asset in data.get("assets", []):
+        assets = data.get("assets", [])
+        print(f"[DEBUG] Found {len(assets)} assets")
+        
+        for asset in assets:
             classid = asset.get("classid")
             if not classid or classid not in descriptions:
+                print(f"[DEBUG] Skipping asset {asset.get('assetid')} - classid {classid} not in descriptions")
                 continue
             
             desc = descriptions[classid]
             market_hash = desc.get("market_hash_name", "")
             
             if not market_hash:
+                print(f"[DEBUG] Skipping asset {asset.get('assetid')} - no market_hash_name")
                 continue
             
             items.append({
@@ -111,6 +130,8 @@ def fetch_steam_inventory(steam_id: str, timeout: int = 20) -> List[dict]:
         
     except Exception as e:
         print(f"[ERROR] fetch_steam_inventory: {e}")
+        import traceback
+        traceback.print_exc()
         return []
 
 
@@ -225,3 +246,52 @@ def validate_steam_api_key(steam_api_key: str) -> bool:
         return True
     except Exception:
         return False
+
+
+def check_inventory_accessibility(steam_id: str) -> dict:
+    """
+    Vérifier si l'inventaire Steam est accessible.
+    Retourne un dict avec le statut et les détails.
+    """
+    try:
+        url = f"{STEAM_COMMUNITY_BASE}/inventory/{steam_id}/730/2"
+        params = {"l": "english", "count": 1}  # count=1 pour test rapide
+        
+        r = requests.get(url, params=params, timeout=10)
+        
+        result = {
+            "status_code": r.status_code,
+            "accessible": False,
+            "reason": "",
+            "data": None
+        }
+        
+        if r.status_code == 200:
+            try:
+                data = r.json()
+                result["data"] = data
+                result["accessible"] = data.get("success", False)
+                if not result["accessible"]:
+                    result["reason"] = "API returned success=false"
+                elif not data.get("assets"):
+                    result["reason"] = "No assets in inventory"
+                else:
+                    result["reason"] = "OK"
+            except Exception as e:
+                result["reason"] = f"Invalid JSON response: {e}"
+        elif r.status_code == 403:
+            result["reason"] = "Inventory is private (403 Forbidden)"
+        elif r.status_code == 404:
+            result["reason"] = "Profile or inventory not found (404)"
+        else:
+            result["reason"] = f"HTTP {r.status_code}"
+            
+        return result
+        
+    except Exception as e:
+        return {
+            "status_code": None,
+            "accessible": False,
+            "reason": f"Request failed: {e}",
+            "data": None
+        }
