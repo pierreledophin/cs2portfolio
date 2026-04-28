@@ -1,5 +1,6 @@
-import io, os, base64, json, uuid, requests, pandas as pd, numpy as np, streamlit as st
+import io, os, base64, json, uuid, requests, pandas as pd, numpy as np, streamlit as st, time
 from datetime import datetime, date
+from steam_integration import get_steam_id_from_vanity, fetch_steam_inventory, detect_new_skins, import_new_skins_to_holdings, validate_steam_api_key
 
 # ---------- Configuration ----------
 st.set_page_config(page_title="CS2 Portfolio (CSFloat)", layout="wide")
@@ -71,6 +72,7 @@ REPO    = st.secrets.get("GH_REPO", "")
 BRANCH  = st.secrets.get("GH_BRANCH", "main")
 GH_PAT  = st.secrets.get("GH_PAT")
 CSFLOAT_API_KEY = st.secrets.get("CSFLOAT_API_KEY")
+STEAM_API_KEY = st.secrets.get("STEAM_API_KEY", "")
 CSFLOAT_API = "https://csfloat.com/api/v1/listings"
 CSFLOAT_HEADERS = {"Authorization": CSFLOAT_API_KEY} if CSFLOAT_API_KEY else {}
 
@@ -514,7 +516,7 @@ total_pnl  = totals["total_pnl"]
 total_pct  = totals["total_pct"]
 
 # ---------- UI ----------
-tab1, tab2, tab3, tab4 = st.tabs(["Portefeuille", "Achat / Vente", "Transactions", "Statistiques financières"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Portefeuille", "Achat / Vente", "Transactions", "Statistiques financières", "📲 Auto-import Steam"])
 
 # ---------- Onglet 1 : Portefeuille ----------
 with tab1:
@@ -821,3 +823,179 @@ with tab4:
             else:
                 st.error("ID introuvable.")
         st.dataframe(fin_display, use_container_width=True, hide_index=True)
+
+# ---------- Onglet 5 : Auto-import Steam ----------
+with tab5:
+    st.subheader("📲 Détection automatique depuis Steam")
+    st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+    
+    # Vérifier si la clé API Steam est configurée
+    if not STEAM_API_KEY:
+        st.error("⚠️ **STEAM_API_KEY manquante** dans les secrets Streamlit. Ajoute-la pour utiliser cette fonctionnalité.")
+        st.info("""
+        ### Comment obtenir une clé API Steam:
+        1. Va sur https://steamcommunity.com/dev/apikey
+        2. Log-toi avec ton compte Steam
+        3. Accepte les conditions
+        4. Tu reçois une clé API
+        5. Ajoute-la dans Streamlit Secrets (`.streamlit/secrets.toml`):
+           ```
+           STEAM_API_KEY = "ta_clé_ici"
+           ```
+        """)
+    else:
+        st.success("✅ STEAM_API_KEY configurée")
+        
+        st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            steam_input = st.text_input(
+                "Vanity URL ou SteamID64",
+                placeholder="Ex: pierreledophin ou 76561198123456789",
+                help="Entre ta vanity URL Steam (ex: pierreledophin) ou directement ton SteamID64",
+                key="steam_input"
+            )
+        
+        with col2:
+            st.markdown('<div style="height: 22px;"></div>', unsafe_allow_html=True)
+            fetch_btn = st.button("🔍 Chercher skins", key="btn_fetch_steam", use_container_width=True)
+        
+        st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+        
+        if fetch_btn:
+            if not steam_input.strip():
+                st.error("Entre une vanity URL ou SteamID64.")
+            else:
+                with st.spinner("Récupération de l'inventaire Steam..."):
+                    steam_input = steam_input.strip()
+                    
+                    # Déterminer si c'est une vanity URL ou SteamID
+                    if steam_input.isdigit():
+                        steam_id = steam_input
+                    else:
+                        steam_id = get_steam_id_from_vanity(steam_input, STEAM_API_KEY)
+                    
+                    if not steam_id:
+                        st.error("❌ Impossible de trouver le compte Steam. Vérifie la vanity URL ou l'ID.")
+                    else:
+                        # Récupérer l'inventaire
+                        steam_items = fetch_steam_inventory(steam_id)
+                        
+                        if not steam_items:
+                            st.warning("⚠️ Inventaire CS2 vide ou privé. Assure-toi que:")
+                            st.markdown("""
+                            - Ton inventaire Steam est **public**
+                            - Tu as au moins **1 skin CS2**
+                            """)
+                        else:
+                            # Charger les holdings actuels
+                            current_holdings = pd.DataFrame()
+                            try:
+                                current_holdings = pd.read_csv(PATH_HOLDINGS)
+                            except Exception:
+                                pass
+                            
+                            # Détecter les nouveaux skins
+                            new_skins = detect_new_skins(steam_items, current_holdings)
+                            
+                            if new_skins.empty:
+                                st.info(f"✅ Inventaire à jour! Tous les {len(steam_items)} skins CS2 sont déjà dans holdings.csv")
+                            else:
+                                st.success(f"✅ {len(new_skins)} nouveaux skins détectés!")
+                                
+                                st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+                                st.markdown("### Skins à ajouter")
+                                
+                                # Afficher tableau des nouveaux items
+                                display_df = new_skins[["market_hash_name", "qty", "item_name", "type"]].rename(columns={
+                                    "market_hash_name": "Item",
+                                    "qty": "Quantité",
+                                    "item_name": "Nom",
+                                    "type": "Type"
+                                })
+                                
+                                st.dataframe(
+                                    display_df,
+                                    use_container_width=True,
+                                    hide_index=True,
+                                    column_config={
+                                        "Item": st.column_config.TextColumn("Item"),
+                                        "Quantité": st.column_config.NumberColumn("Quantité", format="%d"),
+                                        "Nom": st.column_config.TextColumn("Nom"),
+                                        "Type": st.column_config.TextColumn("Type"),
+                                    }
+                                )
+                                
+                                st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
+                                
+                                # Options avant import
+                                import_col1, import_col2 = st.columns(2)
+                                
+                                with import_col1:
+                                    default_price = st.number_input(
+                                        "Prix achat par défaut (USD)",
+                                        min_value=0.0,
+                                        step=0.01,
+                                        value=0.0,
+                                        help="Le prix utilisé pour les nouveaux skins (tu peux l'ajuster plus tard)",
+                                        key="steam_import_price"
+                                    )
+                                
+                                with import_col2:
+                                    st.markdown('<div style="height: 22px;"></div>', unsafe_allow_html=True)
+                                    if st.button("✅ Importer dans holdings.csv", key="btn_import_steam", use_container_width=True):
+                                        with st.spinner("Import en cours..."):
+                                            # Importer les nouveaux skins
+                                            updated_holdings = import_new_skins_to_holdings(
+                                                new_skins,
+                                                current_holdings,
+                                                default_price=default_price
+                                            )
+                                            
+                                            # Sauvegarder
+                                            save_holdings(updated_holdings, f"auto-import {len(new_skins)} skins from Steam")
+                                            
+                                            st.success(f"✅ {len(new_skins)} skins ajoutés à holdings.csv!")
+                                            st.balloons()
+                                            
+                                            # Rafraîchir
+                                            st.cache_data.clear()
+                                            time.sleep(1)
+                                            st.rerun()
+        
+        st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
+        st.divider()
+        st.markdown('<div class="section-gap-lg"></div>', unsafe_allow_html=True)
+        
+        with st.expander("ℹ️ Comment ça marche?"):
+            st.markdown("""
+            ### Workflow d'auto-import Steam
+            
+            1. **Récupère ton inventaire CS2** depuis Steam via l'API officielle
+            2. **Compare** avec tes `holdings.csv` actuels
+            3. **Détecte les nouveaux skins** que tu n'as pas encore enregistrés
+            4. **Te propose de les ajouter** en bulk à holdings.csv
+            
+            ### Avantages
+            - ⚡ Plus besoin de copier-coller les noms des skins
+            - 🔄 Synchronisation rapide après des achats Steam
+            - 📊 Évite les doublons
+            
+            ### Points importants
+            - **Inventaire privé?** Va dans les paramètres Steam et mets-le en public
+            - **Floatvalue** : L'exactitude du float Steam vs CSFloat peut varier légèrement
+            - **Prix par défaut** : Les nouveaux skins commencent à 0.00$ (à ajuster manuellement)
+            """)
+        
+        with st.expander("🔧 Troubleshooting"):
+            st.markdown("""
+            | Problème | Solution |
+            |----------|----------|
+            | "Impossible de trouver le compte Steam" | Vérifie ta vanity URL ou utilise directement ton SteamID64 |
+            | "Inventaire CS2 vide ou privé" | Rends ton inventaire public dans Steam Settings → Privacy |
+            | La clé API ne marche pas | Génère une nouvelle clé sur https://steamcommunity.com/dev/apikey |
+            | Après import, les prix affichent 0.00$ | C'est normal. Utilise l'onglet "Achat/Vente" pour ajuster les prix par item |
+            """)
+
