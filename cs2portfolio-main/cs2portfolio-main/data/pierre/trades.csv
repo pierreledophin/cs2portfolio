@@ -1,0 +1,24 @@
+date,type,market_hash_name,qty,price_usd,note,trade_id
+2025-01-10,BUY,AWP | Atheris (Factory New),1,22.51,test,trd1
+2025-01-10,BUY,Operator | FBI SWAT,1,22.31,test,trd2
+2025-01-10,BUY,Glock-18 | Bunsen Burner (Factory New),1,2.0,test,trd3
+2025-01-10,BUY,AK-47 | Legion of Anubis (Minimal Wear),1,11.38,test,trd4
+2025-01-10,BUY,AWP | Duality (Field-Tested),1,0.0,test,trd5
+2025-01-10,BUY,SSG 08 | Zeno (Well-Worn),1,0.0,test,trd6
+2025-01-10,BUY,Desert Eagle | Heat Treated (Field-Tested),1,1.9,test,trd7
+2025-01-10,BUY,Soldier | Phoenix,1,2.0,test,trd8
+2025-01-10,BUY,USP-S | Cortex (Well-Worn),1,1.5,test,trd9
+2025-01-10,BUY,USP-S | Neo-Noir (Minimal Wear),1,23.4,test,trd10
+2025-01-10,BUY,Snakebite Case,10,0.64,test,trd11
+2025-10-09,BUY,M4A1-S | Black Lotus (Minimal Wear),1,5.78,,trd_4d42dcf2
+2025-10-13,SELL,Operator | FBI SWAT,1,25.38,,trd_13a95e25
+2025-10-20,SELL,M4A1-S | Black Lotus (Minimal Wear),1,12.78,,trd_08f1a26a
+2025-10-23,SELL,Snakebite Case,10,0.65,,trd_fef9a25a
+2025-10-23,SELL,AK-47 | Legion of Anubis (Minimal Wear),1,29.3,,trd_8104d02a
+2025-10-23,SELL,USP-S | Neo-Noir (Minimal Wear),1,29.09,,trd_9608619a
+2025-10-23,SELL,AWP | Duality (Field-Tested),1,1.82,,trd_984f7a26
+2025-10-23,BUY,Trapper Aggressor | Guerrilla Warfare,1,27.6,,trd_2c6add21
+2025-10-25,BUY,★ Falchion Knife | Lore (Field-Tested),1,85.0,,trd_c426f93e
+2025-10-31,SELL,Trapper Aggressor | Guerrilla Warfare,1,30.67,,trd_4cd11972
+2026-04-28,BUY,M4A1-S | Stratosphere (Field-Tested),1,12.23,low float,trd_5bc19d91
+2026-04-28,BUY,Glock-18 | Vogue (Factory New),1,14.2,,trd_928d1246
