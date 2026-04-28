@@ -1,0 +1,1625 @@
+ts_utc,market_hash_name,price_cents,price_usd
+
+2025-10-11T15:30:45Z,3rd Commando Company | KSK,1870,18.7
+2025-10-11T15:30:45Z,AK-47 | Point Disarray (Field-Tested),1231,12.31
+2025-10-11T15:30:45Z,M4A1-S | Hyper Beast (Well-Worn),1825,18.25
+2025-10-11T15:30:45Z,USP-S | The Traitor (Well-Worn),1138,11.38
+2025-10-11T19:13:37Z,3rd Commando Company | KSK,1835,18.35
+2025-10-11T19:13:37Z,AK-47 | Point Disarray (Field-Tested),1238,12.38
+2025-10-11T19:13:37Z,M4A1-S | Hyper Beast (Well-Worn),1810,18.1
+2025-10-11T19:13:37Z,USP-S | The Traitor (Well-Worn),1102,11.02
+2025-10-12T07:16:53Z,3rd Commando Company | KSK,1881,18.81
+2025-10-12T07:16:53Z,AK-47 | Point Disarray (Field-Tested),1238,12.38
+2025-10-12T07:16:53Z,M4A1-S | Hyper Beast (Well-Worn),1831,18.31
+2025-10-12T07:16:53Z,USP-S | The Traitor (Well-Worn),1100,11.0
+2025-10-12T19:14:12Z,3rd Commando Company | KSK,1741,17.41
+2025-10-12T19:14:12Z,AK-47 | Point Disarray (Field-Tested),1238,12.38
+2025-10-12T19:14:12Z,M4A1-S | Hyper Beast (Well-Worn),1800,18.0
+2025-10-12T19:14:12Z,USP-S | The Traitor (Well-Worn),1092,10.92
+2025-10-13T07:20:18Z,3rd Commando Company | KSK,1741,17.41
+2025-10-13T07:20:18Z,AK-47 | Point Disarray (Field-Tested),1238,12.38
+2025-10-13T07:20:18Z,M4A1-S | Hyper Beast (Well-Worn),1800,18.0
+2025-10-13T07:20:18Z,USP-S | The Traitor (Well-Worn),1092,10.92
+2025-10-13T19:14:48Z,3rd Commando Company | KSK,1819,18.19
+2025-10-13T19:14:48Z,AK-47 | Point Disarray (Field-Tested),1240,12.4
+2025-10-13T19:14:48Z,M4A1-S | Hyper Beast (Well-Worn),1948,19.48
+2025-10-13T19:14:48Z,USP-S | The Traitor (Well-Worn),1175,11.75
+2025-10-14T07:19:59Z,3rd Commando Company | KSK,1836,18.36
+2025-10-14T07:19:59Z,AK-47 | Point Disarray (Field-Tested),1230,12.3
+2025-10-14T07:19:59Z,M4A1-S | Hyper Beast (Well-Worn),2000,20.0
+2025-10-14T07:19:59Z,USP-S | The Traitor (Well-Worn),1100,11.0
+2025-10-14T19:15:52Z,3rd Commando Company | KSK,1834,18.34
+2025-10-14T19:15:52Z,AK-47 | Point Disarray (Field-Tested),1230,12.3
+2025-10-14T19:15:52Z,M4A1-S | Hyper Beast (Well-Worn),1902,19.02
+2025-10-14T19:15:52Z,USP-S | The Traitor (Well-Worn),1122,11.22
+2025-10-15T07:20:12Z,3rd Commando Company | KSK,1803,18.03
+2025-10-15T07:20:12Z,AK-47 | Point Disarray (Field-Tested),1250,12.5
+2025-10-15T07:20:12Z,M4A1-S | Hyper Beast (Well-Worn),1890,18.9
+2025-10-15T07:20:12Z,USP-S | The Traitor (Well-Worn),1175,11.75
+2025-10-15T19:15:50Z,3rd Commando Company | KSK,1761,17.61
+2025-10-15T19:15:50Z,AK-47 | Point Disarray (Field-Tested),1232,12.32
+2025-10-15T19:15:50Z,M4A1-S | Hyper Beast (Well-Worn),1892,18.92
+2025-10-15T19:15:50Z,USP-S | The Traitor (Well-Worn),1140,11.4
+2025-10-16T07:20:10Z,3rd Commando Company | KSK,1814,18.14
+2025-10-16T07:20:10Z,AK-47 | Point Disarray (Field-Tested),1232,12.32
+2025-10-16T07:20:10Z,M4A1-S | Hyper Beast (Well-Worn),1919,19.19
+2025-10-16T07:20:10Z,USP-S | The Traitor (Well-Worn),1128,11.28
+2025-10-16T19:14:52Z,3rd Commando Company | KSK,1819,18.19
+2025-10-16T19:14:52Z,AK-47 | Point Disarray (Field-Tested),1234,12.34
+2025-10-16T19:14:52Z,M4A1-S | Hyper Beast (Well-Worn),1959,19.59
+2025-10-16T19:14:52Z,USP-S | The Traitor (Well-Worn),1120,11.2
+2025-10-17T07:19:23Z,3rd Commando Company | KSK,1819,18.19
+2025-10-17T07:19:23Z,AK-47 | Point Disarray (Field-Tested),1234,12.34
+2025-10-17T07:19:23Z,M4A1-S | Hyper Beast (Well-Worn),1923,19.23
+2025-10-17T07:19:23Z,USP-S | The Traitor (Well-Worn),1133,11.33
+2025-10-17T19:15:35Z,3rd Commando Company | KSK,1780,17.8
+2025-10-17T19:15:35Z,AK-47 | Point Disarray (Field-Tested),1220,12.2
+2025-10-17T19:15:35Z,M4A1-S | Hyper Beast (Well-Worn),1966,19.66
+2025-10-17T19:15:35Z,USP-S | The Traitor (Well-Worn),1133,11.33
+2025-10-18T07:17:12Z,3rd Commando Company | KSK,1799,17.99
+2025-10-18T07:17:12Z,AK-47 | Point Disarray (Field-Tested),1209,12.09
+2025-10-18T07:17:12Z,M4A1-S | Hyper Beast (Well-Worn),1966,19.66
+2025-10-18T07:17:12Z,USP-S | The Traitor (Well-Worn),1141,11.41
+2025-10-18T19:14:17Z,3rd Commando Company | KSK,1739,17.39
+2025-10-18T19:14:17Z,AK-47 | Point Disarray (Field-Tested),1200,12.0
+2025-10-18T19:14:17Z,M4A1-S | Hyper Beast (Well-Worn),2000,20.0
+2025-10-18T19:14:17Z,USP-S | The Traitor (Well-Worn),1175,11.75
+2025-10-19T07:16:40Z,3rd Commando Company | KSK,1750,17.5
+2025-10-19T07:16:40Z,AK-47 | Point Disarray (Field-Tested),1200,12.0
+2025-10-19T07:16:40Z,M4A1-S | Hyper Beast (Well-Worn),2000,20.0
+2025-10-19T07:16:40Z,USP-S | The Traitor (Well-Worn),1153,11.53
+2025-10-19T19:14:32Z,3rd Commando Company | KSK,1666,16.66
+2025-10-19T19:14:32Z,AK-47 | Point Disarray (Field-Tested),1190,11.9
+2025-10-19T19:14:32Z,M4A1-S | Hyper Beast (Well-Worn),1988,19.88
+2025-10-19T19:14:32Z,USP-S | The Traitor (Well-Worn),1159,11.59
+2025-10-20T07:20:39Z,3rd Commando Company | KSK,1676,16.76
+2025-10-20T07:20:39Z,AK-47 | Point Disarray (Field-Tested),1200,12.0
+2025-10-20T07:20:39Z,M4A1-S | Hyper Beast (Well-Worn),1988,19.88
+2025-10-20T07:20:39Z,USP-S | The Traitor (Well-Worn),1189,11.89
+2025-10-20T19:16:36Z,3rd Commando Company | KSK,1643,16.43
+2025-10-20T19:16:36Z,AK-47 | Point Disarray (Field-Tested),1183,11.83
+2025-10-20T19:16:36Z,M4A1-S | Hyper Beast (Well-Worn),1989,19.89
+2025-10-20T19:16:36Z,Sir Bloody Skullhead Darryl | The Professionals,6521,65.21
+2025-10-20T19:16:36Z,USP-S | The Traitor (Well-Worn),1193,11.93
+2025-10-21T07:20:21Z,3rd Commando Company | KSK,1670,16.7
+2025-10-21T07:20:21Z,AK-47 | Point Disarray (Field-Tested),1215,12.15
+2025-10-21T07:20:21Z,M4A1-S | Hyper Beast (Well-Worn),1980,19.8
+2025-10-21T07:20:21Z,Sir Bloody Skullhead Darryl | The Professionals,6394,63.94
+2025-10-21T07:20:21Z,USP-S | The Traitor (Well-Worn),1207,12.07
+2025-10-21T19:16:59Z,3rd Commando Company | KSK,1669,16.69
+2025-10-21T19:16:59Z,AK-47 | Point Disarray (Field-Tested),1194,11.94
+2025-10-21T19:16:59Z,M4A1-S | Hyper Beast (Well-Worn),1980,19.8
+2025-10-21T19:16:59Z,Sir Bloody Skullhead Darryl | The Professionals,6155,61.55
+2025-10-21T19:16:59Z,USP-S | The Traitor (Well-Worn),1127,11.27
+2025-10-22T07:19:47Z,3rd Commando Company | KSK,1670,16.7
+2025-10-22T07:19:47Z,AK-47 | Point Disarray (Field-Tested),1162,11.62
+2025-10-22T07:19:47Z,M4A1-S | Hyper Beast (Well-Worn),2000,20.0
+2025-10-22T07:19:47Z,Sir Bloody Skullhead Darryl | The Professionals,6299,62.99
+2025-10-22T07:19:47Z,USP-S | The Traitor (Well-Worn),1149,11.49
+2025-10-22T19:15:29Z,3rd Commando Company | KSK,1670,16.7
+2025-10-22T19:15:29Z,AK-47 | Point Disarray (Field-Tested),1161,11.61
+2025-10-22T19:15:29Z,M4A1-S | Hyper Beast (Well-Worn),2006,20.06
+2025-10-22T19:15:29Z,Sir Bloody Skullhead Darryl | The Professionals,6646,66.46
+2025-10-22T19:15:29Z,USP-S | The Traitor (Well-Worn),1189,11.89
+2025-10-23T07:20:21Z,3rd Commando Company | KSK,1534,15.34
+2025-10-23T07:20:21Z,AK-47 | Point Disarray (Field-Tested),1162,11.62
+2025-10-23T07:20:21Z,Sir Bloody Skullhead Darryl | The Professionals,5452,54.52
+2025-10-23T19:16:16Z,'Blueberries' Buckshot | NSWC SEAL,1786,17.86
+2025-10-23T19:16:16Z,3rd Commando Company | KSK,1515,15.15
+2025-10-23T19:16:16Z,AK-47 | Point Disarray (Field-Tested),1143,11.43
+2025-10-23T19:16:16Z,Sir Bloody Skullhead Darryl | The Professionals,5103,51.03
+2025-10-24T07:19:34Z,'Blueberries' Buckshot | NSWC SEAL,1371,13.71
+2025-10-24T07:19:34Z,3rd Commando Company | KSK,1283,12.83
+2025-10-24T07:19:34Z,AK-47 | Point Disarray (Field-Tested),1119,11.19
+2025-10-24T07:19:34Z,Sir Bloody Skullhead Darryl | The Professionals,4067,40.67
+2025-10-24T19:16:19Z,'Blueberries' Buckshot | NSWC SEAL,1356,13.56
+2025-10-24T19:16:19Z,3rd Commando Company | KSK,1229,12.29
+2025-10-24T19:16:19Z,AK-47 | Point Disarray (Field-Tested),1134,11.34
+2025-10-24T19:16:19Z,Sir Bloody Skullhead Darryl | The Professionals,4185,41.85
+2025-10-25T07:17:39Z,'Blueberries' Buckshot | NSWC SEAL,1898,18.98
+2025-10-25T07:17:39Z,3rd Commando Company | KSK,1231,12.31
+2025-10-25T07:17:39Z,AK-47 | Point Disarray (Field-Tested),1080,10.8
+2025-10-25T07:17:39Z,Sir Bloody Skullhead Darryl | The Professionals,4885,48.85
+2025-10-25T19:14:40Z,'Blueberries' Buckshot | NSWC SEAL,2071,20.71
+2025-10-25T19:14:40Z,3rd Commando Company | KSK,1497,14.97
+2025-10-25T19:14:40Z,AK-47 | Point Disarray (Field-Tested),1183,11.83
+2025-10-25T19:14:40Z,Sir Bloody Skullhead Darryl | The Professionals,5800,58.0
+2025-10-26T07:17:13Z,'Blueberries' Buckshot | NSWC SEAL,2279,22.79
+2025-10-26T07:17:13Z,3rd Commando Company | KSK,1271,12.71
+2025-10-26T07:17:13Z,AK-47 | Point Disarray (Field-Tested),1242,12.42
+2025-10-26T07:17:13Z,Sir Bloody Skullhead Darryl | The Professionals,6401,64.01
+2025-10-26T19:15:05Z,'Blueberries' Buckshot | NSWC SEAL,2400,24.0
+2025-10-26T19:15:05Z,3rd Commando Company | KSK,1656,16.56
+2025-10-26T19:15:05Z,AK-47 | Point Disarray (Field-Tested),1278,12.78
+2025-10-26T19:15:05Z,Arno The Overgrown | Guerrilla Warfare,1984,19.84
+2025-10-26T19:15:05Z,Enforcer | Phoenix,1160,11.6
+2025-10-26T19:15:05Z,Sir Bloody Skullhead Darryl | The Professionals,6027,60.27
+2025-10-27T07:20:11Z,'Blueberries' Buckshot | NSWC SEAL,2300,23.0
+2025-10-27T07:20:11Z,3rd Commando Company | KSK,1500,15.0
+2025-10-27T07:20:11Z,AK-47 | Point Disarray (Field-Tested),1330,13.3
+2025-10-27T07:20:11Z,Arno The Overgrown | Guerrilla Warfare,2286,22.86
+2025-10-27T07:20:11Z,Enforcer | Phoenix,1160,11.6
+2025-10-27T07:20:11Z,Sir Bloody Skullhead Darryl | The Professionals,6200,62.0
+2025-10-27T19:16:40Z,'Blueberries' Buckshot | NSWC SEAL,2118,21.18
+2025-10-27T19:16:40Z,3rd Commando Company | KSK,1656,16.56
+2025-10-27T19:16:40Z,AK-47 | Point Disarray (Field-Tested),1330,13.3
+2025-10-27T19:16:40Z,Arno The Overgrown | Guerrilla Warfare,2100,21.0
+2025-10-27T19:16:40Z,Enforcer | Phoenix,1139,11.39
+2025-10-27T19:16:40Z,Sir Bloody Skullhead Darryl | The Professionals,5775,57.75
+2025-10-28T07:19:49Z,'Blueberries' Buckshot | NSWC SEAL,2100,21.0
+2025-10-28T07:19:49Z,3rd Commando Company | KSK,1625,16.25
+2025-10-28T07:19:49Z,AK-47 | Point Disarray (Field-Tested),1300,13.0
+2025-10-28T07:19:49Z,Arno The Overgrown | Guerrilla Warfare,2048,20.48
+2025-10-28T07:19:49Z,Enforcer | Phoenix,1110,11.1
+2025-10-28T07:19:49Z,Sir Bloody Skullhead Darryl | The Professionals,5814,58.14
+2025-10-28T19:16:34Z,'Blueberries' Buckshot | NSWC SEAL,1915,19.15
+2025-10-28T19:16:34Z,3rd Commando Company | KSK,1385,13.85
+2025-10-28T19:16:34Z,AK-47 | Point Disarray (Field-Tested),1330,13.3
+2025-10-28T19:16:34Z,Arno The Overgrown | Guerrilla Warfare,1972,19.72
+2025-10-28T19:16:34Z,Enforcer | Phoenix,1080,10.8
+2025-10-28T19:16:34Z,Sir Bloody Skullhead Darryl | The Professionals,5345,53.45
+2025-10-29T07:20:11Z,'Blueberries' Buckshot | NSWC SEAL,2080,20.8
+2025-10-29T07:20:11Z,3rd Commando Company | KSK,1493,14.93
+2025-10-29T07:20:11Z,AK-47 | Point Disarray (Field-Tested),1287,12.87
+2025-10-29T07:20:11Z,Arno The Overgrown | Guerrilla Warfare,1971,19.71
+2025-10-29T07:20:11Z,Enforcer | Phoenix,1087,10.87
+2025-10-29T07:20:11Z,Sir Bloody Skullhead Darryl | The Professionals,5231,52.31
+2025-10-29T19:16:06Z,'Blueberries' Buckshot | NSWC SEAL,2080,20.8
+2025-10-29T19:16:06Z,3rd Commando Company | KSK,1521,15.21
+2025-10-29T19:16:06Z,AK-47 | Point Disarray (Field-Tested),1224,12.24
+2025-10-29T19:16:06Z,Arno The Overgrown | Guerrilla Warfare,1971,19.71
+2025-10-29T19:16:06Z,Enforcer | Phoenix,1037,10.37
+2025-10-29T19:16:06Z,Sir Bloody Skullhead Darryl | The Professionals,5231,52.31
+2025-10-30T07:19:17Z,'Blueberries' Buckshot | NSWC SEAL,2080,20.8
+2025-10-30T07:19:17Z,3rd Commando Company | KSK,1500,15.0
+2025-10-30T07:19:17Z,AK-47 | Point Disarray (Field-Tested),1224,12.24
+2025-10-30T07:19:17Z,Arno The Overgrown | Guerrilla Warfare,1971,19.71
+2025-10-30T07:19:17Z,Enforcer | Phoenix,1049,10.49
+2025-10-30T07:19:17Z,Sir Bloody Skullhead Darryl | The Professionals,5211,52.11
+2025-10-30T19:16:18Z,'Blueberries' Buckshot | NSWC SEAL,2091,20.91
+2025-10-30T19:16:18Z,3rd Commando Company | KSK,1545,15.45
+2025-10-30T19:16:18Z,AK-47 | Point Disarray (Field-Tested),1239,12.39
+2025-10-30T19:16:18Z,Arno The Overgrown | Guerrilla Warfare,1968,19.68
+2025-10-30T19:16:18Z,Enforcer | Phoenix,1143,11.43
+2025-10-30T19:16:18Z,Sir Bloody Skullhead Darryl | The Professionals,5911,59.11
+2025-10-31T07:19:03Z,'Blueberries' Buckshot | NSWC SEAL,2372,23.72
+2025-10-31T07:19:03Z,3rd Commando Company | KSK,1572,15.72
+2025-10-31T07:19:03Z,AK-47 | Point Disarray (Field-Tested),1184,11.84
+2025-10-31T07:19:03Z,Arno The Overgrown | Guerrilla Warfare,2235,22.35
+2025-10-31T07:19:03Z,Enforcer | Phoenix,1163,11.63
+2025-10-31T07:19:03Z,Sir Bloody Skullhead Darryl | The Professionals,6286,62.86
+2025-10-31T19:15:17Z,'Blueberries' Buckshot | NSWC SEAL,2300,23.0
+2025-10-31T19:15:17Z,3rd Commando Company | KSK,1658,16.58
+2025-10-31T19:15:17Z,AK-47 | Point Disarray (Field-Tested),1330,13.3
+2025-10-31T19:15:17Z,Arno The Overgrown | Guerrilla Warfare,2321,23.21
+2025-10-31T19:15:17Z,Enforcer | Phoenix,1197,11.97
+2025-10-31T19:15:17Z,Sir Bloody Skullhead Darryl | The Professionals,6286,62.86
+2025-11-01T07:17:28Z,3rd Commando Company | KSK,1651,16.51
+2025-11-01T07:17:28Z,AK-47 | Point Disarray (Field-Tested),1447,14.47
+2025-11-01T07:17:28Z,Arno The Overgrown | Guerrilla Warfare,2509,25.09
+2025-11-01T07:17:28Z,Enforcer | Phoenix,1229,12.29
+2025-11-01T07:17:28Z,Sir Bloody Skullhead Darryl | The Professionals,6589,65.89
+2025-11-01T19:13:46Z,3rd Commando Company | KSK,1669,16.69
+2025-11-01T19:13:46Z,AK-47 | Point Disarray (Field-Tested),1435,14.35
+2025-11-01T19:13:46Z,Arno The Overgrown | Guerrilla Warfare,2557,25.57
+2025-11-01T19:13:46Z,Enforcer | Phoenix,1371,13.71
+2025-11-01T19:13:46Z,Sir Bloody Skullhead Darryl | The Professionals,6589,65.89
+2025-11-02T07:17:59Z,3rd Commando Company | KSK,1478,14.78
+2025-11-02T07:17:59Z,AK-47 | Point Disarray (Field-Tested),1384,13.84
+2025-11-02T07:17:59Z,Arno The Overgrown | Guerrilla Warfare,2509,25.09
+2025-11-02T07:17:59Z,Enforcer | Phoenix,1200,12.0
+2025-11-02T07:17:59Z,Sir Bloody Skullhead Darryl | The Professionals,6855,68.55
+2025-11-02T19:14:04Z,3rd Commando Company | KSK,1673,16.73
+2025-11-02T19:14:04Z,AK-47 | Point Disarray (Field-Tested),1618,16.18
+2025-11-02T19:14:04Z,Arno The Overgrown | Guerrilla Warfare,2598,25.98
+2025-11-02T19:14:04Z,Enforcer | Phoenix,1290,12.9
+2025-11-02T19:14:04Z,Sir Bloody Skullhead Darryl | The Professionals,6800,68.0
+2025-11-03T07:20:22Z,3rd Commando Company | KSK,1478,14.78
+2025-11-03T07:20:22Z,AK-47 | Point Disarray (Field-Tested),1633,16.33
+2025-11-03T07:20:22Z,Arno The Overgrown | Guerrilla Warfare,2600,26.0
+2025-11-03T07:20:22Z,Enforcer | Phoenix,1279,12.79
+2025-11-03T07:20:22Z,Sir Bloody Skullhead Darryl | The Professionals,6605,66.05
+2025-11-03T19:16:14Z,3rd Commando Company | KSK,1637,16.37
+2025-11-03T19:16:14Z,AK-47 | Point Disarray (Field-Tested),1504,15.04
+2025-11-03T19:16:14Z,Arno The Overgrown | Guerrilla Warfare,2610,26.1
+2025-11-03T19:16:14Z,Enforcer | Phoenix,1177,11.77
+2025-11-03T19:16:14Z,Sir Bloody Skullhead Darryl | The Professionals,6500,65.0
+2025-11-04T07:20:00Z,3rd Commando Company | KSK,1643,16.43
+2025-11-04T07:20:00Z,AK-47 | Point Disarray (Field-Tested),1544,15.44
+2025-11-04T07:20:00Z,Arno The Overgrown | Guerrilla Warfare,2650,26.5
+2025-11-04T07:20:00Z,Enforcer | Phoenix,1141,11.41
+2025-11-04T07:20:00Z,Sir Bloody Skullhead Darryl | The Professionals,5963,59.63
+2025-11-04T19:16:27Z,3rd Commando Company | KSK,1508,15.08
+2025-11-04T19:16:27Z,AK-47 | Point Disarray (Field-Tested),1470,14.7
+2025-11-04T19:16:27Z,Arno The Overgrown | Guerrilla Warfare,2700,27.0
+2025-11-04T19:16:27Z,Enforcer | Phoenix,1107,11.07
+2025-11-04T19:16:27Z,Sir Bloody Skullhead Darryl | The Professionals,6201,62.01
+2025-11-05T07:19:55Z,3rd Commando Company | KSK,1446,14.46
+2025-11-05T07:19:55Z,AK-47 | Point Disarray (Field-Tested),1464,14.64
+2025-11-05T07:19:55Z,Arno The Overgrown | Guerrilla Warfare,3175,31.75
+2025-11-05T07:19:55Z,Enforcer | Phoenix,1079,10.79
+2025-11-05T07:19:55Z,Sir Bloody Skullhead Darryl | The Professionals,6285,62.85
+2025-11-05T19:17:24Z,3rd Commando Company | KSK,1549,15.49
+2025-11-05T19:17:24Z,AK-47 | Point Disarray (Field-Tested),1420,14.2
+2025-11-05T19:17:24Z,Enforcer | Phoenix,1243,12.43
+2025-11-05T19:17:24Z,Sir Bloody Skullhead Darryl | The Professionals,6318,63.18
+2025-11-06T07:19:38Z,3rd Commando Company | KSK,1650,16.5
+2025-11-06T07:19:38Z,AK-47 | Point Disarray (Field-Tested),1441,14.41
+2025-11-06T07:19:38Z,Enforcer | Phoenix,1180,11.8
+2025-11-06T07:19:38Z,Sir Bloody Skullhead Darryl | The Professionals,6447,64.47
+2025-11-06T19:16:28Z,3rd Commando Company | KSK,1558,15.58
+2025-11-06T19:16:28Z,AK-47 | Point Disarray (Field-Tested),1332,13.32
+2025-11-06T19:16:28Z,Enforcer | Phoenix,1199,11.99
+2025-11-06T19:16:28Z,Sir Bloody Skullhead Darryl | The Professionals,6461,64.61
+2025-11-07T07:19:34Z,3rd Commando Company | KSK,1630,16.3
+2025-11-07T07:19:34Z,AK-47 | Point Disarray (Field-Tested),1450,14.5
+2025-11-07T07:19:34Z,Enforcer | Phoenix,1195,11.95
+2025-11-07T07:19:34Z,Sir Bloody Skullhead Darryl | The Professionals,6462,64.62
+2025-11-07T19:16:46Z,3rd Commando Company | KSK,1583,15.83
+2025-11-07T19:16:46Z,AK-47 | Point Disarray (Field-Tested),1320,13.2
+2025-11-07T19:16:46Z,Enforcer | Phoenix,1143,11.43
+2025-11-07T19:16:46Z,Sir Bloody Skullhead Darryl | The Professionals,6220,62.2
+2025-11-08T07:17:43Z,3rd Commando Company | KSK,1561,15.61
+2025-11-08T07:17:43Z,AK-47 | Point Disarray (Field-Tested),1398,13.98
+2025-11-08T07:17:43Z,Enforcer | Phoenix,1149,11.49
+2025-11-08T07:17:43Z,Sir Bloody Skullhead Darryl | The Professionals,6149,61.49
+2025-11-08T19:14:44Z,3rd Commando Company | KSK,1500,15.0
+2025-11-08T19:14:44Z,AK-47 | Point Disarray (Field-Tested),1388,13.88
+2025-11-08T19:14:44Z,Enforcer | Phoenix,1190,11.9
+2025-11-08T19:14:44Z,Sir Bloody Skullhead Darryl | The Professionals,6131,61.31
+2025-11-09T07:18:12Z,3rd Commando Company | KSK,1400,14.0
+2025-11-09T07:18:12Z,AK-47 | Point Disarray (Field-Tested),1352,13.52
+2025-11-09T07:18:12Z,Enforcer | Phoenix,1094,10.94
+2025-11-09T07:18:12Z,Sir Bloody Skullhead Darryl | The Professionals,6094,60.94
+2025-11-09T19:14:14Z,3rd Commando Company | KSK,1447,14.47
+2025-11-09T19:14:14Z,AK-47 | Point Disarray (Field-Tested),1315,13.15
+2025-11-09T19:14:14Z,Enforcer | Phoenix,1136,11.36
+2025-11-09T19:14:14Z,Sir Bloody Skullhead Darryl | The Professionals,5945,59.45
+2025-11-10T07:20:09Z,3rd Commando Company | KSK,1618,16.18
+2025-11-10T07:20:09Z,AK-47 | Point Disarray (Field-Tested),1388,13.88
+2025-11-10T07:20:09Z,Enforcer | Phoenix,1111,11.11
+2025-11-10T07:20:09Z,Sir Bloody Skullhead Darryl | The Professionals,5968,59.68
+2025-11-10T19:16:40Z,3rd Commando Company | KSK,1619,16.19
+2025-11-10T19:16:40Z,AK-47 | Point Disarray (Field-Tested),1306,13.06
+2025-11-10T19:16:40Z,Enforcer | Phoenix,1050,10.5
+2025-11-10T19:16:40Z,Sir Bloody Skullhead Darryl | The Professionals,5774,57.74
+2025-11-11T07:20:35Z,3rd Commando Company | KSK,1601,16.01
+2025-11-11T07:20:35Z,AK-47 | Point Disarray (Field-Tested),1323,13.23
+2025-11-11T07:20:35Z,Enforcer | Phoenix,1068,10.68
+2025-11-11T07:20:35Z,Sir Bloody Skullhead Darryl | The Professionals,5629,56.29
+2025-11-11T19:16:33Z,3rd Commando Company | KSK,1474,14.74
+2025-11-11T19:16:33Z,AK-47 | Point Disarray (Field-Tested),1275,12.75
+2025-11-11T19:16:33Z,Enforcer | Phoenix,1062,10.62
+2025-11-11T19:16:33Z,Sir Bloody Skullhead Darryl | The Professionals,5799,57.99
+2025-11-12T07:20:11Z,3rd Commando Company | KSK,1595,15.95
+2025-11-12T07:20:11Z,AK-47 | Point Disarray (Field-Tested),1375,13.75
+2025-11-12T07:20:11Z,Enforcer | Phoenix,1059,10.59
+2025-11-12T07:20:11Z,Sir Bloody Skullhead Darryl | The Professionals,5580,55.8
+2025-11-12T19:17:16Z,3rd Commando Company | KSK,1380,13.8
+2025-11-12T19:17:16Z,AK-47 | Point Disarray (Field-Tested),1287,12.87
+2025-11-12T19:17:16Z,Enforcer | Phoenix,1040,10.4
+2025-11-12T19:17:16Z,Sir Bloody Skullhead Darryl | The Professionals,5581,55.81
+2025-11-13T07:19:49Z,3rd Commando Company | KSK,1304,13.04
+2025-11-13T07:19:49Z,AK-47 | Point Disarray (Field-Tested),1283,12.83
+2025-11-13T07:19:49Z,Enforcer | Phoenix,1024,10.24
+2025-11-13T07:19:49Z,Sir Bloody Skullhead Darryl | The Professionals,5744,57.44
+2025-11-13T19:16:42Z,3rd Commando Company | KSK,1390,13.9
+2025-11-13T19:16:42Z,AK-47 | Point Disarray (Field-Tested),1327,13.27
+2025-11-13T19:16:42Z,Enforcer | Phoenix,1024,10.24
+2025-11-13T19:16:42Z,Sir Bloody Skullhead Darryl | The Professionals,5609,56.09
+2025-11-14T07:19:50Z,3rd Commando Company | KSK,1330,13.3
+2025-11-14T07:19:50Z,AK-47 | Point Disarray (Field-Tested),1327,13.27
+2025-11-14T07:19:50Z,Enforcer | Phoenix,1023,10.23
+2025-11-14T07:19:50Z,Sir Bloody Skullhead Darryl | The Professionals,5617,56.17
+2025-11-14T19:16:44Z,3rd Commando Company | KSK,1328,13.28
+2025-11-14T19:16:44Z,AK-47 | Point Disarray (Field-Tested),1309,13.09
+2025-11-14T19:16:44Z,Enforcer | Phoenix,992,9.92
+2025-11-14T19:16:44Z,Sir Bloody Skullhead Darryl | The Professionals,5574,55.74
+2025-11-15T07:17:46Z,3rd Commando Company | KSK,1354,13.54
+2025-11-15T07:17:46Z,AK-47 | Point Disarray (Field-Tested),1369,13.69
+2025-11-15T07:17:46Z,Enforcer | Phoenix,900,9.0
+2025-11-15T07:17:46Z,Sir Bloody Skullhead Darryl | The Professionals,5562,55.62
+2025-11-15T19:13:54Z,3rd Commando Company | KSK,1330,13.3
+2025-11-15T19:13:54Z,AK-47 | Point Disarray (Field-Tested),1387,13.87
+2025-11-15T19:13:54Z,Enforcer | Phoenix,964,9.64
+2025-11-15T19:13:54Z,Sir Bloody Skullhead Darryl | The Professionals,5616,56.16
+2025-11-16T07:18:18Z,3rd Commando Company | KSK,1350,13.5
+2025-11-16T07:18:18Z,AK-47 | Point Disarray (Field-Tested),1330,13.3
+2025-11-16T07:18:18Z,Enforcer | Phoenix,925,9.25
+2025-11-16T07:18:18Z,Sir Bloody Skullhead Darryl | The Professionals,5616,56.16
+2025-11-16T19:15:21Z,3rd Commando Company | KSK,1475,14.75
+2025-11-16T19:15:21Z,AK-47 | Point Disarray (Field-Tested),1398,13.98
+2025-11-16T19:15:21Z,Enforcer | Phoenix,948,9.48
+2025-11-16T19:15:21Z,Sir Bloody Skullhead Darryl | The Professionals,5555,55.55
+2025-11-17T07:20:29Z,3rd Commando Company | KSK,1298,12.98
+2025-11-17T07:20:29Z,AK-47 | Point Disarray (Field-Tested),1353,13.53
+2025-11-17T07:20:29Z,Enforcer | Phoenix,948,9.48
+2025-11-17T07:20:29Z,Sir Bloody Skullhead Darryl | The Professionals,5666,56.66
+2025-11-17T19:16:31Z,3rd Commando Company | KSK,1298,12.98
+2025-11-17T19:16:31Z,AK-47 | Point Disarray (Field-Tested),1336,13.36
+2025-11-17T19:16:31Z,Enforcer | Phoenix,965,9.65
+2025-11-17T19:16:31Z,Sir Bloody Skullhead Darryl | The Professionals,5410,54.1
+2025-11-18T07:20:29Z,3rd Commando Company | KSK,1248,12.48
+2025-11-18T07:20:29Z,AK-47 | Point Disarray (Field-Tested),1336,13.36
+2025-11-18T07:20:29Z,Enforcer | Phoenix,931,9.31
+2025-11-18T07:20:29Z,Sir Bloody Skullhead Darryl | The Professionals,5410,54.1
+2025-11-18T19:17:53Z,3rd Commando Company | KSK,1240,12.4
+2025-11-18T19:17:53Z,AK-47 | Point Disarray (Field-Tested),1378,13.78
+2025-11-18T19:17:53Z,Enforcer | Phoenix,931,9.31
+2025-11-18T19:17:53Z,Sir Bloody Skullhead Darryl | The Professionals,5450,54.5
+2025-11-19T07:20:27Z,3rd Commando Company | KSK,1200,12.0
+2025-11-19T07:20:27Z,AK-47 | Point Disarray (Field-Tested),1366,13.66
+2025-11-19T07:20:27Z,Enforcer | Phoenix,912,9.12
+2025-11-19T07:20:27Z,Sir Bloody Skullhead Darryl | The Professionals,5280,52.8
+2025-11-19T19:16:55Z,3rd Commando Company | KSK,1207,12.07
+2025-11-19T19:16:55Z,AK-47 | Point Disarray (Field-Tested),1330,13.3
+2025-11-19T19:16:55Z,Enforcer | Phoenix,902,9.02
+2025-11-19T19:16:55Z,Sir Bloody Skullhead Darryl | The Professionals,5399,53.99
+2025-11-20T07:20:07Z,3rd Commando Company | KSK,1239,12.39
+2025-11-20T07:20:07Z,AK-47 | Point Disarray (Field-Tested),1291,12.91
+2025-11-20T07:20:07Z,Enforcer | Phoenix,901,9.01
+2025-11-20T07:20:07Z,Sir Bloody Skullhead Darryl | The Professionals,5319,53.19
+2025-11-20T19:16:44Z,3rd Commando Company | KSK,1181,11.81
+2025-11-20T19:16:44Z,AK-47 | Point Disarray (Field-Tested),1366,13.66
+2025-11-20T19:16:44Z,Enforcer | Phoenix,909,9.09
+2025-11-20T19:16:44Z,Sir Bloody Skullhead Darryl | The Professionals,5218,52.18
+2025-11-21T07:20:30Z,3rd Commando Company | KSK,1169,11.69
+2025-11-21T07:20:30Z,AK-47 | Point Disarray (Field-Tested),1337,13.37
+2025-11-21T07:20:30Z,Enforcer | Phoenix,909,9.09
+2025-11-21T07:20:30Z,Sir Bloody Skullhead Darryl | The Professionals,5219,52.19
+2025-11-21T19:17:37Z,3rd Commando Company | KSK,1248,12.48
+2025-11-21T19:17:37Z,AK-47 | Point Disarray (Field-Tested),1424,14.24
+2025-11-21T19:17:37Z,Enforcer | Phoenix,911,9.11
+2025-11-21T19:17:37Z,Sir Bloody Skullhead Darryl | The Professionals,5300,53.0
+2025-11-22T07:18:09Z,3rd Commando Company | KSK,1240,12.4
+2025-11-22T07:18:09Z,AK-47 | Point Disarray (Field-Tested),1336,13.36
+2025-11-22T07:18:09Z,Enforcer | Phoenix,865,8.65
+2025-11-22T07:18:09Z,Sir Bloody Skullhead Darryl | The Professionals,5200,52.0
+2025-11-22T19:15:26Z,3rd Commando Company | KSK,1243,12.43
+2025-11-22T19:15:26Z,AK-47 | Point Disarray (Field-Tested),1405,14.05
+2025-11-22T19:15:26Z,Enforcer | Phoenix,864,8.64
+2025-11-22T19:15:26Z,Sir Bloody Skullhead Darryl | The Professionals,4952,49.52
+2025-11-23T07:19:16Z,3rd Commando Company | KSK,1233,12.33
+2025-11-23T07:19:16Z,AK-47 | Point Disarray (Field-Tested),1400,14.0
+2025-11-23T07:19:16Z,Enforcer | Phoenix,817,8.17
+2025-11-23T07:19:16Z,Sir Bloody Skullhead Darryl | The Professionals,5071,50.71
+2025-11-23T19:15:54Z,3rd Commando Company | KSK,1258,12.58
+2025-11-23T19:15:54Z,AK-47 | Point Disarray (Field-Tested),1328,13.28
+2025-11-23T19:15:54Z,Enforcer | Phoenix,856,8.56
+2025-11-23T19:15:54Z,Sir Bloody Skullhead Darryl | The Professionals,5072,50.72
+2025-11-24T07:20:50Z,3rd Commando Company | KSK,1232,12.32
+2025-11-24T07:20:50Z,AK-47 | Point Disarray (Field-Tested),1363,13.63
+2025-11-24T07:20:50Z,Enforcer | Phoenix,854,8.54
+2025-11-24T07:20:50Z,Sir Bloody Skullhead Darryl | The Professionals,5079,50.79
+2025-11-24T16:05:04Z,3rd Commando Company | KSK,1241,12.41
+2025-11-24T16:05:04Z,AK-47 | Point Disarray (Field-Tested),1324,13.24
+2025-11-24T16:05:04Z,Enforcer | Phoenix,856,8.56
+2025-11-24T16:05:04Z,Sir Bloody Skullhead Darryl | The Professionals,5194,51.94
+2025-11-24T19:14:57Z,3rd Commando Company | KSK,1241,12.41
+2025-11-24T19:14:57Z,AK-47 | Point Disarray (Field-Tested),1324,13.24
+2025-11-24T19:14:57Z,Enforcer | Phoenix,837,8.37
+2025-11-24T19:14:57Z,Sir Bloody Skullhead Darryl | The Professionals,5194,51.94
+2025-11-25T07:20:30Z,3rd Commando Company | KSK,1255,12.55
+2025-11-25T07:20:30Z,AK-47 | Point Disarray (Field-Tested),1295,12.95
+2025-11-25T07:20:30Z,Enforcer | Phoenix,856,8.56
+2025-11-25T07:20:30Z,Sir Bloody Skullhead Darryl | The Professionals,5103,51.03
+2025-11-25T19:17:58Z,3rd Commando Company | KSK,1249,12.49
+2025-11-25T19:17:58Z,AK-47 | Point Disarray (Field-Tested),1235,12.35
+2025-11-25T19:17:58Z,Enforcer | Phoenix,879,8.79
+2025-11-25T19:17:58Z,Sir Bloody Skullhead Darryl | The Professionals,5048,50.48
+2025-11-26T07:20:17Z,3rd Commando Company | KSK,1237,12.37
+2025-11-26T07:20:17Z,AK-47 | Point Disarray (Field-Tested),1292,12.92
+2025-11-26T07:20:17Z,Enforcer | Phoenix,857,8.57
+2025-11-26T07:20:17Z,Sir Bloody Skullhead Darryl | The Professionals,5079,50.79
+2025-11-26T19:16:55Z,3rd Commando Company | KSK,1270,12.7
+2025-11-26T19:16:55Z,AK-47 | Point Disarray (Field-Tested),1292,12.92
+2025-11-26T19:16:55Z,Enforcer | Phoenix,892,8.92
+2025-11-26T19:16:55Z,Sir Bloody Skullhead Darryl | The Professionals,5400,54.0
+2025-11-27T07:21:21Z,3rd Commando Company | KSK,1261,12.61
+2025-11-27T07:21:21Z,AK-47 | Point Disarray (Field-Tested),1294,12.94
+2025-11-27T07:21:21Z,Enforcer | Phoenix,881,8.81
+2025-11-27T07:21:21Z,Sir Bloody Skullhead Darryl | The Professionals,5131,51.31
+2025-11-27T19:16:40Z,3rd Commando Company | KSK,1268,12.68
+2025-11-27T19:16:40Z,AK-47 | Point Disarray (Field-Tested),1293,12.93
+2025-11-27T19:16:40Z,Enforcer | Phoenix,912,9.12
+2025-11-27T19:16:40Z,Sir Bloody Skullhead Darryl | The Professionals,5463,54.63
+2025-11-28T07:20:32Z,3rd Commando Company | KSK,1216,12.16
+2025-11-28T07:20:32Z,AK-47 | Point Disarray (Field-Tested),1293,12.93
+2025-11-28T07:20:32Z,Enforcer | Phoenix,926,9.26
+2025-11-28T07:20:32Z,Sir Bloody Skullhead Darryl | The Professionals,5485,54.85
+2025-11-28T19:16:16Z,3rd Commando Company | KSK,1270,12.7
+2025-11-28T19:16:16Z,AK-47 | Point Disarray (Field-Tested),1307,13.07
+2025-11-28T19:16:16Z,Enforcer | Phoenix,936,9.36
+2025-11-28T19:16:16Z,Sir Bloody Skullhead Darryl | The Professionals,5521,55.21
+2025-11-29T07:18:58Z,3rd Commando Company | KSK,1273,12.73
+2025-11-29T07:18:58Z,AK-47 | Point Disarray (Field-Tested),1315,13.15
+2025-11-29T07:18:58Z,Enforcer | Phoenix,923,9.23
+2025-11-29T07:18:58Z,Sir Bloody Skullhead Darryl | The Professionals,5632,56.32
+2025-11-29T19:15:45Z,3rd Commando Company | KSK,1282,12.82
+2025-11-29T19:15:45Z,AK-47 | Point Disarray (Field-Tested),1308,13.08
+2025-11-29T19:15:45Z,Enforcer | Phoenix,923,9.23
+2025-11-29T19:15:45Z,Sir Bloody Skullhead Darryl | The Professionals,5735,57.35
+2025-11-30T07:18:31Z,3rd Commando Company | KSK,1283,12.83
+2025-11-30T07:18:31Z,AK-47 | Point Disarray (Field-Tested),1310,13.1
+2025-11-30T07:18:31Z,Enforcer | Phoenix,922,9.22
+2025-11-30T07:18:31Z,Sir Bloody Skullhead Darryl | The Professionals,5674,56.74
+2025-11-30T19:16:02Z,3rd Commando Company | KSK,1275,12.75
+2025-11-30T19:16:02Z,AK-47 | Point Disarray (Field-Tested),1350,13.5
+2025-11-30T19:16:02Z,Enforcer | Phoenix,925,9.25
+2025-11-30T19:16:02Z,Sir Bloody Skullhead Darryl | The Professionals,5503,55.03
+2025-12-01T07:23:43Z,3rd Commando Company | KSK,1282,12.82
+2025-12-01T07:23:43Z,AK-47 | Point Disarray (Field-Tested),1375,13.75
+2025-12-01T07:23:43Z,Enforcer | Phoenix,900,9.0
+2025-12-01T07:23:43Z,Sir Bloody Skullhead Darryl | The Professionals,5450,54.5
+2025-12-01T19:22:01Z,3rd Commando Company | KSK,1274,12.74
+2025-12-01T19:22:01Z,AK-47 | Point Disarray (Field-Tested),1375,13.75
+2025-12-01T19:22:01Z,Enforcer | Phoenix,915,9.15
+2025-12-01T19:22:01Z,Sir Bloody Skullhead Darryl | The Professionals,5523,55.23
+2025-12-02T07:22:27Z,3rd Commando Company | KSK,1254,12.54
+2025-12-02T07:22:27Z,AK-47 | Point Disarray (Field-Tested),1363,13.63
+2025-12-02T07:22:27Z,Enforcer | Phoenix,895,8.95
+2025-12-02T07:22:27Z,Sir Bloody Skullhead Darryl | The Professionals,5530,55.3
+2025-12-02T19:19:46Z,3rd Commando Company | KSK,1241,12.41
+2025-12-02T19:19:46Z,AK-47 | Point Disarray (Field-Tested),1372,13.72
+2025-12-02T19:19:46Z,Enforcer | Phoenix,888,8.88
+2025-12-02T19:19:46Z,Sir Bloody Skullhead Darryl | The Professionals,5401,54.01
+2025-12-03T07:22:28Z,3rd Commando Company | KSK,1288,12.88
+2025-12-03T07:22:28Z,AK-47 | Point Disarray (Field-Tested),1372,13.72
+2025-12-03T07:22:28Z,Enforcer | Phoenix,879,8.79
+2025-12-03T07:22:28Z,Sir Bloody Skullhead Darryl | The Professionals,5399,53.99
+2025-12-03T19:18:47Z,3rd Commando Company | KSK,1247,12.47
+2025-12-03T19:18:47Z,AK-47 | Point Disarray (Field-Tested),1350,13.5
+2025-12-03T19:18:47Z,Enforcer | Phoenix,882,8.82
+2025-12-03T19:18:47Z,Sir Bloody Skullhead Darryl | The Professionals,5363,53.63
+2025-12-04T07:22:27Z,3rd Commando Company | KSK,1258,12.58
+2025-12-04T07:22:27Z,AK-47 | Point Disarray (Field-Tested),1370,13.7
+2025-12-04T07:22:27Z,Enforcer | Phoenix,850,8.5
+2025-12-04T07:22:27Z,Sir Bloody Skullhead Darryl | The Professionals,5424,54.24
+2025-12-04T19:19:36Z,3rd Commando Company | KSK,1211,12.11
+2025-12-04T19:19:36Z,AK-47 | Point Disarray (Field-Tested),1340,13.4
+2025-12-04T19:19:36Z,Enforcer | Phoenix,883,8.83
+2025-12-04T19:19:36Z,Sir Bloody Skullhead Darryl | The Professionals,5500,55.0
+2025-12-05T07:21:57Z,3rd Commando Company | KSK,1275,12.75
+2025-12-05T07:21:57Z,AK-47 | Point Disarray (Field-Tested),1348,13.48
+2025-12-05T07:21:57Z,Enforcer | Phoenix,887,8.87
+2025-12-05T07:21:57Z,Sir Bloody Skullhead Darryl | The Professionals,5498,54.98
+2025-12-05T19:17:30Z,3rd Commando Company | KSK,1253,12.53
+2025-12-05T19:17:30Z,AK-47 | Point Disarray (Field-Tested),1390,13.9
+2025-12-05T19:17:30Z,Enforcer | Phoenix,854,8.54
+2025-12-05T19:17:30Z,Sir Bloody Skullhead Darryl | The Professionals,5346,53.46
+2025-12-06T07:19:08Z,3rd Commando Company | KSK,1279,12.79
+2025-12-06T07:19:08Z,AK-47 | Point Disarray (Field-Tested),1385,13.85
+2025-12-06T07:19:08Z,Enforcer | Phoenix,854,8.54
+2025-12-06T07:19:08Z,Sir Bloody Skullhead Darryl | The Professionals,5385,53.85
+2025-12-06T19:15:50Z,3rd Commando Company | KSK,1266,12.66
+2025-12-06T19:15:50Z,AK-47 | Point Disarray (Field-Tested),1395,13.95
+2025-12-06T19:15:50Z,Enforcer | Phoenix,800,8.0
+2025-12-06T19:15:50Z,Sir Bloody Skullhead Darryl | The Professionals,5408,54.08
+2025-12-07T07:19:12Z,3rd Commando Company | KSK,1278,12.78
+2025-12-07T07:19:12Z,AK-47 | Point Disarray (Field-Tested),1400,14.0
+2025-12-07T07:19:12Z,Enforcer | Phoenix,813,8.13
+2025-12-07T07:19:12Z,Sir Bloody Skullhead Darryl | The Professionals,5356,53.56
+2025-12-07T19:15:58Z,3rd Commando Company | KSK,1278,12.78
+2025-12-07T19:15:58Z,AK-47 | Point Disarray (Field-Tested),1423,14.23
+2025-12-07T19:15:58Z,Enforcer | Phoenix,817,8.17
+2025-12-07T19:15:58Z,Sir Bloody Skullhead Darryl | The Professionals,5240,52.4
+2025-12-08T07:24:29Z,3rd Commando Company | KSK,1278,12.78
+2025-12-08T07:24:29Z,AK-47 | Point Disarray (Field-Tested),1417,14.17
+2025-12-08T07:24:29Z,Enforcer | Phoenix,825,8.25
+2025-12-08T07:24:29Z,Sir Bloody Skullhead Darryl | The Professionals,5387,53.87
+2025-12-08T19:18:05Z,3rd Commando Company | KSK,1188,11.88
+2025-12-08T19:18:05Z,AK-47 | Point Disarray (Field-Tested),1400,14.0
+2025-12-08T19:18:05Z,Enforcer | Phoenix,825,8.25
+2025-12-08T19:18:05Z,Sir Bloody Skullhead Darryl | The Professionals,5340,53.4
+2025-12-09T07:22:28Z,3rd Commando Company | KSK,1256,12.56
+2025-12-09T07:22:28Z,AK-47 | Point Disarray (Field-Tested),1412,14.12
+2025-12-09T07:22:28Z,Enforcer | Phoenix,826,8.26
+2025-12-09T07:22:28Z,Sir Bloody Skullhead Darryl | The Professionals,5100,51.0
+2025-12-09T19:15:53Z,3rd Commando Company | KSK,1235,12.35
+2025-12-09T19:15:53Z,AK-47 | Point Disarray (Field-Tested),1400,14.0
+2025-12-09T19:15:53Z,Enforcer | Phoenix,829,8.29
+2025-12-09T19:15:53Z,Sir Bloody Skullhead Darryl | The Professionals,5200,52.0
+2025-12-10T07:23:18Z,3rd Commando Company | KSK,1251,12.51
+2025-12-10T07:23:18Z,AK-47 | Point Disarray (Field-Tested),1383,13.83
+2025-12-10T07:23:18Z,Enforcer | Phoenix,834,8.34
+2025-12-10T07:23:18Z,Sir Bloody Skullhead Darryl | The Professionals,5100,51.0
+2025-12-10T19:18:56Z,3rd Commando Company | KSK,1225,12.25
+2025-12-10T19:18:56Z,AK-47 | Point Disarray (Field-Tested),1383,13.83
+2025-12-10T19:18:56Z,Enforcer | Phoenix,835,8.35
+2025-12-10T19:18:56Z,Sir Bloody Skullhead Darryl | The Professionals,5200,52.0
+2025-12-11T07:24:37Z,3rd Commando Company | KSK,1225,12.25
+2025-12-11T07:24:37Z,AK-47 | Point Disarray (Field-Tested),1344,13.44
+2025-12-11T07:24:37Z,Enforcer | Phoenix,811,8.11
+2025-12-11T07:24:37Z,Sir Bloody Skullhead Darryl | The Professionals,5141,51.41
+2025-12-11T19:20:11Z,3rd Commando Company | KSK,1256,12.56
+2025-12-11T19:20:11Z,AK-47 | Point Disarray (Field-Tested),1322,13.22
+2025-12-11T19:20:11Z,Enforcer | Phoenix,845,8.45
+2025-12-11T19:20:11Z,Sir Bloody Skullhead Darryl | The Professionals,5298,52.98
+2025-12-12T07:23:55Z,3rd Commando Company | KSK,1254,12.54
+2025-12-12T07:23:55Z,AK-47 | Point Disarray (Field-Tested),1378,13.78
+2025-12-12T07:23:55Z,Enforcer | Phoenix,840,8.4
+2025-12-12T07:23:55Z,Sir Bloody Skullhead Darryl | The Professionals,5278,52.78
+2025-12-12T19:18:08Z,3rd Commando Company | KSK,1254,12.54
+2025-12-12T19:18:08Z,AK-47 | Point Disarray (Field-Tested),1346,13.46
+2025-12-12T19:18:08Z,Enforcer | Phoenix,845,8.45
+2025-12-12T19:18:08Z,Sir Bloody Skullhead Darryl | The Professionals,5298,52.98
+2025-12-13T07:22:28Z,3rd Commando Company | KSK,1200,12.0
+2025-12-13T07:22:28Z,AK-47 | Point Disarray (Field-Tested),1366,13.66
+2025-12-13T07:22:28Z,Enforcer | Phoenix,845,8.45
+2025-12-13T07:22:28Z,Sir Bloody Skullhead Darryl | The Professionals,5285,52.85
+2025-12-13T19:15:45Z,3rd Commando Company | KSK,1248,12.48
+2025-12-13T19:15:45Z,AK-47 | Point Disarray (Field-Tested),1367,13.67
+2025-12-13T19:15:45Z,Enforcer | Phoenix,830,8.3
+2025-12-13T19:15:45Z,Sir Bloody Skullhead Darryl | The Professionals,5180,51.8
+2025-12-14T07:19:39Z,3rd Commando Company | KSK,1205,12.05
+2025-12-14T07:19:39Z,AK-47 | Point Disarray (Field-Tested),1350,13.5
+2025-12-14T07:19:39Z,Enforcer | Phoenix,810,8.1
+2025-12-14T07:19:39Z,Sir Bloody Skullhead Darryl | The Professionals,5280,52.8
+2025-12-14T19:16:18Z,3rd Commando Company | KSK,1256,12.56
+2025-12-14T19:16:18Z,AK-47 | Point Disarray (Field-Tested),1394,13.94
+2025-12-14T19:16:18Z,Enforcer | Phoenix,800,8.0
+2025-12-14T19:16:18Z,Sir Bloody Skullhead Darryl | The Professionals,5071,50.71
+2025-12-15T07:25:36Z,3rd Commando Company | KSK,1200,12.0
+2025-12-15T07:25:36Z,AK-47 | Point Disarray (Field-Tested),1385,13.85
+2025-12-15T07:25:36Z,Enforcer | Phoenix,774,7.74
+2025-12-15T07:25:36Z,Sir Bloody Skullhead Darryl | The Professionals,5070,50.7
+2025-12-15T19:20:27Z,3rd Commando Company | KSK,1232,12.32
+2025-12-15T19:20:27Z,AK-47 | Point Disarray (Field-Tested),1385,13.85
+2025-12-15T19:20:27Z,Enforcer | Phoenix,840,8.4
+2025-12-15T19:20:27Z,Sir Bloody Skullhead Darryl | The Professionals,5040,50.4
+2025-12-16T07:23:56Z,3rd Commando Company | KSK,1157,11.57
+2025-12-16T07:23:56Z,AK-47 | Point Disarray (Field-Tested),1399,13.99
+2025-12-16T07:23:56Z,Enforcer | Phoenix,788,7.88
+2025-12-16T07:23:56Z,Sir Bloody Skullhead Darryl | The Professionals,5041,50.41
+2025-12-16T19:19:55Z,3rd Commando Company | KSK,1203,12.03
+2025-12-16T19:19:55Z,AK-47 | Point Disarray (Field-Tested),1360,13.6
+2025-12-16T19:19:55Z,Enforcer | Phoenix,800,8.0
+2025-12-16T19:19:55Z,Sir Bloody Skullhead Darryl | The Professionals,5053,50.53
+2025-12-17T07:23:39Z,3rd Commando Company | KSK,1226,12.26
+2025-12-17T07:23:39Z,AK-47 | Point Disarray (Field-Tested),1391,13.91
+2025-12-17T07:23:39Z,Enforcer | Phoenix,775,7.75
+2025-12-17T07:23:39Z,Sir Bloody Skullhead Darryl | The Professionals,4934,49.34
+2025-12-17T19:20:03Z,3rd Commando Company | KSK,1200,12.0
+2025-12-17T19:20:03Z,AK-47 | Point Disarray (Field-Tested),1399,13.99
+2025-12-17T19:20:03Z,Enforcer | Phoenix,775,7.75
+2025-12-17T19:20:03Z,Sir Bloody Skullhead Darryl | The Professionals,4976,49.76
+2025-12-18T07:22:53Z,3rd Commando Company | KSK,1214,12.14
+2025-12-18T07:22:53Z,AK-47 | Point Disarray (Field-Tested),1394,13.94
+2025-12-18T07:22:53Z,Enforcer | Phoenix,750,7.5
+2025-12-18T07:22:53Z,Sir Bloody Skullhead Darryl | The Professionals,4965,49.65
+2025-12-18T19:17:52Z,3rd Commando Company | KSK,1190,11.9
+2025-12-18T19:17:52Z,AK-47 | Point Disarray (Field-Tested),1402,14.02
+2025-12-18T19:17:52Z,Enforcer | Phoenix,781,7.81
+2025-12-18T19:17:52Z,Sir Bloody Skullhead Darryl | The Professionals,5045,50.45
+2025-12-19T07:22:44Z,3rd Commando Company | KSK,1214,12.14
+2025-12-19T07:22:44Z,AK-47 | Point Disarray (Field-Tested),1402,14.02
+2025-12-19T07:22:44Z,Enforcer | Phoenix,780,7.8
+2025-12-19T07:22:44Z,Sir Bloody Skullhead Darryl | The Professionals,5032,50.32
+2025-12-19T19:17:11Z,3rd Commando Company | KSK,1243,12.43
+2025-12-19T19:17:11Z,AK-47 | Point Disarray (Field-Tested),1425,14.25
+2025-12-19T19:17:11Z,Enforcer | Phoenix,745,7.45
+2025-12-19T19:17:11Z,Sir Bloody Skullhead Darryl | The Professionals,5042,50.42
+2025-12-20T07:19:07Z,3rd Commando Company | KSK,1200,12.0
+2025-12-20T07:19:07Z,AK-47 | Point Disarray (Field-Tested),1424,14.24
+2025-12-20T07:19:07Z,Enforcer | Phoenix,762,7.62
+2025-12-20T07:19:07Z,Sir Bloody Skullhead Darryl | The Professionals,4995,49.95
+2025-12-20T19:16:14Z,3rd Commando Company | KSK,1177,11.77
+2025-12-20T19:16:14Z,AK-47 | Point Disarray (Field-Tested),1432,14.32
+2025-12-20T19:16:14Z,Enforcer | Phoenix,761,7.61
+2025-12-20T19:16:14Z,Sir Bloody Skullhead Darryl | The Professionals,5007,50.07
+2025-12-21T07:20:06Z,3rd Commando Company | KSK,1177,11.77
+2025-12-21T07:20:06Z,AK-47 | Point Disarray (Field-Tested),1439,14.39
+2025-12-21T07:20:06Z,Enforcer | Phoenix,754,7.54
+2025-12-21T07:20:06Z,Sir Bloody Skullhead Darryl | The Professionals,5007,50.07
+2025-12-21T19:16:08Z,3rd Commando Company | KSK,1247,12.47
+2025-12-21T19:16:08Z,AK-47 | Point Disarray (Field-Tested),1462,14.62
+2025-12-21T19:16:08Z,Enforcer | Phoenix,753,7.53
+2025-12-21T19:16:08Z,Sir Bloody Skullhead Darryl | The Professionals,5029,50.29
+2025-12-22T07:24:50Z,3rd Commando Company | KSK,1219,12.19
+2025-12-22T07:24:50Z,AK-47 | Point Disarray (Field-Tested),1431,14.31
+2025-12-22T07:24:50Z,Enforcer | Phoenix,750,7.5
+2025-12-22T07:24:50Z,Sir Bloody Skullhead Darryl | The Professionals,5015,50.15
+2025-12-22T19:18:32Z,3rd Commando Company | KSK,1200,12.0
+2025-12-22T19:18:32Z,AK-47 | Point Disarray (Field-Tested),1460,14.6
+2025-12-22T19:18:32Z,Enforcer | Phoenix,764,7.64
+2025-12-22T19:18:32Z,Sir Bloody Skullhead Darryl | The Professionals,5030,50.3
+2025-12-23T07:24:33Z,3rd Commando Company | KSK,1216,12.16
+2025-12-23T07:24:33Z,AK-47 | Point Disarray (Field-Tested),1443,14.43
+2025-12-23T07:24:33Z,Enforcer | Phoenix,750,7.5
+2025-12-23T07:24:33Z,Sir Bloody Skullhead Darryl | The Professionals,4827,48.27
+2025-12-23T19:18:13Z,3rd Commando Company | KSK,1219,12.19
+2025-12-23T19:18:13Z,AK-47 | Point Disarray (Field-Tested),1410,14.1
+2025-12-23T19:18:13Z,Enforcer | Phoenix,820,8.2
+2025-12-23T19:18:13Z,Sir Bloody Skullhead Darryl | The Professionals,5030,50.3
+2025-12-24T07:24:32Z,3rd Commando Company | KSK,1219,12.19
+2025-12-24T07:24:32Z,AK-47 | Point Disarray (Field-Tested),1413,14.13
+2025-12-24T07:24:32Z,Enforcer | Phoenix,743,7.43
+2025-12-24T07:24:32Z,Sir Bloody Skullhead Darryl | The Professionals,4953,49.53
+2025-12-24T19:17:13Z,3rd Commando Company | KSK,1200,12.0
+2025-12-24T19:17:13Z,AK-47 | Point Disarray (Field-Tested),1426,14.26
+2025-12-24T19:17:13Z,Enforcer | Phoenix,758,7.58
+2025-12-24T19:17:13Z,Sir Bloody Skullhead Darryl | The Professionals,4828,48.28
+2025-12-25T07:22:32Z,3rd Commando Company | KSK,1198,11.98
+2025-12-25T07:22:32Z,AK-47 | Point Disarray (Field-Tested),1426,14.26
+2025-12-25T07:22:32Z,Enforcer | Phoenix,781,7.81
+2025-12-25T07:22:32Z,Sir Bloody Skullhead Darryl | The Professionals,4894,48.94
+2025-12-25T19:17:05Z,3rd Commando Company | KSK,1228,12.28
+2025-12-25T19:17:05Z,AK-47 | Point Disarray (Field-Tested),1400,14.0
+2025-12-25T19:17:05Z,Enforcer | Phoenix,830,8.3
+2025-12-25T19:17:05Z,Sir Bloody Skullhead Darryl | The Professionals,4883,48.83
+2025-12-26T07:22:47Z,3rd Commando Company | KSK,1229,12.29
+2025-12-26T07:22:47Z,AK-47 | Point Disarray (Field-Tested),1424,14.24
+2025-12-26T07:22:47Z,Enforcer | Phoenix,747,7.47
+2025-12-26T07:22:47Z,Sir Bloody Skullhead Darryl | The Professionals,4835,48.35
+2025-12-26T19:16:43Z,3rd Commando Company | KSK,1231,12.31
+2025-12-26T19:16:43Z,AK-47 | Point Disarray (Field-Tested),1409,14.09
+2025-12-26T19:16:43Z,Enforcer | Phoenix,830,8.3
+2025-12-26T19:16:43Z,Sir Bloody Skullhead Darryl | The Professionals,4835,48.35
+2025-12-27T07:19:21Z,3rd Commando Company | KSK,1250,12.5
+2025-12-27T07:19:21Z,AK-47 | Point Disarray (Field-Tested),1397,13.97
+2025-12-27T07:19:21Z,Enforcer | Phoenix,800,8.0
+2025-12-27T07:19:21Z,Sir Bloody Skullhead Darryl | The Professionals,4897,48.97
+2025-12-27T19:16:04Z,3rd Commando Company | KSK,1225,12.25
+2025-12-27T19:16:04Z,AK-47 | Point Disarray (Field-Tested),1374,13.74
+2025-12-27T19:16:04Z,Enforcer | Phoenix,799,7.99
+2025-12-27T19:16:04Z,Sir Bloody Skullhead Darryl | The Professionals,4897,48.97
+2025-12-28T07:20:47Z,3rd Commando Company | KSK,1226,12.26
+2025-12-28T07:20:47Z,AK-47 | Point Disarray (Field-Tested),1413,14.13
+2025-12-28T07:20:47Z,Enforcer | Phoenix,772,7.72
+2025-12-28T07:20:47Z,Sir Bloody Skullhead Darryl | The Professionals,4905,49.05
+2025-12-28T19:16:42Z,3rd Commando Company | KSK,1238,12.38
+2025-12-28T19:16:42Z,AK-47 | Point Disarray (Field-Tested),1391,13.91
+2025-12-28T19:16:42Z,Enforcer | Phoenix,773,7.73
+2025-12-28T19:16:42Z,Sir Bloody Skullhead Darryl | The Professionals,4903,49.03
+2025-12-29T07:26:37Z,3rd Commando Company | KSK,1230,12.3
+2025-12-29T07:26:37Z,AK-47 | Point Disarray (Field-Tested),1383,13.83
+2025-12-29T07:26:37Z,Enforcer | Phoenix,747,7.47
+2025-12-29T07:26:37Z,Sir Bloody Skullhead Darryl | The Professionals,4824,48.24
+2025-12-29T19:16:54Z,3rd Commando Company | KSK,1209,12.09
+2025-12-29T19:16:54Z,AK-47 | Point Disarray (Field-Tested),1400,14.0
+2025-12-29T19:16:54Z,Enforcer | Phoenix,754,7.54
+2025-12-29T19:16:54Z,Sir Bloody Skullhead Darryl | The Professionals,4865,48.65
+2025-12-30T07:23:25Z,3rd Commando Company | KSK,1250,12.5
+2025-12-30T07:23:25Z,AK-47 | Point Disarray (Field-Tested),1400,14.0
+2025-12-30T07:23:25Z,Enforcer | Phoenix,780,7.8
+2025-12-30T07:23:25Z,Sir Bloody Skullhead Darryl | The Professionals,4790,47.9
+2025-12-30T19:18:04Z,3rd Commando Company | KSK,1252,12.52
+2025-12-30T19:18:04Z,AK-47 | Point Disarray (Field-Tested),1414,14.14
+2025-12-30T19:18:04Z,Enforcer | Phoenix,736,7.36
+2025-12-30T19:18:04Z,Sir Bloody Skullhead Darryl | The Professionals,4808,48.08
+2025-12-31T07:24:10Z,3rd Commando Company | KSK,1202,12.02
+2025-12-31T07:24:10Z,AK-47 | Point Disarray (Field-Tested),1427,14.27
+2025-12-31T07:24:10Z,Enforcer | Phoenix,839,8.39
+2025-12-31T07:24:10Z,Sir Bloody Skullhead Darryl | The Professionals,4753,47.53
+2025-12-31T19:16:57Z,3rd Commando Company | KSK,1233,12.33
+2025-12-31T19:16:57Z,AK-47 | Point Disarray (Field-Tested),1432,14.32
+2025-12-31T19:16:57Z,Enforcer | Phoenix,832,8.32
+2025-12-31T19:16:57Z,Sir Bloody Skullhead Darryl | The Professionals,4886,48.86
+2026-01-01T07:23:53Z,3rd Commando Company | KSK,1217,12.17
+2026-01-01T07:23:53Z,AK-47 | Point Disarray (Field-Tested),1427,14.27
+2026-01-01T07:23:53Z,Enforcer | Phoenix,789,7.89
+2026-01-01T07:23:53Z,Sir Bloody Skullhead Darryl | The Professionals,4821,48.21
+2026-01-01T19:17:58Z,3rd Commando Company | KSK,1273,12.73
+2026-01-01T19:17:58Z,AK-47 | Point Disarray (Field-Tested),1427,14.27
+2026-01-01T19:17:58Z,Enforcer | Phoenix,885,8.85
+2026-01-01T19:17:58Z,Sir Bloody Skullhead Darryl | The Professionals,4958,49.58
+2026-01-02T07:24:43Z,3rd Commando Company | KSK,1293,12.93
+2026-01-02T07:24:43Z,AK-47 | Point Disarray (Field-Tested),1432,14.32
+2026-01-02T07:24:43Z,Enforcer | Phoenix,870,8.7
+2026-01-02T07:24:43Z,Sir Bloody Skullhead Darryl | The Professionals,5011,50.11
+2026-01-02T19:15:00Z,3rd Commando Company | KSK,1256,12.56
+2026-01-02T19:15:00Z,AK-47 | Point Disarray (Field-Tested),1454,14.54
+2026-01-02T19:15:00Z,Enforcer | Phoenix,914,9.14
+2026-01-02T19:15:00Z,Sir Bloody Skullhead Darryl | The Professionals,5050,50.5
+2026-01-03T07:20:09Z,3rd Commando Company | KSK,1257,12.57
+2026-01-03T07:20:09Z,AK-47 | Point Disarray (Field-Tested),1469,14.69
+2026-01-03T07:20:09Z,Enforcer | Phoenix,754,7.54
+2026-01-03T07:20:09Z,Sir Bloody Skullhead Darryl | The Professionals,5161,51.61
+2026-01-03T19:16:10Z,3rd Commando Company | KSK,1299,12.99
+2026-01-03T19:16:10Z,AK-47 | Point Disarray (Field-Tested),1461,14.61
+2026-01-03T19:16:10Z,Enforcer | Phoenix,815,8.15
+2026-01-03T19:16:10Z,Sir Bloody Skullhead Darryl | The Professionals,5050,50.5
+2026-01-04T07:21:50Z,3rd Commando Company | KSK,1311,13.11
+2026-01-04T07:21:50Z,AK-47 | Point Disarray (Field-Tested),1470,14.7
+2026-01-04T07:21:50Z,Enforcer | Phoenix,937,9.37
+2026-01-04T07:21:50Z,Sir Bloody Skullhead Darryl | The Professionals,5010,50.1
+2026-01-04T19:16:49Z,3rd Commando Company | KSK,1308,13.08
+2026-01-04T19:16:49Z,AK-47 | Point Disarray (Field-Tested),1468,14.68
+2026-01-04T19:16:49Z,Enforcer | Phoenix,937,9.37
+2026-01-04T19:16:49Z,Sir Bloody Skullhead Darryl | The Professionals,5043,50.43
+2026-01-05T07:29:27Z,3rd Commando Company | KSK,1307,13.07
+2026-01-05T07:29:27Z,AK-47 | Point Disarray (Field-Tested),1468,14.68
+2026-01-05T07:29:27Z,Enforcer | Phoenix,955,9.55
+2026-01-05T07:29:27Z,Sir Bloody Skullhead Darryl | The Professionals,5016,50.16
+2026-01-05T19:21:12Z,3rd Commando Company | KSK,1307,13.07
+2026-01-05T19:21:12Z,AK-47 | Point Disarray (Field-Tested),1491,14.91
+2026-01-05T19:21:12Z,Enforcer | Phoenix,842,8.42
+2026-01-05T19:21:12Z,Sir Bloody Skullhead Darryl | The Professionals,5050,50.5
+2026-01-06T07:26:44Z,3rd Commando Company | KSK,1350,13.5
+2026-01-06T07:26:44Z,AK-47 | Point Disarray (Field-Tested),1500,15.0
+2026-01-06T07:26:44Z,Enforcer | Phoenix,828,8.28
+2026-01-06T07:26:44Z,Sir Bloody Skullhead Darryl | The Professionals,5000,50.0
+2026-01-06T19:17:41Z,3rd Commando Company | KSK,1346,13.46
+2026-01-06T19:17:41Z,AK-47 | Point Disarray (Field-Tested),1476,14.76
+2026-01-06T19:17:41Z,Enforcer | Phoenix,820,8.2
+2026-01-06T19:17:41Z,Sir Bloody Skullhead Darryl | The Professionals,5050,50.5
+2026-01-07T07:26:13Z,3rd Commando Company | KSK,1284,12.84
+2026-01-07T07:26:13Z,AK-47 | Point Disarray (Field-Tested),1512,15.12
+2026-01-07T07:26:13Z,Enforcer | Phoenix,816,8.16
+2026-01-07T07:26:13Z,Sir Bloody Skullhead Darryl | The Professionals,4983,49.83
+2026-01-07T19:20:35Z,3rd Commando Company | KSK,1319,13.19
+2026-01-07T19:20:35Z,AK-47 | Point Disarray (Field-Tested),1507,15.07
+2026-01-07T19:20:35Z,Enforcer | Phoenix,818,8.18
+2026-01-07T19:20:35Z,Sir Bloody Skullhead Darryl | The Professionals,4907,49.07
+2026-01-08T07:25:33Z,3rd Commando Company | KSK,1279,12.79
+2026-01-08T07:25:33Z,AK-47 | Point Disarray (Field-Tested),1510,15.1
+2026-01-08T07:25:33Z,Enforcer | Phoenix,813,8.13
+2026-01-08T07:25:33Z,Sir Bloody Skullhead Darryl | The Professionals,4917,49.17
+2026-01-08T19:20:36Z,3rd Commando Company | KSK,1355,13.55
+2026-01-08T19:20:36Z,AK-47 | Point Disarray (Field-Tested),1495,14.95
+2026-01-08T19:20:36Z,Enforcer | Phoenix,792,7.92
+2026-01-08T19:20:36Z,Sir Bloody Skullhead Darryl | The Professionals,5044,50.44
+2026-01-09T07:26:18Z,3rd Commando Company | KSK,1348,13.48
+2026-01-09T07:26:18Z,AK-47 | Point Disarray (Field-Tested),1530,15.3
+2026-01-09T07:26:18Z,Enforcer | Phoenix,829,8.29
+2026-01-09T07:26:18Z,Sir Bloody Skullhead Darryl | The Professionals,5050,50.5
+2026-01-09T19:20:24Z,3rd Commando Company | KSK,1309,13.09
+2026-01-09T19:20:24Z,AK-47 | Point Disarray (Field-Tested),1544,15.44
+2026-01-09T19:20:24Z,Enforcer | Phoenix,830,8.3
+2026-01-09T19:20:24Z,Sir Bloody Skullhead Darryl | The Professionals,5000,50.0
+2026-01-10T07:20:19Z,3rd Commando Company | KSK,1291,12.91
+2026-01-10T07:20:19Z,AK-47 | Point Disarray (Field-Tested),1499,14.99
+2026-01-10T07:20:19Z,Enforcer | Phoenix,803,8.03
+2026-01-10T07:20:19Z,Sir Bloody Skullhead Darryl | The Professionals,5000,50.0
+2026-01-10T19:16:42Z,3rd Commando Company | KSK,1290,12.9
+2026-01-10T19:16:42Z,AK-47 | Point Disarray (Field-Tested),1487,14.87
+2026-01-10T19:16:42Z,Enforcer | Phoenix,785,7.85
+2026-01-10T19:16:42Z,Sir Bloody Skullhead Darryl | The Professionals,5063,50.63
+2026-01-11T07:21:28Z,3rd Commando Company | KSK,1297,12.97
+2026-01-11T07:21:28Z,AK-47 | Point Disarray (Field-Tested),1484,14.84
+2026-01-11T07:21:28Z,Enforcer | Phoenix,772,7.72
+2026-01-11T07:21:28Z,Sir Bloody Skullhead Darryl | The Professionals,5060,50.6
+2026-01-11T19:16:51Z,3rd Commando Company | KSK,1279,12.79
+2026-01-11T19:16:51Z,AK-47 | Point Disarray (Field-Tested),1480,14.8
+2026-01-11T19:16:51Z,Enforcer | Phoenix,772,7.72
+2026-01-11T19:16:51Z,Sir Bloody Skullhead Darryl | The Professionals,4827,48.27
+2026-01-12T07:27:54Z,3rd Commando Company | KSK,1256,12.56
+2026-01-12T07:27:54Z,AK-47 | Point Disarray (Field-Tested),1479,14.79
+2026-01-12T07:27:54Z,Enforcer | Phoenix,772,7.72
+2026-01-12T07:27:54Z,Sir Bloody Skullhead Darryl | The Professionals,5074,50.74
+2026-01-12T19:21:01Z,3rd Commando Company | KSK,1268,12.68
+2026-01-12T19:21:01Z,AK-47 | Point Disarray (Field-Tested),1426,14.26
+2026-01-12T19:21:01Z,Enforcer | Phoenix,790,7.9
+2026-01-12T19:21:01Z,Sir Bloody Skullhead Darryl | The Professionals,5071,50.71
+2026-01-13T07:25:45Z,3rd Commando Company | KSK,1260,12.6
+2026-01-13T07:25:45Z,AK-47 | Point Disarray (Field-Tested),1448,14.48
+2026-01-13T07:25:45Z,Enforcer | Phoenix,835,8.35
+2026-01-13T07:25:45Z,Sir Bloody Skullhead Darryl | The Professionals,4868,48.68
+2026-01-13T19:20:35Z,3rd Commando Company | KSK,1279,12.79
+2026-01-13T19:20:35Z,AK-47 | Point Disarray (Field-Tested),1477,14.77
+2026-01-13T19:20:35Z,Enforcer | Phoenix,829,8.29
+2026-01-13T19:20:35Z,Sir Bloody Skullhead Darryl | The Professionals,5075,50.75
+2026-01-14T07:26:26Z,3rd Commando Company | KSK,1332,13.32
+2026-01-14T07:26:26Z,AK-47 | Point Disarray (Field-Tested),1444,14.44
+2026-01-14T07:26:26Z,Enforcer | Phoenix,764,7.64
+2026-01-14T07:26:26Z,Sir Bloody Skullhead Darryl | The Professionals,5112,51.12
+2026-01-14T19:20:05Z,3rd Commando Company | KSK,1282,12.82
+2026-01-14T19:20:05Z,AK-47 | Point Disarray (Field-Tested),1444,14.44
+2026-01-14T19:20:05Z,Enforcer | Phoenix,764,7.64
+2026-01-14T19:20:05Z,Sir Bloody Skullhead Darryl | The Professionals,5050,50.5
+2026-01-15T07:26:26Z,3rd Commando Company | KSK,1304,13.04
+2026-01-15T07:26:26Z,AK-47 | Point Disarray (Field-Tested),1483,14.83
+2026-01-15T07:26:26Z,Enforcer | Phoenix,775,7.75
+2026-01-15T07:26:26Z,Sir Bloody Skullhead Darryl | The Professionals,4881,48.81
+2026-01-15T19:25:26Z,3rd Commando Company | KSK,1302,13.02
+2026-01-15T19:25:26Z,AK-47 | Point Disarray (Field-Tested),1486,14.86
+2026-01-15T19:25:26Z,Enforcer | Phoenix,769,7.69
+2026-01-15T19:25:26Z,Sir Bloody Skullhead Darryl | The Professionals,4900,49.0
+2026-01-16T07:25:29Z,3rd Commando Company | KSK,1300,13.0
+2026-01-16T07:25:29Z,AK-47 | Point Disarray (Field-Tested),1481,14.81
+2026-01-16T07:25:29Z,Enforcer | Phoenix,849,8.49
+2026-01-16T07:25:29Z,Sir Bloody Skullhead Darryl | The Professionals,4930,49.3
+2026-01-16T19:20:10Z,3rd Commando Company | KSK,1304,13.04
+2026-01-16T19:20:10Z,AK-47 | Point Disarray (Field-Tested),1481,14.81
+2026-01-16T19:20:10Z,Enforcer | Phoenix,793,7.93
+2026-01-16T19:20:10Z,Sir Bloody Skullhead Darryl | The Professionals,4943,49.43
+2026-01-17T07:20:02Z,3rd Commando Company | KSK,1274,12.74
+2026-01-17T07:20:02Z,AK-47 | Point Disarray (Field-Tested),1437,14.37
+2026-01-17T07:20:02Z,Enforcer | Phoenix,793,7.93
+2026-01-17T07:20:02Z,Sir Bloody Skullhead Darryl | The Professionals,4995,49.95
+2026-01-17T19:16:33Z,3rd Commando Company | KSK,1303,13.03
+2026-01-17T19:16:33Z,AK-47 | Point Disarray (Field-Tested),1481,14.81
+2026-01-17T19:16:33Z,Enforcer | Phoenix,823,8.23
+2026-01-17T19:16:33Z,Sir Bloody Skullhead Darryl | The Professionals,5092,50.92
+2026-01-18T07:20:32Z,3rd Commando Company | KSK,1299,12.99
+2026-01-18T07:20:32Z,AK-47 | Point Disarray (Field-Tested),1481,14.81
+2026-01-18T07:20:32Z,Enforcer | Phoenix,770,7.7
+2026-01-18T07:20:32Z,Sir Bloody Skullhead Darryl | The Professionals,5000,50.0
+2026-01-18T19:16:31Z,3rd Commando Company | KSK,1307,13.07
+2026-01-18T19:16:31Z,AK-47 | Point Disarray (Field-Tested),1456,14.56
+2026-01-18T19:16:31Z,Enforcer | Phoenix,777,7.77
+2026-01-18T19:16:31Z,Sir Bloody Skullhead Darryl | The Professionals,4933,49.33
+2026-01-19T07:29:29Z,3rd Commando Company | KSK,1328,13.28
+2026-01-19T07:29:29Z,AK-47 | Point Disarray (Field-Tested),1471,14.71
+2026-01-19T07:29:29Z,Enforcer | Phoenix,773,7.73
+2026-01-19T07:29:29Z,Sir Bloody Skullhead Darryl | The Professionals,5000,50.0
+2026-01-19T19:19:43Z,3rd Commando Company | KSK,1328,13.28
+2026-01-19T19:19:43Z,AK-47 | Point Disarray (Field-Tested),1490,14.9
+2026-01-19T19:19:43Z,Enforcer | Phoenix,832,8.32
+2026-01-19T19:19:43Z,Sir Bloody Skullhead Darryl | The Professionals,5000,50.0
+2026-01-20T07:28:39Z,3rd Commando Company | KSK,1350,13.5
+2026-01-20T07:28:39Z,AK-47 | Point Disarray (Field-Tested),1490,14.9
+2026-01-20T07:28:39Z,Enforcer | Phoenix,783,7.83
+2026-01-20T07:28:39Z,Sir Bloody Skullhead Darryl | The Professionals,4838,48.38
+2026-01-20T20:12:40Z,3rd Commando Company | KSK,1350,13.5
+2026-01-20T20:12:40Z,AK-47 | Point Disarray (Field-Tested),1484,14.84
+2026-01-20T20:12:40Z,Enforcer | Phoenix,806,8.06
+2026-01-20T20:12:40Z,Sir Bloody Skullhead Darryl | The Professionals,4838,48.38
+2026-01-21T07:29:19Z,3rd Commando Company | KSK,1406,14.06
+2026-01-21T07:29:19Z,AK-47 | Point Disarray (Field-Tested),1490,14.9
+2026-01-21T07:29:19Z,Enforcer | Phoenix,779,7.79
+2026-01-21T07:29:19Z,Sir Bloody Skullhead Darryl | The Professionals,4849,48.49
+2026-01-21T19:27:38Z,3rd Commando Company | KSK,1352,13.52
+2026-01-21T19:27:38Z,AK-47 | Point Disarray (Field-Tested),1502,15.02
+2026-01-21T19:27:38Z,Enforcer | Phoenix,804,8.04
+2026-01-21T19:27:38Z,Sir Bloody Skullhead Darryl | The Professionals,4849,48.49
+2026-01-22T07:28:15Z,3rd Commando Company | KSK,1352,13.52
+2026-01-22T07:28:15Z,AK-47 | Point Disarray (Field-Tested),1486,14.86
+2026-01-22T07:28:15Z,Enforcer | Phoenix,782,7.82
+2026-01-22T07:28:15Z,Sir Bloody Skullhead Darryl | The Professionals,4983,49.83
+2026-01-22T19:25:38Z,3rd Commando Company | KSK,1389,13.89
+2026-01-22T19:25:38Z,AK-47 | Point Disarray (Field-Tested),1520,15.2
+2026-01-22T19:25:38Z,Enforcer | Phoenix,785,7.85
+2026-01-22T19:25:38Z,Sir Bloody Skullhead Darryl | The Professionals,4970,49.7
+2026-01-23T07:26:24Z,3rd Commando Company | KSK,1349,13.49
+2026-01-23T07:26:24Z,AK-47 | Point Disarray (Field-Tested),1526,15.26
+2026-01-23T07:26:24Z,Enforcer | Phoenix,797,7.97
+2026-01-23T07:26:24Z,Sir Bloody Skullhead Darryl | The Professionals,4701,47.01
+2026-01-23T19:25:18Z,3rd Commando Company | KSK,1300,13.0
+2026-01-23T19:25:18Z,AK-47 | Point Disarray (Field-Tested),1520,15.2
+2026-01-23T19:25:18Z,Enforcer | Phoenix,773,7.73
+2026-01-23T19:25:18Z,Sir Bloody Skullhead Darryl | The Professionals,4748,47.48
+2026-01-24T07:20:41Z,3rd Commando Company | KSK,1321,13.21
+2026-01-24T07:20:41Z,AK-47 | Point Disarray (Field-Tested),1526,15.26
+2026-01-24T07:20:41Z,Enforcer | Phoenix,785,7.85
+2026-01-24T07:20:41Z,Sir Bloody Skullhead Darryl | The Professionals,4970,49.7
+2026-01-24T19:17:34Z,3rd Commando Company | KSK,1324,13.24
+2026-01-24T19:17:34Z,AK-47 | Point Disarray (Field-Tested),1514,15.14
+2026-01-24T19:17:34Z,Enforcer | Phoenix,800,8.0
+2026-01-24T19:17:34Z,Sir Bloody Skullhead Darryl | The Professionals,4969,49.69
+2026-01-25T07:22:22Z,3rd Commando Company | KSK,1332,13.32
+2026-01-25T07:22:22Z,AK-47 | Point Disarray (Field-Tested),1466,14.66
+2026-01-25T07:22:22Z,Enforcer | Phoenix,842,8.42
+2026-01-25T07:22:22Z,Sir Bloody Skullhead Darryl | The Professionals,4821,48.21
+2026-01-25T19:18:03Z,3rd Commando Company | KSK,1333,13.33
+2026-01-25T19:18:03Z,AK-47 | Point Disarray (Field-Tested),1518,15.18
+2026-01-25T19:18:03Z,Enforcer | Phoenix,795,7.95
+2026-01-25T19:18:03Z,Sir Bloody Skullhead Darryl | The Professionals,4771,47.71
+2026-01-26T07:28:48Z,3rd Commando Company | KSK,1345,13.45
+2026-01-26T07:28:48Z,AK-47 | Point Disarray (Field-Tested),1536,15.36
+2026-01-26T07:28:48Z,Enforcer | Phoenix,773,7.73
+2026-01-26T07:28:48Z,Sir Bloody Skullhead Darryl | The Professionals,5050,50.5
+2026-01-26T19:24:25Z,3rd Commando Company | KSK,1415,14.15
+2026-01-26T19:24:25Z,AK-47 | Point Disarray (Field-Tested),1493,14.93
+2026-01-26T19:24:25Z,Enforcer | Phoenix,797,7.97
+2026-01-26T19:24:25Z,Sir Bloody Skullhead Darryl | The Professionals,4800,48.0
+2026-01-27T07:28:46Z,3rd Commando Company | KSK,1390,13.9
+2026-01-27T07:28:46Z,AK-47 | Point Disarray (Field-Tested),1493,14.93
+2026-01-27T07:28:46Z,Enforcer | Phoenix,785,7.85
+2026-01-27T07:28:46Z,Sir Bloody Skullhead Darryl | The Professionals,4777,47.77
+2026-01-27T19:27:24Z,3rd Commando Company | KSK,1480,14.8
+2026-01-27T19:27:24Z,AK-47 | Point Disarray (Field-Tested),1496,14.96
+2026-01-27T19:27:24Z,Enforcer | Phoenix,834,8.34
+2026-01-27T19:27:24Z,Sir Bloody Skullhead Darryl | The Professionals,4750,47.5
+2026-01-28T07:27:25Z,3rd Commando Company | KSK,1427,14.27
+2026-01-28T07:27:25Z,AK-47 | Point Disarray (Field-Tested),1530,15.3
+2026-01-28T07:27:25Z,Enforcer | Phoenix,804,8.04
+2026-01-28T07:27:25Z,Sir Bloody Skullhead Darryl | The Professionals,4845,48.45
+2026-01-28T19:29:17Z,3rd Commando Company | KSK,1590,15.9
+2026-01-28T19:29:17Z,AK-47 | Point Disarray (Field-Tested),1530,15.3
+2026-01-28T19:29:17Z,Enforcer | Phoenix,804,8.04
+2026-01-28T19:29:17Z,Sir Bloody Skullhead Darryl | The Professionals,4979,49.79
+2026-01-29T07:40:15Z,3rd Commando Company | KSK,1557,15.57
+2026-01-29T07:40:15Z,AK-47 | Point Disarray (Field-Tested),1522,15.22
+2026-01-29T07:40:15Z,Enforcer | Phoenix,804,8.04
+2026-01-29T07:40:15Z,Sir Bloody Skullhead Darryl | The Professionals,4985,49.85
+2026-01-29T19:31:02Z,3rd Commando Company | KSK,1699,16.99
+2026-01-29T19:31:02Z,AK-47 | Point Disarray (Field-Tested),1535,15.35
+2026-01-29T19:31:02Z,Enforcer | Phoenix,813,8.13
+2026-01-29T19:31:02Z,Sir Bloody Skullhead Darryl | The Professionals,4938,49.38
+2026-01-30T07:40:34Z,3rd Commando Company | KSK,1520,15.2
+2026-01-30T07:40:34Z,AK-47 | Point Disarray (Field-Tested),1549,15.49
+2026-01-30T07:40:34Z,Enforcer | Phoenix,804,8.04
+2026-01-30T07:40:34Z,Sir Bloody Skullhead Darryl | The Professionals,4800,48.0
+2026-01-30T19:32:56Z,3rd Commando Company | KSK,1522,15.22
+2026-01-30T19:32:56Z,AK-47 | Point Disarray (Field-Tested),1552,15.52
+2026-01-30T19:32:56Z,Enforcer | Phoenix,801,8.01
+2026-01-30T19:32:56Z,Sir Bloody Skullhead Darryl | The Professionals,4995,49.95
+2026-01-31T07:29:52Z,3rd Commando Company | KSK,1584,15.84
+2026-01-31T07:29:52Z,AK-47 | Point Disarray (Field-Tested),1553,15.53
+2026-01-31T07:29:52Z,Enforcer | Phoenix,800,8.0
+2026-01-31T07:29:52Z,Sir Bloody Skullhead Darryl | The Professionals,4930,49.3
+2026-01-31T19:21:07Z,3rd Commando Company | KSK,1628,16.28
+2026-01-31T19:21:07Z,AK-47 | Point Disarray (Field-Tested),1532,15.32
+2026-01-31T19:21:07Z,Enforcer | Phoenix,797,7.97
+2026-01-31T19:21:07Z,Sir Bloody Skullhead Darryl | The Professionals,4969,49.69
+2026-02-01T07:37:30Z,3rd Commando Company | KSK,1650,16.5
+2026-02-01T07:37:30Z,AK-47 | Point Disarray (Field-Tested),1535,15.35
+2026-02-01T07:37:30Z,Enforcer | Phoenix,800,8.0
+2026-02-01T07:37:30Z,Sir Bloody Skullhead Darryl | The Professionals,4960,49.6
+2026-02-01T19:25:10Z,3rd Commando Company | KSK,1701,17.01
+2026-02-01T19:25:10Z,AK-47 | Point Disarray (Field-Tested),1537,15.37
+2026-02-01T19:25:10Z,Enforcer | Phoenix,799,7.99
+2026-02-01T19:25:10Z,Sir Bloody Skullhead Darryl | The Professionals,4773,47.73
+2026-02-02T07:51:00Z,3rd Commando Company | KSK,1600,16.0
+2026-02-02T07:51:00Z,AK-47 | Point Disarray (Field-Tested),1602,16.02
+2026-02-02T07:51:00Z,Enforcer | Phoenix,824,8.24
+2026-02-02T07:51:00Z,Sir Bloody Skullhead Darryl | The Professionals,4841,48.41
+2026-02-03T07:43:03Z,3rd Commando Company | KSK,1565,15.65
+2026-02-03T07:43:03Z,AK-47 | Point Disarray (Field-Tested),1523,15.23
+2026-02-03T07:43:03Z,Enforcer | Phoenix,810,8.1
+2026-02-03T07:43:03Z,Sir Bloody Skullhead Darryl | The Professionals,4786,47.86
+2026-02-03T19:44:24Z,3rd Commando Company | KSK,1531,15.31
+2026-02-03T19:44:24Z,AK-47 | Point Disarray (Field-Tested),1549,15.49
+2026-02-03T19:44:24Z,Enforcer | Phoenix,792,7.92
+2026-02-03T19:44:24Z,Sir Bloody Skullhead Darryl | The Professionals,4800,48.0
+2026-02-04T07:44:22Z,3rd Commando Company | KSK,1482,14.82
+2026-02-04T07:44:22Z,AK-47 | Point Disarray (Field-Tested),1541,15.41
+2026-02-04T07:44:22Z,Enforcer | Phoenix,794,7.94
+2026-02-04T07:44:22Z,Sir Bloody Skullhead Darryl | The Professionals,4814,48.14
+2026-02-04T19:38:57Z,3rd Commando Company | KSK,1513,15.13
+2026-02-04T19:38:57Z,AK-47 | Point Disarray (Field-Tested),1541,15.41
+2026-02-04T19:38:57Z,Enforcer | Phoenix,790,7.9
+2026-02-04T19:38:57Z,Sir Bloody Skullhead Darryl | The Professionals,4755,47.55
+2026-02-05T07:50:16Z,3rd Commando Company | KSK,1514,15.14
+2026-02-05T07:50:16Z,AK-47 | Point Disarray (Field-Tested),1507,15.07
+2026-02-05T07:50:16Z,Enforcer | Phoenix,765,7.65
+2026-02-05T07:50:16Z,Sir Bloody Skullhead Darryl | The Professionals,4738,47.38
+2026-02-05T19:37:40Z,3rd Commando Company | KSK,1486,14.86
+2026-02-05T19:37:40Z,AK-47 | Point Disarray (Field-Tested),1507,15.07
+2026-02-05T19:37:40Z,Enforcer | Phoenix,783,7.83
+2026-02-05T19:37:40Z,Sir Bloody Skullhead Darryl | The Professionals,4731,47.31
+2026-02-06T07:47:43Z,3rd Commando Company | KSK,1455,14.55
+2026-02-06T07:47:43Z,AK-47 | Point Disarray (Field-Tested),1526,15.26
+2026-02-06T07:47:43Z,Enforcer | Phoenix,790,7.9
+2026-02-06T07:47:43Z,Sir Bloody Skullhead Darryl | The Professionals,4803,48.03
+2026-02-06T19:37:58Z,3rd Commando Company | KSK,1450,14.5
+2026-02-06T19:37:58Z,AK-47 | Point Disarray (Field-Tested),1512,15.12
+2026-02-06T19:37:58Z,Enforcer | Phoenix,784,7.84
+2026-02-06T19:37:58Z,Sir Bloody Skullhead Darryl | The Professionals,4774,47.74
+2026-02-07T07:32:14Z,3rd Commando Company | KSK,1480,14.8
+2026-02-07T07:32:14Z,AK-47 | Point Disarray (Field-Tested),1525,15.25
+2026-02-07T07:32:14Z,Enforcer | Phoenix,785,7.85
+2026-02-07T07:32:14Z,Sir Bloody Skullhead Darryl | The Professionals,4659,46.59
+2026-02-07T19:24:38Z,3rd Commando Company | KSK,1489,14.89
+2026-02-07T19:24:38Z,AK-47 | Point Disarray (Field-Tested),1498,14.98
+2026-02-07T19:24:38Z,Enforcer | Phoenix,756,7.56
+2026-02-07T19:24:38Z,Sir Bloody Skullhead Darryl | The Professionals,4659,46.59
+2026-02-08T07:39:18Z,3rd Commando Company | KSK,1427,14.27
+2026-02-08T07:39:18Z,AK-47 | Point Disarray (Field-Tested),1511,15.11
+2026-02-08T07:39:18Z,Enforcer | Phoenix,778,7.78
+2026-02-08T07:39:18Z,Sir Bloody Skullhead Darryl | The Professionals,4733,47.33
+2026-02-08T19:26:26Z,3rd Commando Company | KSK,1488,14.88
+2026-02-08T19:26:26Z,AK-47 | Point Disarray (Field-Tested),1490,14.9
+2026-02-08T19:26:26Z,Enforcer | Phoenix,778,7.78
+2026-02-08T19:26:26Z,Sir Bloody Skullhead Darryl | The Professionals,4733,47.33
+2026-02-09T07:58:03Z,3rd Commando Company | KSK,1428,14.28
+2026-02-09T07:58:03Z,AK-47 | Point Disarray (Field-Tested),1473,14.73
+2026-02-09T07:58:03Z,Enforcer | Phoenix,775,7.75
+2026-02-09T07:58:03Z,Sir Bloody Skullhead Darryl | The Professionals,4662,46.62
+2026-02-09T20:01:41Z,3rd Commando Company | KSK,1428,14.28
+2026-02-09T20:01:41Z,AK-47 | Point Disarray (Field-Tested),1473,14.73
+2026-02-09T20:01:41Z,Enforcer | Phoenix,797,7.97
+2026-02-09T20:01:41Z,Sir Bloody Skullhead Darryl | The Professionals,4801,48.01
+2026-02-10T07:59:05Z,3rd Commando Company | KSK,1450,14.5
+2026-02-10T07:59:05Z,AK-47 | Point Disarray (Field-Tested),1473,14.73
+2026-02-10T07:59:05Z,Enforcer | Phoenix,799,7.99
+2026-02-10T07:59:05Z,Sir Bloody Skullhead Darryl | The Professionals,4919,49.19
+2026-02-10T19:59:48Z,3rd Commando Company | KSK,1414,14.14
+2026-02-10T19:59:48Z,AK-47 | Point Disarray (Field-Tested),1473,14.73
+2026-02-10T19:59:48Z,Enforcer | Phoenix,795,7.95
+2026-02-10T19:59:48Z,Sir Bloody Skullhead Darryl | The Professionals,4840,48.4
+2026-02-11T07:55:47Z,3rd Commando Company | KSK,1414,14.14
+2026-02-11T07:55:47Z,AK-47 | Point Disarray (Field-Tested),1465,14.65
+2026-02-11T07:55:47Z,Enforcer | Phoenix,756,7.56
+2026-02-11T07:55:47Z,Sir Bloody Skullhead Darryl | The Professionals,4689,46.89
+2026-02-11T19:54:54Z,3rd Commando Company | KSK,1411,14.11
+2026-02-11T19:54:54Z,AK-47 | Point Disarray (Field-Tested),1487,14.87
+2026-02-11T19:54:54Z,Enforcer | Phoenix,814,8.14
+2026-02-11T19:54:54Z,Sir Bloody Skullhead Darryl | The Professionals,4832,48.32
+2026-02-12T07:53:06Z,3rd Commando Company | KSK,1412,14.12
+2026-02-12T07:53:06Z,AK-47 | Point Disarray (Field-Tested),1475,14.75
+2026-02-12T07:53:06Z,Enforcer | Phoenix,770,7.7
+2026-02-12T07:53:06Z,Sir Bloody Skullhead Darryl | The Professionals,4622,46.22
+2026-02-12T19:49:50Z,3rd Commando Company | KSK,1404,14.04
+2026-02-12T19:49:50Z,AK-47 | Point Disarray (Field-Tested),1485,14.85
+2026-02-12T19:49:50Z,Enforcer | Phoenix,800,8.0
+2026-02-12T19:49:50Z,Sir Bloody Skullhead Darryl | The Professionals,4667,46.67
+2026-02-13T07:49:59Z,3rd Commando Company | KSK,1404,14.04
+2026-02-13T07:49:59Z,AK-47 | Point Disarray (Field-Tested),1496,14.96
+2026-02-13T07:49:59Z,Enforcer | Phoenix,766,7.66
+2026-02-13T07:49:59Z,Sir Bloody Skullhead Darryl | The Professionals,4765,47.65
+2026-02-13T19:42:11Z,3rd Commando Company | KSK,1460,14.6
+2026-02-13T19:42:11Z,AK-47 | Point Disarray (Field-Tested),1500,15.0
+2026-02-13T19:42:11Z,Enforcer | Phoenix,780,7.8
+2026-02-13T19:42:11Z,Sir Bloody Skullhead Darryl | The Professionals,4678,46.78
+2026-02-14T07:34:27Z,3rd Commando Company | KSK,1432,14.32
+2026-02-14T07:34:27Z,AK-47 | Point Disarray (Field-Tested),1500,15.0
+2026-02-14T07:34:27Z,Enforcer | Phoenix,778,7.78
+2026-02-14T07:34:27Z,Sir Bloody Skullhead Darryl | The Professionals,4700,47.0
+2026-02-14T19:24:57Z,3rd Commando Company | KSK,1410,14.1
+2026-02-14T19:24:57Z,AK-47 | Point Disarray (Field-Tested),1500,15.0
+2026-02-14T19:24:57Z,Enforcer | Phoenix,800,8.0
+2026-02-14T19:24:57Z,Sir Bloody Skullhead Darryl | The Professionals,4762,47.62
+2026-02-15T07:38:23Z,3rd Commando Company | KSK,1432,14.32
+2026-02-15T07:38:23Z,AK-47 | Point Disarray (Field-Tested),1500,15.0
+2026-02-15T07:38:23Z,Enforcer | Phoenix,799,7.99
+2026-02-15T07:38:23Z,Sir Bloody Skullhead Darryl | The Professionals,4790,47.9
+2026-02-15T19:26:17Z,3rd Commando Company | KSK,1475,14.75
+2026-02-15T19:26:17Z,AK-47 | Point Disarray (Field-Tested),1504,15.04
+2026-02-15T19:26:17Z,Enforcer | Phoenix,765,7.65
+2026-02-15T19:26:17Z,Sir Bloody Skullhead Darryl | The Professionals,4790,47.9
+2026-02-16T07:54:59Z,3rd Commando Company | KSK,1490,14.9
+2026-02-16T07:54:59Z,AK-47 | Point Disarray (Field-Tested),1517,15.17
+2026-02-16T07:54:59Z,Enforcer | Phoenix,747,7.47
+2026-02-16T07:54:59Z,Sir Bloody Skullhead Darryl | The Professionals,4790,47.9
+2026-02-16T19:32:11Z,3rd Commando Company | KSK,1397,13.97
+2026-02-16T19:32:11Z,AK-47 | Point Disarray (Field-Tested),1522,15.22
+2026-02-16T19:32:11Z,Enforcer | Phoenix,747,7.47
+2026-02-16T19:32:11Z,Sir Bloody Skullhead Darryl | The Professionals,4770,47.7
+2026-02-17T07:51:06Z,3rd Commando Company | KSK,1452,14.52
+2026-02-17T07:51:06Z,AK-47 | Point Disarray (Field-Tested),1521,15.21
+2026-02-17T07:51:06Z,Enforcer | Phoenix,758,7.58
+2026-02-17T07:51:06Z,Sir Bloody Skullhead Darryl | The Professionals,4713,47.13
+2026-02-17T19:47:46Z,3rd Commando Company | KSK,1493,14.93
+2026-02-17T19:47:46Z,AK-47 | Point Disarray (Field-Tested),1514,15.14
+2026-02-17T19:47:46Z,Enforcer | Phoenix,766,7.66
+2026-02-17T19:47:46Z,Sir Bloody Skullhead Darryl | The Professionals,4783,47.83
+2026-02-18T07:50:47Z,3rd Commando Company | KSK,1445,14.45
+2026-02-18T07:50:47Z,AK-47 | Point Disarray (Field-Tested),1538,15.38
+2026-02-18T07:50:47Z,Enforcer | Phoenix,775,7.75
+2026-02-18T07:50:47Z,Sir Bloody Skullhead Darryl | The Professionals,4686,46.86
+2026-02-18T19:49:14Z,3rd Commando Company | KSK,1482,14.82
+2026-02-18T19:49:14Z,AK-47 | Point Disarray (Field-Tested),1538,15.38
+2026-02-18T19:49:14Z,Enforcer | Phoenix,775,7.75
+2026-02-18T19:49:14Z,Sir Bloody Skullhead Darryl | The Professionals,4789,47.89
+2026-02-19T07:49:29Z,3rd Commando Company | KSK,1471,14.71
+2026-02-19T07:49:29Z,AK-47 | Point Disarray (Field-Tested),1545,15.45
+2026-02-19T07:49:29Z,Enforcer | Phoenix,752,7.52
+2026-02-19T07:49:29Z,Sir Bloody Skullhead Darryl | The Professionals,4766,47.66
+2026-02-19T19:39:28Z,3rd Commando Company | KSK,1469,14.69
+2026-02-19T19:39:28Z,AK-47 | Point Disarray (Field-Tested),1563,15.63
+2026-02-19T19:39:28Z,Enforcer | Phoenix,752,7.52
+2026-02-19T19:39:28Z,Sir Bloody Skullhead Darryl | The Professionals,4789,47.89
+2026-02-20T07:49:13Z,3rd Commando Company | KSK,1476,14.76
+2026-02-20T07:49:13Z,AK-47 | Point Disarray (Field-Tested),1571,15.71
+2026-02-20T07:49:13Z,Enforcer | Phoenix,752,7.52
+2026-02-20T07:49:13Z,Sir Bloody Skullhead Darryl | The Professionals,4800,48.0
+2026-02-20T19:36:58Z,3rd Commando Company | KSK,1470,14.7
+2026-02-20T19:36:58Z,AK-47 | Point Disarray (Field-Tested),1559,15.59
+2026-02-20T19:36:58Z,Enforcer | Phoenix,749,7.49
+2026-02-20T19:36:58Z,Sir Bloody Skullhead Darryl | The Professionals,4700,47.0
+2026-02-21T07:33:00Z,3rd Commando Company | KSK,1460,14.6
+2026-02-21T07:33:00Z,AK-47 | Point Disarray (Field-Tested),1569,15.69
+2026-02-21T07:33:00Z,Enforcer | Phoenix,746,7.46
+2026-02-21T07:33:00Z,Sir Bloody Skullhead Darryl | The Professionals,4776,47.76
+2026-02-21T19:24:39Z,3rd Commando Company | KSK,1471,14.71
+2026-02-21T19:24:39Z,AK-47 | Point Disarray (Field-Tested),1639,16.39
+2026-02-21T19:24:39Z,Enforcer | Phoenix,746,7.46
+2026-02-21T19:24:39Z,Sir Bloody Skullhead Darryl | The Professionals,4706,47.06
+2026-02-22T07:36:17Z,3rd Commando Company | KSK,1473,14.73
+2026-02-22T07:36:17Z,AK-47 | Point Disarray (Field-Tested),1639,16.39
+2026-02-22T07:36:17Z,Enforcer | Phoenix,757,7.57
+2026-02-22T07:36:17Z,Sir Bloody Skullhead Darryl | The Professionals,4789,47.89
+2026-02-22T19:25:51Z,3rd Commando Company | KSK,1473,14.73
+2026-02-22T19:25:51Z,AK-47 | Point Disarray (Field-Tested),1607,16.07
+2026-02-22T19:25:51Z,Enforcer | Phoenix,798,7.98
+2026-02-22T19:25:51Z,Sir Bloody Skullhead Darryl | The Professionals,4800,48.0
+2026-02-23T07:55:18Z,3rd Commando Company | KSK,1474,14.74
+2026-02-23T07:55:18Z,AK-47 | Point Disarray (Field-Tested),1610,16.1
+2026-02-23T07:55:18Z,Enforcer | Phoenix,756,7.56
+2026-02-23T07:55:18Z,Sir Bloody Skullhead Darryl | The Professionals,4800,48.0
+2026-02-23T19:56:57Z,3rd Commando Company | KSK,1441,14.41
+2026-02-23T19:56:57Z,AK-47 | Point Disarray (Field-Tested),1615,16.15
+2026-02-23T19:56:57Z,Enforcer | Phoenix,738,7.38
+2026-02-23T19:56:57Z,Sir Bloody Skullhead Darryl | The Professionals,4836,48.36
+2026-02-24T07:51:05Z,3rd Commando Company | KSK,1466,14.66
+2026-02-24T07:51:05Z,AK-47 | Point Disarray (Field-Tested),1614,16.14
+2026-02-24T07:51:05Z,Enforcer | Phoenix,752,7.52
+2026-02-24T07:51:05Z,Sir Bloody Skullhead Darryl | The Professionals,4821,48.21
+2026-02-24T19:48:26Z,3rd Commando Company | KSK,1388,13.88
+2026-02-24T19:48:26Z,AK-47 | Point Disarray (Field-Tested),1631,16.31
+2026-02-24T19:48:26Z,Enforcer | Phoenix,781,7.81
+2026-02-24T19:48:26Z,Sir Bloody Skullhead Darryl | The Professionals,4717,47.17
+2026-02-25T07:52:04Z,3rd Commando Company | KSK,1429,14.29
+2026-02-25T07:52:04Z,AK-47 | Point Disarray (Field-Tested),1656,16.56
+2026-02-25T07:52:04Z,Enforcer | Phoenix,753,7.53
+2026-02-25T07:52:04Z,Sir Bloody Skullhead Darryl | The Professionals,4776,47.76
+2026-02-25T19:49:18Z,3rd Commando Company | KSK,1417,14.17
+2026-02-25T19:49:18Z,AK-47 | Point Disarray (Field-Tested),1644,16.44
+2026-02-25T19:49:18Z,Enforcer | Phoenix,782,7.82
+2026-02-25T19:49:18Z,Sir Bloody Skullhead Darryl | The Professionals,4722,47.22
+2026-02-26T07:51:40Z,3rd Commando Company | KSK,1416,14.16
+2026-02-26T07:51:40Z,AK-47 | Point Disarray (Field-Tested),1611,16.11
+2026-02-26T07:51:40Z,Enforcer | Phoenix,790,7.9
+2026-02-26T07:51:40Z,Sir Bloody Skullhead Darryl | The Professionals,4756,47.56
+2026-02-26T19:43:07Z,3rd Commando Company | KSK,1429,14.29
+2026-02-26T19:43:07Z,AK-47 | Point Disarray (Field-Tested),1650,16.5
+2026-02-26T19:43:07Z,Enforcer | Phoenix,753,7.53
+2026-02-26T19:43:07Z,Sir Bloody Skullhead Darryl | The Professionals,4627,46.27
+2026-02-27T07:47:36Z,3rd Commando Company | KSK,1421,14.21
+2026-02-27T07:47:36Z,AK-47 | Point Disarray (Field-Tested),1621,16.21
+2026-02-27T07:47:36Z,Enforcer | Phoenix,739,7.39
+2026-02-27T07:47:36Z,Sir Bloody Skullhead Darryl | The Professionals,4671,46.71
+2026-02-27T19:34:05Z,3rd Commando Company | KSK,1430,14.3
+2026-02-27T19:34:05Z,AK-47 | Point Disarray (Field-Tested),1651,16.51
+2026-02-27T19:34:05Z,Enforcer | Phoenix,790,7.9
+2026-02-27T19:34:05Z,Sir Bloody Skullhead Darryl | The Professionals,4723,47.23
+2026-02-28T07:27:58Z,3rd Commando Company | KSK,1430,14.3
+2026-02-28T07:27:58Z,AK-47 | Point Disarray (Field-Tested),1606,16.06
+2026-02-28T07:27:58Z,Enforcer | Phoenix,773,7.73
+2026-02-28T07:27:58Z,Sir Bloody Skullhead Darryl | The Professionals,4757,47.57
+2026-02-28T19:21:06Z,3rd Commando Company | KSK,1434,14.34
+2026-02-28T19:21:06Z,AK-47 | Point Disarray (Field-Tested),1619,16.19
+2026-02-28T19:21:06Z,Enforcer | Phoenix,788,7.88
+2026-02-28T19:21:06Z,Sir Bloody Skullhead Darryl | The Professionals,4579,45.79
+2026-03-01T07:33:13Z,3rd Commando Company | KSK,1477,14.77
+2026-03-01T07:33:13Z,AK-47 | Point Disarray (Field-Tested),1654,16.54
+2026-03-01T07:33:13Z,Enforcer | Phoenix,773,7.73
+2026-03-01T07:33:13Z,Sir Bloody Skullhead Darryl | The Professionals,4730,47.3
+2026-03-01T19:22:44Z,3rd Commando Company | KSK,1476,14.76
+2026-03-01T19:22:44Z,AK-47 | Point Disarray (Field-Tested),1671,16.71
+2026-03-01T19:22:44Z,Enforcer | Phoenix,773,7.73
+2026-03-01T19:22:44Z,Sir Bloody Skullhead Darryl | The Professionals,4673,46.73
+2026-03-02T07:49:47Z,3rd Commando Company | KSK,1476,14.76
+2026-03-02T07:49:47Z,AK-47 | Point Disarray (Field-Tested),1691,16.91
+2026-03-02T07:49:47Z,Enforcer | Phoenix,773,7.73
+2026-03-02T07:49:47Z,Sir Bloody Skullhead Darryl | The Professionals,4725,47.25
+2026-03-02T19:37:28Z,3rd Commando Company | KSK,1449,14.49
+2026-03-02T19:37:28Z,AK-47 | Point Disarray (Field-Tested),1681,16.81
+2026-03-02T19:37:28Z,Enforcer | Phoenix,798,7.98
+2026-03-02T19:37:28Z,Sir Bloody Skullhead Darryl | The Professionals,4706,47.06
+2026-03-03T07:42:39Z,3rd Commando Company | KSK,1433,14.33
+2026-03-03T07:42:39Z,AK-47 | Point Disarray (Field-Tested),1692,16.92
+2026-03-03T07:42:39Z,Enforcer | Phoenix,776,7.76
+2026-03-03T07:42:39Z,Sir Bloody Skullhead Darryl | The Professionals,4660,46.6
+2026-03-03T19:39:35Z,3rd Commando Company | KSK,1459,14.59
+2026-03-03T19:39:35Z,AK-47 | Point Disarray (Field-Tested),1675,16.75
+2026-03-03T19:39:35Z,Enforcer | Phoenix,775,7.75
+2026-03-03T19:39:35Z,Sir Bloody Skullhead Darryl | The Professionals,4613,46.13
+2026-03-04T07:38:09Z,3rd Commando Company | KSK,1454,14.54
+2026-03-04T07:38:09Z,AK-47 | Point Disarray (Field-Tested),1669,16.69
+2026-03-04T07:38:09Z,Enforcer | Phoenix,759,7.59
+2026-03-04T07:38:09Z,Sir Bloody Skullhead Darryl | The Professionals,4600,46.0
+2026-03-04T19:38:35Z,3rd Commando Company | KSK,1459,14.59
+2026-03-04T19:38:35Z,AK-47 | Point Disarray (Field-Tested),1692,16.92
+2026-03-04T19:38:35Z,Enforcer | Phoenix,759,7.59
+2026-03-04T19:38:35Z,Sir Bloody Skullhead Darryl | The Professionals,4519,45.19
+2026-03-05T07:42:28Z,3rd Commando Company | KSK,1400,14.0
+2026-03-05T07:42:28Z,AK-47 | Point Disarray (Field-Tested),1690,16.9
+2026-03-05T07:42:28Z,Enforcer | Phoenix,758,7.58
+2026-03-05T07:42:28Z,Sir Bloody Skullhead Darryl | The Professionals,4663,46.63
+2026-03-05T19:51:59Z,3rd Commando Company | KSK,1459,14.59
+2026-03-05T19:51:59Z,AK-47 | Point Disarray (Field-Tested),1668,16.68
+2026-03-05T19:51:59Z,Enforcer | Phoenix,759,7.59
+2026-03-05T19:51:59Z,Sir Bloody Skullhead Darryl | The Professionals,4700,47.0
+2026-03-06T07:38:51Z,3rd Commando Company | KSK,1376,13.76
+2026-03-06T07:38:51Z,AK-47 | Point Disarray (Field-Tested),1685,16.85
+2026-03-06T07:38:51Z,Enforcer | Phoenix,722,7.22
+2026-03-06T07:38:51Z,Sir Bloody Skullhead Darryl | The Professionals,4600,46.0
+2026-03-06T19:34:29Z,3rd Commando Company | KSK,1450,14.5
+2026-03-06T19:34:29Z,AK-47 | Point Disarray (Field-Tested),1674,16.74
+2026-03-06T19:34:29Z,Enforcer | Phoenix,759,7.59
+2026-03-06T19:34:29Z,Sir Bloody Skullhead Darryl | The Professionals,4653,46.53
+2026-03-07T07:29:13Z,3rd Commando Company | KSK,1406,14.06
+2026-03-07T07:29:13Z,AK-47 | Point Disarray (Field-Tested),1680,16.8
+2026-03-07T07:29:13Z,Enforcer | Phoenix,724,7.24
+2026-03-07T07:29:13Z,Sir Bloody Skullhead Darryl | The Professionals,4640,46.4
+2026-03-07T19:22:45Z,3rd Commando Company | KSK,1464,14.64
+2026-03-07T19:22:45Z,AK-47 | Point Disarray (Field-Tested),1694,16.94
+2026-03-07T19:22:45Z,Enforcer | Phoenix,762,7.62
+2026-03-07T19:22:45Z,Sir Bloody Skullhead Darryl | The Professionals,4665,46.65
+2026-03-08T07:31:09Z,3rd Commando Company | KSK,1465,14.65
+2026-03-08T07:31:09Z,AK-47 | Point Disarray (Field-Tested),1719,17.19
+2026-03-08T07:31:09Z,Enforcer | Phoenix,778,7.78
+2026-03-08T07:31:09Z,Sir Bloody Skullhead Darryl | The Professionals,4700,47.0
+2026-03-08T19:24:14Z,3rd Commando Company | KSK,1429,14.29
+2026-03-08T19:24:14Z,AK-47 | Point Disarray (Field-Tested),1649,16.49
+2026-03-08T19:24:14Z,Enforcer | Phoenix,799,7.99
+2026-03-08T19:24:14Z,Sir Bloody Skullhead Darryl | The Professionals,4680,46.8
+2026-03-09T07:49:59Z,3rd Commando Company | KSK,1486,14.86
+2026-03-09T07:49:59Z,AK-47 | Point Disarray (Field-Tested),1652,16.52
+2026-03-09T07:49:59Z,Enforcer | Phoenix,780,7.8
+2026-03-09T07:49:59Z,Sir Bloody Skullhead Darryl | The Professionals,4618,46.18
+2026-03-09T19:41:18Z,3rd Commando Company | KSK,1475,14.75
+2026-03-09T19:41:18Z,AK-47 | Point Disarray (Field-Tested),1667,16.67
+2026-03-09T19:41:18Z,Enforcer | Phoenix,797,7.97
+2026-03-09T19:41:18Z,Sir Bloody Skullhead Darryl | The Professionals,4639,46.39
+2026-03-10T07:41:07Z,3rd Commando Company | KSK,1442,14.42
+2026-03-10T07:41:07Z,AK-47 | Point Disarray (Field-Tested),1649,16.49
+2026-03-10T07:41:07Z,Enforcer | Phoenix,745,7.45
+2026-03-10T07:41:07Z,Sir Bloody Skullhead Darryl | The Professionals,4600,46.0
+2026-03-10T19:38:32Z,3rd Commando Company | KSK,1420,14.2
+2026-03-10T19:38:32Z,AK-47 | Point Disarray (Field-Tested),1630,16.3
+2026-03-10T19:38:32Z,Enforcer | Phoenix,774,7.74
+2026-03-10T19:38:32Z,Sir Bloody Skullhead Darryl | The Professionals,4679,46.79
+2026-03-11T07:44:17Z,3rd Commando Company | KSK,1486,14.86
+2026-03-11T07:44:17Z,AK-47 | Point Disarray (Field-Tested),1616,16.16
+2026-03-11T07:44:17Z,Enforcer | Phoenix,748,7.48
+2026-03-11T07:44:17Z,Sir Bloody Skullhead Darryl | The Professionals,4600,46.0
+2026-03-11T19:41:38Z,3rd Commando Company | KSK,1470,14.7
+2026-03-11T19:41:38Z,AK-47 | Point Disarray (Field-Tested),1596,15.96
+2026-03-11T19:41:38Z,Enforcer | Phoenix,748,7.48
+2026-03-11T19:41:38Z,Sir Bloody Skullhead Darryl | The Professionals,4680,46.8
+2026-03-12T07:47:14Z,3rd Commando Company | KSK,1442,14.42
+2026-03-12T07:47:14Z,AK-47 | Point Disarray (Field-Tested),1643,16.43
+2026-03-12T07:47:14Z,Enforcer | Phoenix,753,7.53
+2026-03-12T07:47:14Z,Sir Bloody Skullhead Darryl | The Professionals,4641,46.41
+2026-03-12T19:42:51Z,3rd Commando Company | KSK,1500,15.0
+2026-03-12T19:42:51Z,AK-47 | Point Disarray (Field-Tested),1643,16.43
+2026-03-12T19:42:51Z,Enforcer | Phoenix,770,7.7
+2026-03-12T19:42:51Z,Sir Bloody Skullhead Darryl | The Professionals,4650,46.5
+2026-03-13T07:46:39Z,3rd Commando Company | KSK,1534,15.34
+2026-03-13T07:46:39Z,AK-47 | Point Disarray (Field-Tested),1636,16.36
+2026-03-13T07:46:39Z,Enforcer | Phoenix,790,7.9
+2026-03-13T07:46:39Z,Sir Bloody Skullhead Darryl | The Professionals,4800,48.0
+2026-03-13T19:31:17Z,3rd Commando Company | KSK,1543,15.43
+2026-03-13T19:31:17Z,AK-47 | Point Disarray (Field-Tested),1600,16.0
+2026-03-13T19:31:17Z,Enforcer | Phoenix,834,8.34
+2026-03-13T19:31:17Z,Sir Bloody Skullhead Darryl | The Professionals,4772,47.72
+2026-03-14T07:35:11Z,3rd Commando Company | KSK,1569,15.69
+2026-03-14T07:35:11Z,AK-47 | Point Disarray (Field-Tested),1614,16.14
+2026-03-14T07:35:11Z,Enforcer | Phoenix,799,7.99
+2026-03-14T07:35:11Z,Sir Bloody Skullhead Darryl | The Professionals,4737,47.37
+2026-03-14T19:28:00Z,3rd Commando Company | KSK,1610,16.1
+2026-03-14T19:28:00Z,AK-47 | Point Disarray (Field-Tested),1622,16.22
+2026-03-14T19:28:00Z,Enforcer | Phoenix,781,7.81
+2026-03-14T19:28:00Z,Sir Bloody Skullhead Darryl | The Professionals,4868,48.68
+2026-03-15T07:45:13Z,3rd Commando Company | KSK,1581,15.81
+2026-03-15T07:45:13Z,AK-47 | Point Disarray (Field-Tested),1622,16.22
+2026-03-15T07:45:13Z,Enforcer | Phoenix,810,8.1
+2026-03-15T07:45:13Z,Sir Bloody Skullhead Darryl | The Professionals,4955,49.55
+2026-03-15T19:28:25Z,3rd Commando Company | KSK,1580,15.8
+2026-03-15T19:28:25Z,AK-47 | Point Disarray (Field-Tested),1635,16.35
+2026-03-15T19:28:25Z,Enforcer | Phoenix,881,8.81
+2026-03-15T19:28:25Z,Sir Bloody Skullhead Darryl | The Professionals,4968,49.68
+2026-03-16T08:07:48Z,3rd Commando Company | KSK,1551,15.51
+2026-03-16T08:07:48Z,AK-47 | Point Disarray (Field-Tested),1628,16.28
+2026-03-16T08:07:48Z,Enforcer | Phoenix,857,8.57
+2026-03-16T08:07:48Z,Sir Bloody Skullhead Darryl | The Professionals,5004,50.04
+2026-03-16T19:52:24Z,3rd Commando Company | KSK,1581,15.81
+2026-03-16T19:52:24Z,AK-47 | Point Disarray (Field-Tested),1652,16.52
+2026-03-16T19:52:24Z,Enforcer | Phoenix,880,8.8
+2026-03-16T19:52:24Z,Sir Bloody Skullhead Darryl | The Professionals,5004,50.04
+2026-03-17T07:53:16Z,3rd Commando Company | KSK,1526,15.26
+2026-03-17T07:53:16Z,AK-47 | Point Disarray (Field-Tested),1619,16.19
+2026-03-17T07:53:16Z,Enforcer | Phoenix,892,8.92
+2026-03-17T07:53:16Z,Sir Bloody Skullhead Darryl | The Professionals,5004,50.04
+2026-03-17T19:54:01Z,3rd Commando Company | KSK,1608,16.08
+2026-03-17T19:54:01Z,AK-47 | Point Disarray (Field-Tested),1636,16.36
+2026-03-17T19:54:01Z,Enforcer | Phoenix,875,8.75
+2026-03-17T19:54:01Z,Sir Bloody Skullhead Darryl | The Professionals,5103,51.03
+2026-03-18T07:53:20Z,3rd Commando Company | KSK,1585,15.85
+2026-03-18T07:53:20Z,AK-47 | Point Disarray (Field-Tested),1636,16.36
+2026-03-18T07:53:20Z,Enforcer | Phoenix,882,8.82
+2026-03-18T07:53:20Z,Sir Bloody Skullhead Darryl | The Professionals,5119,51.19
+2026-03-18T19:49:49Z,3rd Commando Company | KSK,1569,15.69
+2026-03-18T19:49:49Z,AK-47 | Point Disarray (Field-Tested),1624,16.24
+2026-03-18T19:49:49Z,Enforcer | Phoenix,908,9.08
+2026-03-18T19:49:49Z,Sir Bloody Skullhead Darryl | The Professionals,5071,50.71
+2026-03-19T07:47:31Z,3rd Commando Company | KSK,1533,15.33
+2026-03-19T07:47:31Z,AK-47 | Point Disarray (Field-Tested),1628,16.28
+2026-03-19T07:47:31Z,Enforcer | Phoenix,864,8.64
+2026-03-19T07:47:31Z,Sir Bloody Skullhead Darryl | The Professionals,5103,51.03
+2026-03-19T19:46:30Z,3rd Commando Company | KSK,1616,16.16
+2026-03-19T19:46:30Z,AK-47 | Point Disarray (Field-Tested),1606,16.06
+2026-03-19T19:46:30Z,Enforcer | Phoenix,880,8.8
+2026-03-19T19:46:30Z,Sir Bloody Skullhead Darryl | The Professionals,4865,48.65
+2026-03-20T07:46:53Z,3rd Commando Company | KSK,1594,15.94
+2026-03-20T07:46:53Z,AK-47 | Point Disarray (Field-Tested),1610,16.1
+2026-03-20T07:46:53Z,Enforcer | Phoenix,886,8.86
+2026-03-20T07:46:53Z,Sir Bloody Skullhead Darryl | The Professionals,4926,49.26
+2026-03-20T19:37:21Z,3rd Commando Company | KSK,1600,16.0
+2026-03-20T19:37:21Z,AK-47 | Point Disarray (Field-Tested),1593,15.93
+2026-03-20T19:37:21Z,Enforcer | Phoenix,899,8.99
+2026-03-20T19:37:21Z,Sir Bloody Skullhead Darryl | The Professionals,4926,49.26
+2026-03-21T07:33:28Z,3rd Commando Company | KSK,1600,16.0
+2026-03-21T07:33:28Z,AK-47 | Point Disarray (Field-Tested),1598,15.98
+2026-03-21T07:33:28Z,Enforcer | Phoenix,887,8.87
+2026-03-21T07:33:28Z,Sir Bloody Skullhead Darryl | The Professionals,4926,49.26
+2026-03-21T19:25:18Z,3rd Commando Company | KSK,1700,17.0
+2026-03-21T19:25:18Z,AK-47 | Point Disarray (Field-Tested),1547,15.47
+2026-03-21T19:25:18Z,Enforcer | Phoenix,877,8.77
+2026-03-21T19:25:18Z,Sir Bloody Skullhead Darryl | The Professionals,4941,49.41
+2026-03-22T07:38:48Z,3rd Commando Company | KSK,1633,16.33
+2026-03-22T07:38:48Z,AK-47 | Point Disarray (Field-Tested),1548,15.48
+2026-03-22T07:38:48Z,Enforcer | Phoenix,869,8.69
+2026-03-22T07:38:48Z,Sir Bloody Skullhead Darryl | The Professionals,4899,48.99
+2026-03-22T19:26:57Z,3rd Commando Company | KSK,1564,15.64
+2026-03-22T19:26:57Z,AK-47 | Point Disarray (Field-Tested),1530,15.3
+2026-03-22T19:26:57Z,Enforcer | Phoenix,897,8.97
+2026-03-22T19:26:57Z,Sir Bloody Skullhead Darryl | The Professionals,4958,49.58
+2026-03-23T08:02:09Z,3rd Commando Company | KSK,1620,16.2
+2026-03-23T08:02:09Z,AK-47 | Point Disarray (Field-Tested),1550,15.5
+2026-03-23T08:02:09Z,Enforcer | Phoenix,903,9.03
+2026-03-23T08:02:09Z,Sir Bloody Skullhead Darryl | The Professionals,4790,47.9
+2026-03-23T19:49:26Z,3rd Commando Company | KSK,1638,16.38
+2026-03-23T19:49:26Z,AK-47 | Point Disarray (Field-Tested),1515,15.15
+2026-03-23T19:49:26Z,Enforcer | Phoenix,890,8.9
+2026-03-23T19:49:26Z,Sir Bloody Skullhead Darryl | The Professionals,4943,49.43
+2026-03-24T07:53:18Z,3rd Commando Company | KSK,1604,16.04
+2026-03-24T07:53:18Z,AK-47 | Point Disarray (Field-Tested),1549,15.49
+2026-03-24T07:53:18Z,Enforcer | Phoenix,890,8.9
+2026-03-24T07:53:18Z,Sir Bloody Skullhead Darryl | The Professionals,4697,46.97
+2026-03-24T19:53:08Z,3rd Commando Company | KSK,1571,15.71
+2026-03-24T19:53:08Z,AK-47 | Point Disarray (Field-Tested),1510,15.1
+2026-03-24T19:53:08Z,Enforcer | Phoenix,890,8.9
+2026-03-24T19:53:08Z,Sir Bloody Skullhead Darryl | The Professionals,4633,46.33
+2026-03-25T07:52:51Z,3rd Commando Company | KSK,1569,15.69
+2026-03-25T07:52:51Z,AK-47 | Point Disarray (Field-Tested),1549,15.49
+2026-03-25T07:52:51Z,Enforcer | Phoenix,885,8.85
+2026-03-25T07:52:51Z,Sir Bloody Skullhead Darryl | The Professionals,4832,48.32
+2026-03-25T19:46:55Z,3rd Commando Company | KSK,1575,15.75
+2026-03-25T19:46:55Z,AK-47 | Point Disarray (Field-Tested),1519,15.19
+2026-03-25T19:46:55Z,Enforcer | Phoenix,875,8.75
+2026-03-25T19:46:55Z,Sir Bloody Skullhead Darryl | The Professionals,4896,48.96
+2026-03-26T08:02:01Z,3rd Commando Company | KSK,1503,15.03
+2026-03-26T08:02:01Z,AK-47 | Point Disarray (Field-Tested),1546,15.46
+2026-03-26T08:02:01Z,Enforcer | Phoenix,882,8.82
+2026-03-26T08:02:01Z,Sir Bloody Skullhead Darryl | The Professionals,4838,48.38
+2026-03-26T19:54:50Z,3rd Commando Company | KSK,1548,15.48
+2026-03-26T19:54:50Z,AK-47 | Point Disarray (Field-Tested),1538,15.38
+2026-03-26T19:54:50Z,Enforcer | Phoenix,878,8.78
+2026-03-26T19:54:50Z,Sir Bloody Skullhead Darryl | The Professionals,4838,48.38
+2026-03-27T07:59:52Z,3rd Commando Company | KSK,1555,15.55
+2026-03-27T07:59:52Z,AK-47 | Point Disarray (Field-Tested),1500,15.0
+2026-03-27T07:59:52Z,Enforcer | Phoenix,885,8.85
+2026-03-27T07:59:52Z,Sir Bloody Skullhead Darryl | The Professionals,4838,48.38
+2026-03-27T19:40:54Z,3rd Commando Company | KSK,1500,15.0
+2026-03-27T19:40:54Z,AK-47 | Point Disarray (Field-Tested),1511,15.11
+2026-03-27T19:40:54Z,Enforcer | Phoenix,862,8.62
+2026-03-27T19:40:54Z,Sir Bloody Skullhead Darryl | The Professionals,4838,48.38
+2026-03-28T07:43:58Z,3rd Commando Company | KSK,1508,15.08
+2026-03-28T07:43:58Z,AK-47 | Point Disarray (Field-Tested),1534,15.34
+2026-03-28T07:43:58Z,Enforcer | Phoenix,833,8.33
+2026-03-28T07:43:58Z,Sir Bloody Skullhead Darryl | The Professionals,4800,48.0
+2026-03-28T19:31:49Z,3rd Commando Company | KSK,1512,15.12
+2026-03-28T19:31:49Z,AK-47 | Point Disarray (Field-Tested),1555,15.55
+2026-03-28T19:31:49Z,Enforcer | Phoenix,833,8.33
+2026-03-28T19:31:49Z,Sir Bloody Skullhead Darryl | The Professionals,4951,49.51
+2026-03-29T07:52:14Z,3rd Commando Company | KSK,1512,15.12
+2026-03-29T07:52:14Z,AK-47 | Point Disarray (Field-Tested),1545,15.45
+2026-03-29T07:52:14Z,Enforcer | Phoenix,883,8.83
+2026-03-29T07:52:14Z,Sir Bloody Skullhead Darryl | The Professionals,4890,48.9
+2026-03-29T19:32:36Z,3rd Commando Company | KSK,1490,14.9
+2026-03-29T19:32:36Z,AK-47 | Point Disarray (Field-Tested),1513,15.13
+2026-03-29T19:32:36Z,Enforcer | Phoenix,883,8.83
+2026-03-29T19:32:36Z,Sir Bloody Skullhead Darryl | The Professionals,4945,49.45
+2026-03-30T08:21:32Z,3rd Commando Company | KSK,1477,14.77
+2026-03-30T08:21:32Z,AK-47 | Point Disarray (Field-Tested),1500,15.0
+2026-03-30T08:21:32Z,Enforcer | Phoenix,840,8.4
+2026-03-30T08:21:32Z,Sir Bloody Skullhead Darryl | The Professionals,4896,48.96
+2026-03-30T19:55:37Z,3rd Commando Company | KSK,1510,15.1
+2026-03-30T19:55:37Z,AK-47 | Point Disarray (Field-Tested),1536,15.36
+2026-03-30T19:55:37Z,Enforcer | Phoenix,845,8.45
+2026-03-30T19:55:37Z,Sir Bloody Skullhead Darryl | The Professionals,4761,47.61
+2026-03-31T08:08:34Z,3rd Commando Company | KSK,1475,14.75
+2026-03-31T08:08:34Z,AK-47 | Point Disarray (Field-Tested),1523,15.23
+2026-03-31T08:08:34Z,Enforcer | Phoenix,807,8.07
+2026-03-31T08:08:34Z,Sir Bloody Skullhead Darryl | The Professionals,4736,47.36
+2026-03-31T19:54:14Z,3rd Commando Company | KSK,1460,14.6
+2026-03-31T19:54:14Z,AK-47 | Point Disarray (Field-Tested),1507,15.07
+2026-03-31T19:54:14Z,Enforcer | Phoenix,825,8.25
+2026-03-31T19:54:14Z,Sir Bloody Skullhead Darryl | The Professionals,4903,49.03
+2026-04-01T08:16:01Z,3rd Commando Company | KSK,1475,14.75
+2026-04-01T08:16:01Z,AK-47 | Point Disarray (Field-Tested),1507,15.07
+2026-04-01T08:16:01Z,Enforcer | Phoenix,829,8.29
+2026-04-01T08:16:01Z,Sir Bloody Skullhead Darryl | The Professionals,4943,49.43
+2026-04-01T19:57:33Z,3rd Commando Company | KSK,1475,14.75
+2026-04-01T19:57:33Z,AK-47 | Point Disarray (Field-Tested),1508,15.08
+2026-04-01T19:57:33Z,Enforcer | Phoenix,823,8.23
+2026-04-01T19:57:33Z,Sir Bloody Skullhead Darryl | The Professionals,4861,48.61
+2026-04-02T08:07:11Z,3rd Commando Company | KSK,1482,14.82
+2026-04-02T08:07:11Z,AK-47 | Point Disarray (Field-Tested),1496,14.96
+2026-04-02T08:07:11Z,Enforcer | Phoenix,832,8.32
+2026-04-02T08:07:11Z,Sir Bloody Skullhead Darryl | The Professionals,4910,49.1
+2026-04-02T19:50:40Z,3rd Commando Company | KSK,1468,14.68
+2026-04-02T19:50:40Z,AK-47 | Point Disarray (Field-Tested),1507,15.07
+2026-04-02T19:50:40Z,Enforcer | Phoenix,842,8.42
+2026-04-02T19:50:40Z,Sir Bloody Skullhead Darryl | The Professionals,4755,47.55
+2026-04-03T08:02:17Z,3rd Commando Company | KSK,1493,14.93
+2026-04-03T08:02:17Z,AK-47 | Point Disarray (Field-Tested),1506,15.06
+2026-04-03T08:02:17Z,Enforcer | Phoenix,850,8.5
+2026-04-03T08:02:17Z,Sir Bloody Skullhead Darryl | The Professionals,5040,50.4
+2026-04-03T19:38:29Z,3rd Commando Company | KSK,1516,15.16
+2026-04-03T19:38:29Z,AK-47 | Point Disarray (Field-Tested),1514,15.14
+2026-04-03T19:38:29Z,Enforcer | Phoenix,870,8.7
+2026-04-03T19:38:29Z,Sir Bloody Skullhead Darryl | The Professionals,5160,51.6
+2026-04-04T07:48:39Z,3rd Commando Company | KSK,1471,14.71
+2026-04-04T07:48:39Z,AK-47 | Point Disarray (Field-Tested),1458,14.58
+2026-04-04T07:48:39Z,Enforcer | Phoenix,865,8.65
+2026-04-04T07:48:39Z,Sir Bloody Skullhead Darryl | The Professionals,4779,47.79
+2026-04-04T19:31:43Z,3rd Commando Company | KSK,1471,14.71
+2026-04-04T19:31:43Z,AK-47 | Point Disarray (Field-Tested),1508,15.08
+2026-04-04T19:31:43Z,Enforcer | Phoenix,852,8.52
+2026-04-04T19:31:43Z,Sir Bloody Skullhead Darryl | The Professionals,5143,51.43
+2026-04-05T07:54:44Z,3rd Commando Company | KSK,1500,15.0
+2026-04-05T07:54:44Z,AK-47 | Point Disarray (Field-Tested),1508,15.08
+2026-04-05T07:54:44Z,Enforcer | Phoenix,858,8.58
+2026-04-05T07:54:44Z,Sir Bloody Skullhead Darryl | The Professionals,5157,51.57
+2026-04-05T19:34:05Z,3rd Commando Company | KSK,1502,15.02
+2026-04-05T19:34:05Z,AK-47 | Point Disarray (Field-Tested),1488,14.88
+2026-04-05T19:34:05Z,Enforcer | Phoenix,842,8.42
+2026-04-05T19:34:05Z,Sir Bloody Skullhead Darryl | The Professionals,4861,48.61
+2026-04-06T08:22:15Z,3rd Commando Company | KSK,1479,14.79
+2026-04-06T08:22:15Z,AK-47 | Point Disarray (Field-Tested),1499,14.99
+2026-04-06T08:22:15Z,Enforcer | Phoenix,830,8.3
+2026-04-06T08:22:15Z,Sir Bloody Skullhead Darryl | The Professionals,4818,48.18
+2026-04-06T19:52:37Z,3rd Commando Company | KSK,1497,14.97
+2026-04-06T19:52:37Z,AK-47 | Point Disarray (Field-Tested),1500,15.0
+2026-04-06T19:52:37Z,Enforcer | Phoenix,839,8.39
+2026-04-06T19:52:37Z,Sir Bloody Skullhead Darryl | The Professionals,4818,48.18
+2026-04-07T08:12:53Z,3rd Commando Company | KSK,1474,14.74
+2026-04-07T08:12:53Z,AK-47 | Point Disarray (Field-Tested),1486,14.86
+2026-04-07T08:12:53Z,Enforcer | Phoenix,800,8.0
+2026-04-07T08:12:53Z,Sir Bloody Skullhead Darryl | The Professionals,4900,49.0
+2026-04-07T19:56:59Z,3rd Commando Company | KSK,1459,14.59
+2026-04-07T19:56:59Z,AK-47 | Point Disarray (Field-Tested),1500,15.0
+2026-04-07T19:56:59Z,Enforcer | Phoenix,839,8.39
+2026-04-07T19:56:59Z,Sir Bloody Skullhead Darryl | The Professionals,4925,49.25
+2026-04-08T08:12:54Z,3rd Commando Company | KSK,1455,14.55
+2026-04-08T08:12:54Z,AK-47 | Point Disarray (Field-Tested),1479,14.79
+2026-04-08T08:12:54Z,Enforcer | Phoenix,863,8.63
+2026-04-08T08:12:54Z,Sir Bloody Skullhead Darryl | The Professionals,4870,48.7
+2026-04-08T19:58:56Z,3rd Commando Company | KSK,1471,14.71
+2026-04-08T19:58:56Z,AK-47 | Point Disarray (Field-Tested),1500,15.0
+2026-04-08T19:58:56Z,Enforcer | Phoenix,823,8.23
+2026-04-08T19:58:56Z,Sir Bloody Skullhead Darryl | The Professionals,4680,46.8
+2026-04-09T08:20:24Z,3rd Commando Company | KSK,1399,13.99
+2026-04-09T08:20:24Z,AK-47 | Point Disarray (Field-Tested),1442,14.42
+2026-04-09T08:20:24Z,Enforcer | Phoenix,810,8.1
+2026-04-09T08:20:24Z,Sir Bloody Skullhead Darryl | The Professionals,4724,47.24
+2026-04-09T20:02:03Z,3rd Commando Company | KSK,1480,14.8
+2026-04-09T20:02:03Z,AK-47 | Point Disarray (Field-Tested),1485,14.85
+2026-04-09T20:02:03Z,Enforcer | Phoenix,786,7.86
+2026-04-09T20:02:03Z,Sir Bloody Skullhead Darryl | The Professionals,4700,47.0
+2026-04-10T08:21:05Z,3rd Commando Company | KSK,1467,14.67
+2026-04-10T08:21:05Z,AK-47 | Point Disarray (Field-Tested),1491,14.91
+2026-04-10T08:21:05Z,Enforcer | Phoenix,781,7.81
+2026-04-10T08:21:05Z,Sir Bloody Skullhead Darryl | The Professionals,5154,51.54
+2026-04-10T19:44:33Z,3rd Commando Company | KSK,1466,14.66
+2026-04-10T19:44:33Z,AK-47 | Point Disarray (Field-Tested),1491,14.91
+2026-04-10T19:44:33Z,Enforcer | Phoenix,781,7.81
+2026-04-10T19:44:33Z,Sir Bloody Skullhead Darryl | The Professionals,5187,51.87
+2026-04-11T07:50:09Z,3rd Commando Company | KSK,1435,14.35
+2026-04-11T07:50:09Z,AK-47 | Point Disarray (Field-Tested),1488,14.88
+2026-04-11T07:50:09Z,Enforcer | Phoenix,827,8.27
+2026-04-11T07:50:09Z,Sir Bloody Skullhead Darryl | The Professionals,4664,46.64
+2026-04-11T19:35:16Z,3rd Commando Company | KSK,1424,14.24
+2026-04-11T19:35:16Z,AK-47 | Point Disarray (Field-Tested),1468,14.68
+2026-04-11T19:35:16Z,Enforcer | Phoenix,823,8.23
+2026-04-11T19:35:16Z,Sir Bloody Skullhead Darryl | The Professionals,4962,49.62
+2026-04-12T08:02:57Z,3rd Commando Company | KSK,1484,14.84
+2026-04-12T08:02:57Z,AK-47 | Point Disarray (Field-Tested),1466,14.66
+2026-04-12T08:02:57Z,Enforcer | Phoenix,792,7.92
+2026-04-12T08:02:57Z,Sir Bloody Skullhead Darryl | The Professionals,4749,47.49
+2026-04-12T19:39:43Z,3rd Commando Company | KSK,1498,14.98
+2026-04-12T19:39:43Z,AK-47 | Point Disarray (Field-Tested),1464,14.64
+2026-04-12T19:39:43Z,Enforcer | Phoenix,816,8.16
+2026-04-12T19:39:43Z,Sir Bloody Skullhead Darryl | The Professionals,4962,49.62
+2026-04-13T09:00:53Z,3rd Commando Company | KSK,1498,14.98
+2026-04-13T09:00:53Z,AK-47 | Point Disarray (Field-Tested),1488,14.88
+2026-04-13T09:00:53Z,Enforcer | Phoenix,865,8.65
+2026-04-13T09:00:53Z,Sir Bloody Skullhead Darryl | The Professionals,5150,51.5
+2026-04-13T20:05:41Z,3rd Commando Company | KSK,1498,14.98
+2026-04-13T20:05:41Z,AK-47 | Point Disarray (Field-Tested),1470,14.7
+2026-04-13T20:05:41Z,Enforcer | Phoenix,862,8.62
+2026-04-13T20:05:41Z,Sir Bloody Skullhead Darryl | The Professionals,4664,46.64
+2026-04-14T20:05:04Z,3rd Commando Company | KSK,1415,14.15
+2026-04-14T20:05:04Z,AK-47 | Point Disarray (Field-Tested),1435,14.35
+2026-04-14T20:05:04Z,Enforcer | Phoenix,849,8.49
+2026-04-14T20:05:04Z,Sir Bloody Skullhead Darryl | The Professionals,4890,48.9
+2026-04-15T08:27:20Z,3rd Commando Company | KSK,1436,14.36
+2026-04-15T08:27:20Z,AK-47 | Point Disarray (Field-Tested),1430,14.3
+2026-04-15T08:27:20Z,Enforcer | Phoenix,760,7.6
+2026-04-15T08:27:20Z,Sir Bloody Skullhead Darryl | The Professionals,4653,46.53
+2026-04-15T20:03:23Z,3rd Commando Company | KSK,1384,13.84
+2026-04-15T20:03:23Z,AK-47 | Point Disarray (Field-Tested),1475,14.75
+2026-04-15T20:03:23Z,Enforcer | Phoenix,760,7.6
+2026-04-15T20:03:23Z,Sir Bloody Skullhead Darryl | The Professionals,4653,46.53
+2026-04-16T08:26:29Z,3rd Commando Company | KSK,1351,13.51
+2026-04-16T08:26:29Z,AK-47 | Point Disarray (Field-Tested),1453,14.53
+2026-04-16T08:26:29Z,Enforcer | Phoenix,758,7.58
+2026-04-16T08:26:29Z,Sir Bloody Skullhead Darryl | The Professionals,4647,46.47
+2026-04-16T19:59:35Z,3rd Commando Company | KSK,1351,13.51
+2026-04-16T19:59:35Z,AK-47 | Point Disarray (Field-Tested),1475,14.75
+2026-04-16T19:59:35Z,Enforcer | Phoenix,758,7.58
+2026-04-16T19:59:35Z,Sir Bloody Skullhead Darryl | The Professionals,4700,47.0
+2026-04-17T08:26:03Z,3rd Commando Company | KSK,1358,13.58
+2026-04-17T08:26:03Z,AK-47 | Point Disarray (Field-Tested),1457,14.57
+2026-04-17T08:26:03Z,Enforcer | Phoenix,775,7.75
+2026-04-17T08:26:03Z,Sir Bloody Skullhead Darryl | The Professionals,4701,47.01
+2026-04-17T19:57:58Z,3rd Commando Company | KSK,1408,14.08
+2026-04-17T19:57:58Z,AK-47 | Point Disarray (Field-Tested),1456,14.56
+2026-04-17T19:57:58Z,Enforcer | Phoenix,767,7.67
+2026-04-17T19:57:58Z,Sir Bloody Skullhead Darryl | The Professionals,4668,46.68
+2026-04-18T07:59:24Z,3rd Commando Company | KSK,1348,13.48
+2026-04-18T07:59:24Z,AK-47 | Point Disarray (Field-Tested),1466,14.66
+2026-04-18T07:59:24Z,Enforcer | Phoenix,755,7.55
+2026-04-18T07:59:24Z,Sir Bloody Skullhead Darryl | The Professionals,4704,47.04
+2026-04-18T19:41:19Z,3rd Commando Company | KSK,1395,13.95
+2026-04-18T19:41:19Z,AK-47 | Point Disarray (Field-Tested),1445,14.45
+2026-04-18T19:41:19Z,Enforcer | Phoenix,835,8.35
+2026-04-18T19:41:19Z,Sir Bloody Skullhead Darryl | The Professionals,4567,45.67
+2026-04-19T08:06:13Z,3rd Commando Company | KSK,1331,13.31
+2026-04-19T08:06:13Z,AK-47 | Point Disarray (Field-Tested),1445,14.45
+2026-04-19T08:06:13Z,Enforcer | Phoenix,831,8.31
+2026-04-19T08:06:13Z,Sir Bloody Skullhead Darryl | The Professionals,4432,44.32
+2026-04-19T19:41:40Z,3rd Commando Company | KSK,1331,13.31
+2026-04-19T19:41:40Z,AK-47 | Point Disarray (Field-Tested),1450,14.5
+2026-04-19T19:41:40Z,Enforcer | Phoenix,869,8.69
+2026-04-19T19:41:40Z,Sir Bloody Skullhead Darryl | The Professionals,4543,45.43
+2026-04-20T09:06:47Z,3rd Commando Company | KSK,1356,13.56
+2026-04-20T09:06:47Z,AK-47 | Point Disarray (Field-Tested),1451,14.51
+2026-04-20T09:06:47Z,Enforcer | Phoenix,766,7.66
+2026-04-20T09:06:47Z,Sir Bloody Skullhead Darryl | The Professionals,4536,45.36
+2026-04-20T19:59:11Z,3rd Commando Company | KSK,1356,13.56
+2026-04-20T19:59:11Z,AK-47 | Point Disarray (Field-Tested),1469,14.69
+2026-04-20T19:59:11Z,Enforcer | Phoenix,881,8.81
+2026-04-20T19:59:11Z,Sir Bloody Skullhead Darryl | The Professionals,4510,45.1
+2026-04-21T08:52:35Z,3rd Commando Company | KSK,1458,14.58
+2026-04-21T08:52:35Z,AK-47 | Point Disarray (Field-Tested),1425,14.25
+2026-04-21T08:52:35Z,Enforcer | Phoenix,792,7.92
+2026-04-21T08:52:35Z,Sir Bloody Skullhead Darryl | The Professionals,4500,45.0
+2026-04-21T20:03:21Z,3rd Commando Company | KSK,1417,14.17
+2026-04-21T20:03:21Z,AK-47 | Point Disarray (Field-Tested),1429,14.29
+2026-04-21T20:03:21Z,Enforcer | Phoenix,789,7.89
+2026-04-21T20:03:21Z,Sir Bloody Skullhead Darryl | The Professionals,4203,42.03
+2026-04-22T08:48:45Z,3rd Commando Company | KSK,1417,14.17
+2026-04-22T08:48:45Z,AK-47 | Point Disarray (Field-Tested),1426,14.26
+2026-04-22T08:48:45Z,Enforcer | Phoenix,790,7.9
+2026-04-22T08:48:45Z,Sir Bloody Skullhead Darryl | The Professionals,4426,44.26
+2026-04-22T20:05:32Z,3rd Commando Company | KSK,1325,13.25
+2026-04-22T20:05:32Z,AK-47 | Point Disarray (Field-Tested),1429,14.29
+2026-04-22T20:05:32Z,Enforcer | Phoenix,725,7.25
+2026-04-22T20:05:32Z,Sir Bloody Skullhead Darryl | The Professionals,4390,43.9
+2026-04-23T08:53:17Z,3rd Commando Company | KSK,1214,12.14
+2026-04-23T08:53:17Z,AK-47 | Point Disarray (Field-Tested),1463,14.63
+2026-04-23T08:53:17Z,Enforcer | Phoenix,725,7.25
+2026-04-23T08:53:17Z,Sir Bloody Skullhead Darryl | The Professionals,4250,42.5
+2026-04-23T20:05:53Z,3rd Commando Company | KSK,1285,12.85
+2026-04-23T20:05:53Z,AK-47 | Point Disarray (Field-Tested),1455,14.55
+2026-04-23T20:05:53Z,Enforcer | Phoenix,717,7.17
+2026-04-23T20:05:53Z,Sir Bloody Skullhead Darryl | The Professionals,4214,42.14
+2026-04-24T08:59:46Z,3rd Commando Company | KSK,1315,13.15
+2026-04-24T08:59:46Z,AK-47 | Point Disarray (Field-Tested),1420,14.2
+2026-04-24T08:59:46Z,Enforcer | Phoenix,724,7.24
+2026-04-24T08:59:46Z,Sir Bloody Skullhead Darryl | The Professionals,4199,41.99
+2026-04-24T19:53:05Z,3rd Commando Company | KSK,1400,14.0
+2026-04-24T19:53:05Z,AK-47 | Point Disarray (Field-Tested),1420,14.2
+2026-04-24T19:53:05Z,Enforcer | Phoenix,817,8.17
+2026-04-24T19:53:05Z,Sir Bloody Skullhead Darryl | The Professionals,4375,43.75
+2026-04-25T08:04:55Z,3rd Commando Company | KSK,1448,14.48
+2026-04-25T08:04:55Z,AK-47 | Point Disarray (Field-Tested),1440,14.4
+2026-04-25T08:04:55Z,Enforcer | Phoenix,860,8.6
+2026-04-25T08:04:55Z,Sir Bloody Skullhead Darryl | The Professionals,4071,40.71
+2026-04-25T19:43:54Z,3rd Commando Company | KSK,1259,12.59
+2026-04-25T19:43:54Z,AK-47 | Point Disarray (Field-Tested),1437,14.37
+2026-04-25T19:43:54Z,Enforcer | Phoenix,813,8.13
+2026-04-25T19:43:54Z,Sir Bloody Skullhead Darryl | The Professionals,4400,44.0
+2026-04-26T08:15:16Z,3rd Commando Company | KSK,1470,14.7
+2026-04-26T08:15:16Z,AK-47 | Point Disarray (Field-Tested),1444,14.44
+2026-04-26T08:15:16Z,Enforcer | Phoenix,729,7.29
+2026-04-26T08:15:16Z,Sir Bloody Skullhead Darryl | The Professionals,4490,44.9
+2026-04-26T19:47:39Z,3rd Commando Company | KSK,1259,12.59
+2026-04-26T19:47:39Z,AK-47 | Point Disarray (Field-Tested),1418,14.18
+2026-04-26T19:47:39Z,Enforcer | Phoenix,832,8.32
+2026-04-26T19:47:39Z,Sir Bloody Skullhead Darryl | The Professionals,4636,46.36
+2026-04-27T09:18:00Z,3rd Commando Company | KSK,1355,13.55
+2026-04-27T09:18:00Z,AK-47 | Point Disarray (Field-Tested),1433,14.33
+2026-04-27T09:18:00Z,Enforcer | Phoenix,849,8.49
+2026-04-27T09:18:00Z,Sir Bloody Skullhead Darryl | The Professionals,4550,45.5
+2026-04-27T20:08:00Z,3rd Commando Company | KSK,1330,13.3
+2026-04-27T20:08:00Z,AK-47 | Point Disarray (Field-Tested),1439,14.39
+2026-04-27T20:08:00Z,Enforcer | Phoenix,820,8.2
+2026-04-27T20:08:00Z,Sir Bloody Skullhead Darryl | The Professionals,4533,45.33
