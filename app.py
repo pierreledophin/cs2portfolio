@@ -564,7 +564,7 @@ with tab1:
 
         st.dataframe(
             styler,
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
             column_config={
                 "Image": st.column_config.ImageColumn("Image", width="small"),
@@ -683,7 +683,7 @@ with tab3:
                           na_rep="")
                   .map(lambda v: _evo_style(v), subset=["% Profit/Perte"]))
 
-        st.dataframe(styler, use_container_width=True, hide_index=True, column_config={
+        st.dataframe(styler, width="stretch", hide_index=True, column_config={
             "Trade ID": st.column_config.TextColumn("Trade ID"),
             "Item": "Item",
             "Quantité": st.column_config.NumberColumn("Quantité", format="%d"),
@@ -822,7 +822,7 @@ with tab4:
                 st.success(f"Mouvement {del_id} supprimé."); st.cache_data.clear(); st.rerun()
             else:
                 st.error("ID introuvable.")
-        st.dataframe(fin_display, use_container_width=True, hide_index=True)
+        st.dataframe(fin_display, width="stretch", hide_index=True)
 
 # ---------- Onglet 5 : Auto-import Steam ----------
 with tab5:
@@ -860,7 +860,7 @@ with tab5:
         
         with col2:
             st.markdown('<div style="height: 22px;"></div>', unsafe_allow_html=True)
-            fetch_btn = st.button("🔍 Chercher skins", key="btn_fetch_steam", use_container_width=True)
+            fetch_btn = st.button("🔍 Chercher skins", key="btn_fetch_steam", width="stretch")
             
             # Bouton pour obtenir SteamID64
             if st.button("🔗 Obtenir mon SteamID64", key="get_steam_id_btn"):
@@ -973,7 +973,7 @@ Si ça ne marche toujours pas, essaie avec ton SteamID64 direct au lieu de la va
                                 
                                 st.dataframe(
                                     display_df,
-                                    use_container_width=True,
+                                    width="stretch",
                                     hide_index=True,
                                     column_config={
                                         "Item": st.column_config.TextColumn("Item"),
@@ -1000,7 +1000,7 @@ Si ça ne marche toujours pas, essaie avec ton SteamID64 direct au lieu de la va
                                 
                                 with import_col2:
                                     st.markdown('<div style="height: 22px;"></div>', unsafe_allow_html=True)
-                                    if st.button("✅ Importer dans holdings.csv", key="btn_import_steam", use_container_width=True):
+                                    if st.button("✅ Importer dans holdings.csv", key="btn_import_steam", width="stretch"):
                                         with st.spinner("Import en cours..."):
                                             # Importer les nouveaux skins
                                             updated_holdings = import_new_skins_to_holdings(
